@@ -10,25 +10,74 @@
 
 </head>
 <body>
-	<div id="editors" class="container float">
-		<div class="row mt-5 mb-0 pb-0">
-			<div class="col-2"></div>
-			<div id="editor0" class="col-8 mb-0 pb-0 bg-light "></div>
-			<div class="col-2"></div>	
-		</div>
+	<hr>
+	<div class="container-fluid">
+<div class="row mx-0 px-0 justify-content-center">
+	<div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 col-xxl-3 ml-0 mr-5 bg-light">
 
-		<div class="row mt-5 mb-0 pb-0">
-			<div class="col-2"></div>
-			<div id="editor1" class="col-8 mb-0 pb-0 bg-light "></div>
-			<div class="col-2"></div>
+		<p class="text-start"><b>Рубрика:</b> Космос </p>
+		<p class="text-start"><b>Автор:</b> Фамилия, Имя </p>
+		<p class="text-start">
+			<label for="topc" class="form-label"><b>Заголовок:</b> </label>
+			<input class="form-control" type="text" id="topc" aria-label="default input example">
+
+		</p>
+		<p class="text-start"><b>Редактировалась:</b> раз </p>
+		<p class="text-start"><b>Последняя правка:</b> Дата, время </p>
+		<p class="text-start"><b>Статус:</b> (опубликована, на рассмотрении гл.редактора, новая, возврат) </p>
+		<p class="text-start">
+		    <label for="leadin" class="form-label"><b>Подводка:</b> </label>
+		    <textarea type="text" class="form-control" id="leadin"> </textarea>
+		</p>
+
+
+		 
+		<p class="text-start"><b>Иконка:</b> <button type="button" class="btn btn-outline-dark">Добавить</button> </p>
+
+
+
+	</div>
+
+	<div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-5 col-xxl-6 mx-0 px-0 ">
+		<div id="editors" class="container float mx-0 px-0">
+			<div id="part0" class="row bg-light p-5 mb-1"><div class="col-12 m-0 p-0"><div id="editorjs"></div></div></div>
+		</div>
+	</div>
+
+	<div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 col-xxl-3 ml-5 mr-0 bg-light text-center">
+		<div class="row mx-0 p-3 justify-content-center">
+				<div class="card" style="width: 20rem;">
+					<img src="gettyimages-1088918272_web.jpg" class="card-img-top" alt="...">
+		    		<div class="card-body">
+		       			<h5 class="card-title"><a href="#" class="card-link">Карусель</a></h5>
+		    		</div>
+		    		<div class="card-body">
+		    			<ul class="list-group list-group-flush">
+    <li class="list-group-item"><button type="button" class="btn btn-outline-dark">Вставить</button></li>
+    <li class="list-group-item"><button type="button" class="btn btn-outline-dark">Удалить</button></li>
+
+  </ul>
+		    			
+		    			
+
+		    		</div>
+			</div>
+
 		</div>
 
 	</div>
+</div>
+</div>
+
+
+
 
 	<div id="controls" class="container float">
 		<div class="row my-5">
 			<div class="col-2"></div>
-			<div class="col-8"><button onclick="saveWrapper()">Click me</button></div>
+			<div class="col-3"><button class="btn btn-dark" onclick="addEditor()">Добавить блок</button></div>
+			<div class="col-3"><button class="btn btn-dark" onclick="delEditor()">Удалить блок</button></div>
+			<div class="col-2"><button class="btn btn-dark" onclick="renderNews()">Сверстать</button></div>
 			<div class="col-2"></div>
 		</div>
 
@@ -41,34 +90,224 @@
 
 
 
-<script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
-<script src="https://cdn.jsdelivr.net/npm/@editorjs/header@latest"></script>
-<script src="https://cdn.jsdelivr.net/npm/@editorjs/embed@latest"></script>
-<script src="https://cdn.jsdelivr.net/npm/@editorjs/simple-image@latest"></script>
-<script src="https://cdn.jsdelivr.net/npm/@editorjs/image@latest"></script>
-<script src="https://cdn.jsdelivr.net/npm/@editorjs/link@latest"></script>
-<script src="https://cdn.jsdelivr.net/npm/@editorjs/list@latest"></script>
-<script src="https://cdn.jsdelivr.net/npm/@editorjs/checklist@latest"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
+integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+
+<script src="js/editor/editor.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/editorjs-html@3.0.3/build/edjsHTML.js"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/header@latest"></script><!-- Header -->
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/simple-image@latest"></script><!-- Image -->
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/list@latest"></script><!-- List -->
+
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/quote@latest"></script><!-- Quote -->
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/code@latest"></script><!-- Code -->
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/embed@latest"></script><!-- Embed -->
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/table@latest"></script><!-- Table -->
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/link@latest"></script><!-- Link -->
+
+
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/marker@latest"></script><!-- Marker -->
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/inline-code@latest"></script><!-- Inline Code -->
 <script src="js/edjs/1/edjs.js"></script>
-<script src="js/tools/1/tools.js"></script>
+<script src="js/tools/2/tools.js"></script>
+
+
 <script>
 
-defDat = {};
+// var myCarousel = document.querySelector('#carouselExampleCaptions');
+// var carousel = new bootstrap.Carousel(myCarousel, {
+//   interval: 2000,
+//   wrap: false,
+//   slide: true
+// });
 
-let EDITORS = new Array();
 
-const editor1 = getEdjs('editor1', defDat, false);
-const editor2 = getEdjs('editor2', {}, false);
+/////////////// EDITOR HANDLERS ////////////////////////////
+
+defDat = {"time":1609351722387,"blocks":[{"type":"header","data":{"text":"Searching for stardust: How to find micrometeorites in your gutters","level":3}},{"type":"paragraph","data":{"text":"Space dust is constantly falling to Earth, sprinkling rooftops with beautiful particles unchanged since the birth of the solar <a href=\"https://www.newscientist.com/article/mg24833132-500-searching-for-stardust-how-to-find-micrometeorites-in-your-gutters/\">system</a>. To find some, start with a sieve – and be patient."}}],"version":"2.19.1"};
 
 
+var EDITOR = getEdjs(defDat, false);
+var PARTS = new Map([ ['part0',  defDat], ]);
+var ACTUAL_PART = "part0";
+var ORDER = new Array();
+ORDER.push(ACTUAL_PART);
+
+
+function convertDataToHtml(blocks) {
+      var convertedHtml = "";
+      blocks.map(block => {
+        
+        switch (block.type) {
+          case "header":
+            convertedHtml += `<h${block.data.level}>${block.data.text}</h${block.data.level}>`;
+            break;
+          case "embded":
+            convertedHtml += `<div><iframe width="560" height="315" src="${block.data.embed}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>`;
+            break;
+          case "paragraph":
+            convertedHtml += `<p>${block.data.text}</p>`;
+            break;
+          case "delimiter":
+            convertedHtml += "<hr />";
+            break;
+          case "image":
+            imgstyle = "";
+            if (block.data.withBackground) imgstyle += "cdx-simple-image__picture--with-background";
+            if (block.data.withBorder) imgstyle += " cdx-simple-image__picture--with-border";
+            imghtml = `<img class="img-fluid" src="${block.data.url}" title="${block.data.caption}" /><br /><em>${block.data.caption}</em>`;
+            imghtml = `<div class="cdx-simple-image__picture ${imgstyle}">${imghtml}</div>`;
+            convertedHtml += imghtml;
+            break;
+          case "list":
+            convertedHtml += "<ul>";
+            block.data.items.forEach(function(li) {
+              convertedHtml += `<li>${li}</li>`;
+            });
+            convertedHtml += "</ul>";
+            break;
+          default:
+            console.log("Unknown block type", block.type);
+            break;
+        }
+      });
+      return convertedHtml;
+    }
+
+function addEditor() {
+	EDITOR.save().then((outputData) => {
+		PARTS.set(ACTUAL_PART, outputData);
+		editorAdder(convertDataToHtml(outputData.blocks));
+	 }).catch((error) => {console.log('Save failed: ', error)});
+}
+
+function delEditor() {
+	if (ORDER.length === 1){return;}
+	lastElem = ORDER.pop();
+	PARTS.delete(lastElem);
+	if (ACTUAL_PART === lastElem) {EDITOR.destroy(); editorSwitcher(`${ORDER[0]}`);}
+	
+	var editorBlock = document.getElementById(`${lastElem}`);
+	editorBlock.parentNode.removeChild(editorBlock);
+	
+}
+
+function editorToHTML(dataToConvert){
+	// clear and convert current
+	EDITOR.destroy();
+	el = document.getElementById(ACTUAL_PART);
+	el.innerHTML = `<div class="col-12 m-3 p-3">${dataToConvert}</div>`;
+}
+
+
+function editorAdder(dataToConvert) {
+	editorToHTML(dataToConvert);
+	
+	// create new part
+	newPartName = `part${PARTS.size}`;
+	editors = document.getElementById("editors");
+	editors.innerHTML += `<div id="${newPartName}" class="row bg-light p-5 mb-1"><div class="col-12 m-0 p-0"><div id="editorjs" class="col-12"></div></div></div>`;
+
+	EDITOR = getEdjs("", false);
+
+	for (let eachPart of PARTS.keys()) {document.getElementById(eachPart).addEventListener('click', function (e) {switchEditor(this);}, { once: true });}
+
+	ACTUAL_PART = newPartName;
+    ORDER.push(newPartName);
+}
+
+function removeAllListeners(id) {
+	var old_element = document.getElementById(id);
+	var new_element = old_element.cloneNode(true);
+	old_element.parentNode.replaceChild(new_element, old_element);
+}
+
+function editorSwitcher(id) {
+	item = document.getElementById(id);
+	item.innerHTML = '<div class="col-12 m-0 p-0"><div id="editorjs"></div></div>';
+
+	for (let eachPart of PARTS.keys()) { removeAllListeners(eachPart); }
+
+	EDITOR = getEdjs(PARTS.get(item.id), false);
+
+	for (let eachPart of PARTS.keys()) {
+	 if (eachPart!=item.id) {
+	 	document.getElementById(eachPart).addEventListener('click', function (e) {switchEditor(this);}, { once: true });
+	 }
+	}
+	ACTUAL_PART = item.id;
+}
+
+function switchEditor(item) {
+	EDITOR.save().then((outputData) => {
+		PARTS.set(ACTUAL_PART, outputData);
+		editorToHTML(convertDataToHtml(outputData.blocks));
+		editorSwitcher(item.id);
+	 }).catch((error) => {console.log('Save failed: ', error)});
+}
+
+function getEdjs(data, readonly) {
+  return new EditorJS({
+  tools: {
+    header: {
+      class: Header,
+      inlineToolbar : true,
+      config: {
+        placeholder: 'Введите заголовок',
+        levels: [2, 3, 4],
+        defaultLevel: 3
+      },
+    },
+    image: SimpleImage,
+
+    linkTool: {
+      class: LinkTool,
+      inlineToolbar : true,
+      config: {
+        endpoint: 'http://localhost:8008/fetchUrl', // Your backend endpoint for url data fetching
+      }
+    },
+    list: {
+      class: List,
+      inlineToolbar: true,
+    },
+    embed: {
+      class: Embed,
+      inlineToolbar: true,
+    },
+    marker: {
+      class:  Marker,
+      shortcut: 'CMD+SHIFT+M'
+    },
+    code: {
+      class:  CodeTool,
+      shortcut: 'CMD+SHIFT+C'
+    },
+    inlineCode: {
+      class: InlineCode,
+      shortcut: 'CMD+SHIFT+C'
+    },
+  },
+
+  readOnly: readonly,
+  minHeight: 5,
+
+  data: data
+});
+
+
+}
 
 
 </script>
 
 
-<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
-integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 </body>
 </html>

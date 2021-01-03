@@ -46,7 +46,44 @@
 	<div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-5 col-xxl-6 mx-0 px-0 ">
 	<!-- CENTRAL COLUMN -->
 		<div id="editors" class="container float mx-0 px-0">
-			<div id="part0" class="row bg-light p-5 mb-1"><div class="col-12 m-0 p-0"><div id="editorjs"></div></div></div>
+			<div class="row bg-light p-5 mb-1">
+				<div class="col-12 m-0 p-0">
+					<!-- SLIDER -->
+
+					<div id="car0" class="row mt-5">
+					<h2>Slider via data attributes</h2>
+					<div id="sliderExample" class="carousel slide" data-ride="carousel">
+						<!-- Controls -->
+						<ol class="carousel-indicators">
+							<li data-target="#sliderExample" data-slide-to="0" class="active"></li>
+						</ol>
+						<!-- Slides -->
+						<div class="carousel-inner">
+							<div class="carousel-item active">
+					    		<svg class="bd-placeholder-img bd-placeholder-img-lg d-block w-100" width="800" height="400" xmlns="http://www.w3.org/2000/svg" role="img" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777"></rect></svg>
+					        	<div class="carousel-caption d-none d-md-block">
+					                <h5>Заголовок слайда</h5>
+					                <p>Текст подписи</p>
+					        	</div>
+							</div>
+						</div>
+						<a class="carousel-control-prev" href="#sliderExample" role="button" data-slide="prev">
+							<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+							<span class="sr-only">Назад</span>
+						</a>
+						<a class="carousel-control-next" href="#sliderExample" role="button" data-slide="next">
+							<span class="carousel-control-next-icon" aria-hidden="true"></span>
+							<span class="sr-only">Вперёд</span>
+						</a>
+					</div>
+				</div>
+					
+
+
+
+
+				</div>
+			</div>
 		</div>
 
 		<div class="row my-5">
@@ -59,17 +96,22 @@
 	<div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 col-xxl-3 ml-5 mr-0 bg-light text-center">
 	<!-- RIGHT COLUMN -->
 		{% for sl in slides %}
-		<div class="row mx-0 p-3 justify-content-center">	
+		<div class="row mx-0 p-3 justify-content-center">
 
 			<div class="card border rounded border-white shadow" style="width: 18rem;">
-				<img src="{{ sl.img.image.url }}" class="card-img-top">				
+				<img src="{{ sl.img.image.url }}" class="card-img-top" onclick="changeFile('{{sl.pk}}');">		
+				<input type="file" id="chFile{{sl.pk}}" class="inputfile" onchange="updFile(this, '{{sl.pk}}')" style="width: 0.1px; height: 0.1px; opacity: 0; overflow: hidden; position: absolute; z-index: -1;" />
+						
 				
 				<div class="card-body">
-					<h5 class="card-title">{{sl.label}}</h5>
-					<p class="card-text">{{sl.descr}}</p>
+					<h5 id="h{{sl.pk}}" class="card-title" onclick="replaceText(this, '{{sl.pk}}', `{{sl.label}}`)">
+						{%if sl.label%}{{sl.label}}{%else%}...{%endif%}
+					</h5>
+					<p id="p{{sl.pk}}" class="card-text" onclick="replaceText(this, '{{sl.pk}}', `{{sl.descr}}`)">{%if sl.descr%}{{sl.descr}}{%else%}...{%endif%}</p>
 					<form class="row px-5 justify-content-center" method="POST" enctype="application/x-www-form-urlencoded" novalidate >
 					{% csrf_token %}
 					<button class="btn btn-danger btn-sm border mt-2" name="delBtn" type="submit" value="{{sl.pk}}">Удалить</button>
+					<button class="btn btn-success btn-sm border mt-2" name="insBtn" type="submit" value="{{sl.pk}}">Вставить</button>
 					</form>
 				</div>
 
@@ -86,8 +128,8 @@
 			{% csrf_token %}
 
 			<div class="card border rounded border-white shadow" style="width: 18rem;">
-				<input type="file" name="file" id="file" onchange="addFile(this)" class="inputfile" style="width: 0.1px; height: 0.1px; opacity: 0; overflow: hidden; position: absolute; z-index: -1;" />
-				<label id="loadDescr" class="btn border btn-secondary" for="file" style="height: 6rem;"><p class="text-start mt-4">Клик для выбора файла</p></label>
+				<input type="file" name="file" id="slFile" onchange="addFile(this)" class="inputfile" style="width: 0.1px; height: 0.1px; opacity: 0; overflow: hidden; position: absolute; z-index: -1;" />
+				<label id="loadDescr" class="btn border btn-secondary" for="slFile" style="height: 6rem;"><p class="text-start mt-4">Клик для выбора файла</p></label>
 				<div class="card-body">
 					<input type="text" class="form-control my-1" name="label" placeholder="Заголовок (необяз.)">
 					<input type="text" class="form-control my-1" name="descr" placeholder="Подпись (необяз.)">
@@ -137,6 +179,42 @@ function addFile(item) {
 	el = document.getElementById("loadDescr").outerHTML = `<label id="loadDescr" class="btn border btn-success" for="file" style="height: 6rem;"><p class="text-start mt-4">${fname}</p></label>`;
 	var loadBtn = document.getElementById("loadBtn").disabled = false;
 }
+
+function changeFile(pk){
+	var elem = document.getElementById(`chFile${pk}`);
+	if(elem && document.createEvent) {
+      var evt = document.createEvent("MouseEvents");
+      evt.initEvent("click", true, false);
+      elem.dispatchEvent(evt);
+   }
+
+}
+
+function updFile(item, pk){
+   let formData = new FormData();
+   formData.append("photo", item.files[0]);
+   formData.append("name", pk);
+   fetch("/slider", {method: "POST", headers:{"X-CSRFToken": '{{ csrf_token }}'}, body: formData}).then(() => location.replace('/slider'));
+}
+
+
+function replaceText(item, pk, val){
+	document.getElementById(item.id).outerHTML = `<input id="${item.id}" type="text" class="form-control my-1" value="${val}">
+	<button id="b${item.id}" class="btn btn-info btn-sm border mt-2" type="submit" onclick="updText(this, '${item.id}', '${item.className}', ${pk})">Обновить</button>`;
+}
+
+function updText(btn, itId, itCl, pk){
+	let txt = document.getElementById(itId);
+	let val = txt.value;
+	txt.outerHTML = (itCl==="card-title")? `<h5 id="${itId}" class="card-title" onclick="replaceText(this, '${pk}', '${val}')">${(val==="")? '...': val}</h5>` : `<p id="${itId}" class="card-text" onclick="replaceText(this, '${pk}', '${val}')">${(val==="")? '...': val}</p>`;
+	btn.parentNode.removeChild(btn);
+	let formData = new FormData();
+	formData.append("name", pk);
+	formData.append("class", itCl);
+	formData.append("val", val);
+	fetch("/slider", {method: "POST", headers:{"X-CSRFToken": '{{ csrf_token }}'}, body: formData});
+}
+
 
 </script>
 </body>

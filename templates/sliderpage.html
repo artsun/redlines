@@ -28,6 +28,7 @@
 		<p class="text-start"><b>Редактировалась:</b> раз </p>
 		<p class="text-start"><b>Последняя правка:</b> Дата, время </p>
 		<p class="text-start"><b>Статус:</b> (опубликована, на рассмотрении гл.редактора, новая, возврат) </p>
+		<p class="text-start"><b>Deadline:</b> Дата, время </p>
 		<p class="text-start">
 		    <label for="leadin" class="form-label"><b>Подводка:</b> </label>
 		    <textarea type="text" class="form-control" id="leadin"> </textarea>
@@ -36,7 +37,7 @@
 
 		 
 		<p class="text-start"><b>Иконка:</b> <button type="button" class="btn btn-outline-dark">Добавить</button> </p>
-		<button class="btn btn-dark btn-block" onclick="renderNews()">Сверстать страницу</button>
+		<!--<button class="btn btn-dark btn-block" onclick="renderNews()">Сверстать страницу</button>-->
 		<a href="/" class="btn btn-dark btn-block" role="button">Вернуться</a>
 
 
@@ -49,9 +50,12 @@
 			<div class="row bg-light p-5 mb-1">
 				<div class="col-12 m-0 p-0">
 					<!-- SLIDER -->
+					{% if slider_instance %}{% autoescape off %}{{slider_instance.content}}{% endautoescape %} {% else %}
+
+					
+
 
 					<div id="car0" class="row mt-5">
-					<h2>Slider via data attributes</h2>
 					<div id="sliderExample" class="carousel slide" data-ride="carousel">
 						<!-- Controls -->
 						<ol class="carousel-indicators">
@@ -77,17 +81,15 @@
 						</a>
 					</div>
 				</div>
+				{% endif %}
 					
 
 
 
 
 				</div>
+				
 			</div>
-		</div>
-
-		<div class="row my-5">
-			<div class="col-6"><button class="btn btn-light" onclick="addEditor()">Сохранить</button></div>
 		</div>
 
 
@@ -99,19 +101,24 @@
 		<div class="row mx-0 p-3 justify-content-center">
 
 			<div class="card border rounded border-white shadow" style="width: 18rem;">
-				<img src="{{ sl.img.image.url }}" class="card-img-top" onclick="changeFile('{{sl.pk}}');">		
-				<input type="file" id="chFile{{sl.pk}}" class="inputfile" onchange="updFile(this, '{{sl.pk}}')" style="width: 0.1px; height: 0.1px; opacity: 0; overflow: hidden; position: absolute; z-index: -1;" />
+				<img src="{{ sl.0.img.image.url }}" class="card-img-top" onclick="changeFile('{{sl.0.pk}}');">		
+				<input type="file" id="chFile{{sl.0.pk}}" class="inputfile" onchange="updFile(this, '{{sl.0.pk}}')" style="width: 0.1px; height: 0.1px; opacity: 0; overflow: hidden; position: absolute; z-index: -1;" />
 						
 				
 				<div class="card-body">
-					<h5 id="h{{sl.pk}}" class="card-title" onclick="replaceText(this, '{{sl.pk}}', `{{sl.label}}`)">
-						{%if sl.label%}{{sl.label}}{%else%}...{%endif%}
+					<h5 id="h{{sl.0.pk}}" class="card-title" onclick="replaceText(this, '{{sl.0.pk}}', `{{sl.0.label}}`)">
+						{%if sl.0.label%}{{sl.0.label}}{%else%}...{%endif%}
 					</h5>
-					<p id="p{{sl.pk}}" class="card-text" onclick="replaceText(this, '{{sl.pk}}', `{{sl.descr}}`)">{%if sl.descr%}{{sl.descr}}{%else%}...{%endif%}</p>
+					<p id="p{{sl.0.pk}}" class="card-text" onclick="replaceText(this, '{{sl.0.pk}}', `{{sl.0.descr}}`)">{%if sl.0.descr%}{{sl.0.descr}}{%else%}...{%endif%}</p>
 					<form class="row px-5 justify-content-center" method="POST" enctype="application/x-www-form-urlencoded" novalidate >
 					{% csrf_token %}
-					<button class="btn btn-danger btn-sm border mt-2" name="delBtn" type="submit" value="{{sl.pk}}">Удалить</button>
-					<button class="btn btn-success btn-sm border mt-2" name="insBtn" type="submit" value="{{sl.pk}}">Вставить</button>
+					<button class="btn btn-danger btn-sm border mt-2" name="delBtn" type="submit" value="{{sl.0.pk}}">Удалить</button>
+					{% if sl.1 %}
+					<button class="btn btn-info btn-sm border mt-2" name="remBtn" type="submit" value="{{sl.0.pk}}">Убрать</button>
+					{% else %}
+					<button class="btn btn-success btn-sm border mt-2" name="insBtn" type="submit" value="{{sl.0.pk}}">Вставить</button>
+					{% endif %}
+					
 					</form>
 				</div>
 
@@ -174,6 +181,7 @@ integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNm
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 <script type="text/javascript">
 
+
 function addFile(item) {
 	var fname = item.value.replace(/.*[\/\\]/, '');
 	el = document.getElementById("loadDescr").outerHTML = `<label id="loadDescr" class="btn border btn-success" for="file" style="height: 6rem;"><p class="text-start mt-4">${fname}</p></label>`;
@@ -194,7 +202,7 @@ function updFile(item, pk){
    let formData = new FormData();
    formData.append("photo", item.files[0]);
    formData.append("name", pk);
-   fetch("/slider", {method: "POST", headers:{"X-CSRFToken": '{{ csrf_token }}'}, body: formData}).then(() => location.replace('/slider'));
+   fetch("", {method: "POST", headers:{"X-CSRFToken": '{{ csrf_token }}'}, body: formData}).then(() => location.replace(document.URL));
 }
 
 
@@ -212,7 +220,7 @@ function updText(btn, itId, itCl, pk){
 	formData.append("name", pk);
 	formData.append("class", itCl);
 	formData.append("val", val);
-	fetch("/slider", {method: "POST", headers:{"X-CSRFToken": '{{ csrf_token }}'}, body: formData});
+	fetch("", {method: "POST", headers:{"X-CSRFToken": '{{ csrf_token }}'}, body: formData}).then(() => location.replace(document.URL));
 }
 
 

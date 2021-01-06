@@ -7,10 +7,11 @@ from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.hashers import make_password
-
+from django.utils.safestring import SafeString
 from django.contrib.auth.models import User, Group
 
 import json
+from collections import OrderedDict
 
 from .models import Image, Slide, Slider, SlideToSlider
 
@@ -23,8 +24,8 @@ class Editor(View):
     def get(self, request):
         #instance = Image.objects.get(image='images/c0495392_web_NHqSbRu.jpg')
         sliders = Slider.objects.all()
-        #print(instance.image.url)
-        context = {'sliders': sliders}
+
+        context = {'sliders': json.dumps([[x.pk, x.compouse_struct()] for x in sliders])}
 
         return render(request, 'editform.html', context)
 
@@ -35,17 +36,14 @@ class SliderMake(View):
     def get(self, request, spk=None):
         print('GET PK', spk)
         if spk is None:
-            context = {'slides': [(sl, 0) for sl in Slide.objects.all()],
-                       'slider_instance': ""}
+            context = {'slides': Slide.objects.all().order_by('pk')}
         else:
             if not Slider.objects.filter(pk=spk).exists():
                 return redirect(f'/slider')
 
             slider_instance = Slider.objects.get(pk=spk)
-            used_slides = set([s.slde for s in SlideToSlider.objects.filter(sld=slider_instance)])
-            context = {'slides': [(sl, 1) if sl in used_slides else (sl, 0) for sl in Slide.objects.all()],
-                       'slider_instance': slider_instance}
-
+            context = {'slides': Slide.objects.all().order_by('pk'),
+                       'slider_struct': json.dumps(slider_instance.compouse_struct())}
 
         return render(request, 'sliderpage.html', context)
 
@@ -61,6 +59,19 @@ class SliderMake(View):
             slide.delete()
             return redirect(f'/slider/{spk}') if Slider.objects.filter(pk=spk).exists() else redirect('/slider')
 
+        elif request.POST.get("updSlider"):
+            struct = json.loads(request.POST.get("updSlider"), object_pairs_hook=OrderedDict)
+            if slider_exists:
+                slider = Slider.objects.get(pk=spk)
+                if len(struct) < 1:
+                    slider.delete()
+                    return JsonResponse({'url': '/slider'})
+            else:
+                slider = Slider()
+                slider.save()
+            slider.from_struct(struct)
+            return JsonResponse({'url': f'{slider.get_absolute_url()}'})
+
         elif request.POST.get('remBtn') and slider_exists:
             slide = Slide.objects.get(pk=request.POST.get('remBtn'))
             return redirect(slide.remove_from_slider(Slider.objects.get(pk=spk)))
@@ -75,10 +86,12 @@ class SliderMake(View):
                 new_slider = slide.render_slider_init()
                 return redirect(f'/slider/{new_slider.pk}')
 
+        ### ОБНОВИТЬ ПО СВЯЗЯМ СЛАЙДА А НЕ СЛАЙДЕРА
         elif request.FILES.get('photo') and request.POST.get('name'):
             Slide.objects.get(pk=request.POST.get('name')).img.commit(request.FILES.get('photo'), force_update=True)
             if slider_exists:
                 Slider.objects.get(pk=spk).refresh()
+        ### ОБНОВИТЬ ПО СВЯЗЯМ СЛАЙДА А НЕ СЛАЙДЕРА
         elif request.POST.get('name') and request.POST.get('class') and 'val' in post_heads:
             Slide.objects.get(pk=request.POST.get('name')).upd(request.POST.get('class'), request.POST.get('val'))
             if slider_exists:

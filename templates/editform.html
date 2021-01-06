@@ -59,14 +59,11 @@
 
 	<div id="rightCol" class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 col-xxl-3 ml-5 mr-0 bg-light text-center">
 	<!-- RIGHT COLUMN -->
-	{% for sl in sliders %}
-		<div class="row mx-0 p-3 justify-content-center">
-			<div class="card shadow bg-light" style="width: 22rem;">
-				<div onclick="insertSlider(this, {{sl.pk}}, '{{ sl.get_absolute_url }}');">{% autoescape off %}{{sl.content}}{% endautoescape %}</div>
-		    	<div class="card-body"><a href="{{ sl.get_absolute_url }}" class="btn btn-outline-secondary btn-sm">Редактировать</a></div>
-		    </div>
+	
+		<div id="sliderList" class="row mx-0 p-3 justify-content-center">
+			
 		</div>
-	{% endfor %}
+	
 
 		<a href="slider" class="btn btn-light border my-5" role="button">Новый слайдер</a>
 
@@ -110,6 +107,90 @@ integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNm
 
 
 <script>
+var received_data = {%if sliders %}`{{sliders|safe}}`{%else%}'""' {%endif%};
+var SLIDERS = new Map([]);
+
+window.onload = function (){
+	parsed = JSON.parse(received_data);
+	console.log('PARSED', parsed);
+	for (el of parsed){
+		let temSld = new Map([]);
+		for (s of el[1]){
+			temSld.set(`${s[0]}`, new Array(s[1], s[2], s[3]))
+		}
+		SLIDERS.set(`${el[0]}`, temSld);
+	}
+	console.log(SLIDERS.size);
+
+	SLIDERS.forEach(function(value, key) {
+		let slname = `slider${{pk}}`;
+		let res = 	`<div class="card shadow bg-light" style="width: 22rem;">
+						${compouseSlider(slname, value)}
+		    			<div class="card-body"><a href="/slider/${key}" class="btn btn-outline-secondary btn-sm">Редактировать</a></div>
+		    		</div>`;
+		document.getElementById("sliderList").innerHTML += res;
+
+});
+
+
+
+	//
+
+
+}
+/////////////////////////////////////////////
+function compouseSlider(slname, struct){
+	var indicators = "";
+	var items = "";
+	let active = "active";
+	let num = 0;
+	struct.forEach(function(value, key) {
+		items += compouseSliderItem(active, value[2], value[0], value[1]);
+		indicators += compouseSliderIndicator(slname, active, num);
+		num += 1;
+		active = "";
+});
+	return	`<div id="${slname}" class="carousel slide m-0 p-0" data-ride="carousel">
+            <!-- controls -->
+            <ol class="carousel-indicators">
+                ${indicators}
+            </ol>
+            <!-- slides -->
+            <div class="carousel-inner">
+                ${items}
+            </div>
+            <a class="carousel-control-prev" href="#${slname}" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Назад</span>
+            </a>
+            <a class="carousel-control-next" href="#${slname}" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Далее</span>
+            </a>
+    </div>`;
+}
+
+function compouseSliderItem(active, source, label="", descr=""){
+	label = (label==="")? label: `<h5>${label}</h5>`;
+	descr = (descr==="")? descr: `<p>${descr}</p>`;
+	return `<div class="carousel-item ${active}">
+            <img class="d-block w-100 img-fluid " src="${source}">
+                <div class="carousel-caption d-none d-md-block">
+                        ${label}
+                        ${descr}
+                </div>
+        </div>`
+}
+
+function compouseSliderIndicator(slname, active, num){
+	return `<li data-target="#${slname}" data-slide-to="${num}" class="${active}"></li>`
+}
+
+
+
+
+
+/////////////////////////////////////////////
 
 function insertSlider(item, pk, editLink){
 	var el = document.getElementById(item.value);

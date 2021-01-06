@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User, Group
 
+import json
+
+
 from .html_constructors import HTMLSlider
 
 
@@ -16,7 +19,21 @@ class Image(models.Model):
 
 
 class Slider(models.Model):
-    content = models.CharField(max_length=10240, null=False, blank=False, editable=False)
+    content = models.CharField(max_length=10240, null=True, blank=False, editable=False)
+
+    def compouse_struct(self):
+        sts_list = list(SlideToSlider.objects.filter(sld=self).order_by('num'))
+        return [[x.slde.pk, x.slde.label, x.slde.descr, x.slde.img.image.url] for x in sts_list]
+
+    def from_struct(self, struct):
+        [x.delete() for x in list(SlideToSlider.objects.filter(sld=self))]
+        for num, slide in enumerate(struct, start=0):
+            if not Slide.objects.filter(pk=slide[0]).exists():
+                continue
+            sts = SlideToSlider(sld=self, slde=Slide.objects.get(pk=slide[0]), num=num)
+            sts.save()
+
+
 
     def update_with_slide(self, slide):
         sts_list = list(SlideToSlider.objects.filter(sld=self).order_by('num'))

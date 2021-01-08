@@ -3,8 +3,16 @@ from django.contrib.auth.models import User, Group
 
 import json
 
+from .translators import transliterate
 
-from .html_constructors import HTMLSlider
+
+ARTICLE_STATUS_CHOICES = (
+    ('created', 'Новая'),
+    ('fixes', 'Правки'),
+    ('approved', 'К публикации'),
+    ('examine', 'На рассмотрении'),
+)
+
 
 
 class Image(models.Model):
@@ -18,8 +26,80 @@ class Image(models.Model):
         self.save(force_update=force_update)
 
 
+class Rubric(models.Model):
+    title = models.CharField(verbose_name='Название рубрики', max_length=64, null=False, editable=True)
+    codename = models.CharField(verbose_name='Код рубрики', max_length=64, null=False, editable=True)
+    logo = models.ForeignKey(Image, null=True, on_delete=models.CASCADE, related_name='rubrics_logo')
+    background = models.ForeignKey(Image, null=True, on_delete=models.CASCADE, related_name='rubrics_backs')
+
+    def __str__(self):
+        return self.title
+
+
+class Article(models.Model):
+    title = models.CharField(verbose_name='Название', max_length=128, null=False, editable=True)
+    trans_title = models.CharField(verbose_name='Транслитерированное название', max_length=128, null=False, editable=True)
+    short = models.CharField(verbose_name='Подводка', max_length=512, null=True, editable=True)
+    content = models.TextField()
+    status = models.CharField(max_length=128, default='created', choices=ARTICLE_STATUS_CHOICES)
+    active = models.BooleanField(default=False)
+    status_updated = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.trans_title
+
+    def create(self, rubric, title):
+        trans_title = '-'.join(transliterate(title).split())
+        if Article.objects.filter(trans_title=trans_title).exists():
+            return False
+        self.trans_title = trans_title
+        self.title = title
+        self.status = 'created'
+        self.save()
+        if not Rubric.objects.filter(pk=rubric).exists():
+            self.delete()
+            return False
+        link_to_rubric = ArticleToRubric(rubric=Rubric.objects.get(pk=rubric), art=self)
+        link_to_rubric.save()
+        return True
+
+    def update_title(self, title):
+        if title == self.title:
+            return
+        trans_title = '-'.join(transliterate(title).split())
+        if Article.objects.filter(trans_title=trans_title).exists():
+            return
+        self.title = title
+        self.trans_title = trans_title
+        self.save(force_update=True)
+
+    def update_short(self, short):
+        self.short = short
+        self.save(force_update=True)
+
+    def get_edit_url(self):
+        return f'/editor/{self.trans_title}'
+
+
+class ArticleToImage(models.Model):
+    art = models.ForeignKey(Article, null=False, blank=False, on_delete=models.CASCADE)
+    img = models.ForeignKey(Image, null=False, blank=False, on_delete=models.CASCADE)
+
+    def update_with_image(self, article, icon_file):
+        img = Image()
+        img.commit(icon_file)
+        self.img = img
+        self.art = article
+
+
+class ArticleToRubric(models.Model):
+    art = models.ForeignKey(Article, null=False, blank=False, on_delete=models.CASCADE, related_name='rub')
+    rubric = models.ForeignKey(Rubric, null=False, blank=False, on_delete=models.CASCADE, related_name='arts')
+
+
 class Slider(models.Model):
-    content = models.CharField(max_length=10240, null=True, blank=False, editable=False)
 
     def compouse_struct(self):
         sts_list = list(SlideToSlider.objects.filter(sld=self).order_by('num'))
@@ -34,25 +114,15 @@ class Slider(models.Model):
             sts.save()
 
 
+class EditBlock(models.Model):
+    art = models.ForeignKey(Article, null=False, blank=False, on_delete=models.CASCADE, related_name='edit_blocks')
+    data = models.TextField()
 
-    def update_with_slide(self, slide):
-        sts_list = list(SlideToSlider.objects.filter(sld=self).order_by('num'))
-        html = HTMLSlider(self.pk)
-        new_sts = SlideToSlider(sld=self, slde=slide, num=sts_list[-1].num + 1)
-        new_sts.save()
-        [html.aggregate(sts.slde.label, sts.slde.descr, sts.slde.img.image.url) for sts in sts_list + [new_sts]]
-        self.content = html.gen()
-        self.save(force_update=True)
 
-    def refresh(self):
-        sts_list = list(SlideToSlider.objects.filter(sld=self).order_by('num'))
-        html = HTMLSlider(self.pk)
-        [html.aggregate(sts.slde.label, sts.slde.descr, sts.slde.img.image.url) for sts in sts_list]
-        self.content = html.gen()
-        self.save(force_update=True)
-
-    def get_absolute_url(self):
-        return f'/slider/{self.pk}'
+class SliderToArticle(models.Model):
+    art = models.ForeignKey(Article, null=False, blank=False, on_delete=models.CASCADE, related_name='sliders')
+    slider = models.ForeignKey(Slider, null=False, blank=False, on_delete=models.CASCADE, related_name='arts')
+    edit_block_num = models.IntegerField(verbose_name='Блок привязки слайдера', null=True, editable=True)
 
 
 class Slide(models.Model):
@@ -70,25 +140,11 @@ class Slide(models.Model):
         self.descr = val if itCl == 'card-text' else self.descr
         self.save(force_update=True)
 
-    def render_slider_init(self):
-        new_pk = Slider.objects.last().pk + 1
-        html = HTMLSlider(new_pk)
-        html.aggregate(self.label, self.descr, self.img.image.url)
-        new_slider = Slider(pk=new_pk, content=html.gen())
-        new_slider.save()
-        s_to_s = SlideToSlider(sld=new_slider, slde=self, num=0)
-        s_to_s.save()
-        return new_slider
 
-    def remove_from_slider(self, slider) -> str:
-        sts_list = list(SlideToSlider.objects.filter(sld=slider).order_by('num'))
-        if len(sts_list) > 1:
-            [sts.delete() for sts in sts_list if sts.slde.pk == self.pk]
-            slider.refresh()
-            return slider.get_absolute_url()
-        else:
-            slider.delete()
-            return '/slider'
+    def remove_from_slider(self, slider):
+        slider_sts_list = list(SlideToSlider.objects.filter(sld=slider))
+        [sts.delete() for sts in slider_sts_list if sts.slde.pk == self.pk]
+        slider.delete() if len(list(SlideToSlider.objects.filter(sld=slider))) == 0 else None # del SLIDER if last
 
 
 class SlideToSlider(models.Model):

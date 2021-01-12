@@ -2,6 +2,10 @@ from django.db import models
 from django.contrib.auth.models import User, Group
 
 import json
+from re import sub as rsub
+from collections import OrderedDict
+
+from django_resized import ResizedImageField
 
 from .translators import transliterate
 
@@ -79,6 +83,36 @@ class Article(models.Model):
         self.short = short
         self.save(force_update=True)
 
+    def full_update(self, parts, sliders, htmls, artUpdates):
+        parts, sliders, htmls = [json.loads(x) for x in (parts, sliders, htmls)]
+        if artUpdates is not None:
+            short, title = json.loads(artUpdates)
+            self.update_title(title)
+            self.update_short(short)
+        self.update_sliders_links(sliders)
+        self.content = ''
+        EditBlock.objects.filter(art=self).delete()
+
+        for num, (html, block) in enumerate(zip(htmls, parts)):
+            self.content += html
+            eb = EditBlock()
+            eb.art, eb.edit_block_num, eb.data, eb.html_data = self, num, rsub(r'\\"', "'", json.dumps(block)), html
+            eb.save()
+
+            if SliderToArticle.objects.filter(art=self, edit_block_num=num).exists():
+                self.content += json.loads(SliderToArticle.objects.get(art=self, edit_block_num=num).slider.content)
+        self.save()
+
+    def update_sliders_links(self, sliders):
+        SliderToArticle.objects.filter(art=self).delete()
+
+        for sl in sliders:
+            pk, num = sl[0], sl[1]
+            sl_instance = Slider.objects.get(pk=pk)
+            sta = SliderToArticle()
+            sta.art, sta.slider, sta.edit_block_num = self, sl_instance, num
+            sta.save()
+
     def get_edit_url(self):
         return f'/editor/{self.trans_title}'
 
@@ -100,12 +134,15 @@ class ArticleToRubric(models.Model):
 
 
 class Slider(models.Model):
+    content = models.TextField(null=True)
 
     def compouse_struct(self):
         sts_list = list(SlideToSlider.objects.filter(sld=self).order_by('num'))
-        return [[x.slde.pk, x.slde.label, x.slde.descr, x.slde.img.image.url] for x in sts_list]
+        return [[x.slde.pk, x.slde.label, x.slde.descr, x.slde.img.url] for x in sts_list]
 
-    def from_struct(self, struct):
+    def from_struct_and_content(self, struct, content):
+        self.content = rsub('newsSlider', f'slider{self.pk}', content)
+        self.save(force_update=True)
         [x.delete() for x in list(SlideToSlider.objects.filter(sld=self))]
         for num, slide in enumerate(struct, start=0):
             if not Slide.objects.filter(pk=slide[0]).exists():
@@ -117,6 +154,8 @@ class Slider(models.Model):
 class EditBlock(models.Model):
     art = models.ForeignKey(Article, null=False, blank=False, on_delete=models.CASCADE, related_name='edit_blocks')
     data = models.TextField()
+    html_data = models.TextField(null=True)
+    edit_block_num = models.IntegerField(verbose_name='Порядок', null=False, editable=True)
 
 
 class SliderToArticle(models.Model):
@@ -126,12 +165,12 @@ class SliderToArticle(models.Model):
 
 
 class Slide(models.Model):
-    img = models.ForeignKey(Image, null=False, blank=False, on_delete=models.CASCADE, related_name='slides')
+    img = ResizedImageField(size=[1024, 768], crop=['middle', 'center'],  quality=100, upload_to='images/', blank=True, null=True)
     label = models.CharField(verbose_name='Заголовок', max_length=32, null=True, blank=True, editable=True)
     descr = models.CharField(verbose_name='Подпись', max_length=64, null=True, blank=True, editable=True)
 
     def __str__(self):
-        return f'{self.label} {self.img.image.name}' if self.label else f'slide{self.pk} {self.img.image.name}'
+        return f'{self.label} {self.img.name}' if self.label else f'slide{self.pk} {self.img.name}'
 
     def upd(self, itCl, val):
         if itCl not in ('card-title', 'card-text'):

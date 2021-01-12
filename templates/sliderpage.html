@@ -82,7 +82,7 @@
 		
 
 			<div id="card{{sl.pk}}" class="card border rounded border-white shadow m-3" style="width: 14rem;">
-				<img src="{{ sl.img.image.url }}" class="card-img-top" onclick="changeFile('{{sl.pk}}');">		
+				<img src="{{ sl.img.url }}" class="card-img-top" onclick="changeFile('{{sl.pk}}');">		
 				<input type="file" id="chFile{{sl.pk}}" class="inputfile" onchange="updFile(this, '{{sl.pk}}')" style="width: 0.1px; height: 0.1px; opacity: 0; overflow: hidden; position: absolute; z-index: -1;" />
 						
 				
@@ -98,7 +98,7 @@
 					
 					<button id="delBtn{{sl.pk}}" class="btn btn-outline-danger btn-sm border mt-2 px-1 mx-4" onclick="delSlide('{{sl.pk}}')" name="delBtn" type="submit">Удалить</button>
 					
-					<button id="btn{{sl.pk}}" class="btn btn-outline-dark btn-sm border mt-2 px-1 mx-4" onclick="slideToSlider(this, '{{sl.pk}}', '{{sl.label}}', '{{sl.descr}}', '{{ sl.img.image.url }}')">Вставить</button>
+					<button id="btn{{sl.pk}}" class="btn btn-outline-dark btn-sm border mt-2 px-1 mx-4" onclick="slideToSlider(this, '{{sl.pk}}', '{{sl.label}}', '{{sl.descr}}', '{{ sl.img.url }}')">Вставить</button>
 					</div>
 				</div>
 
@@ -272,7 +272,7 @@ function compouseSliderItem(active, source, label="", descr=""){
 	label = (label==="")? label: `<h5>${label}</h5>`;
 	descr = (descr==="")? descr: `<p>${descr}</p>`;
 	return `<div class="carousel-item ${active}">
-            <img class="d-block w-100 img-fluid " src="${source}">
+            <img class="d-block w-100 img-fluid maintain-height" src="${source}">
                 <div class="carousel-caption d-none d-md-block">
                         ${label}
                         ${descr}
@@ -346,6 +346,9 @@ function saveSess(){
 function sendResult(){
 	let formData = new FormData();
 	formData.append("updSlider", JSON.stringify(Array.from(STRUCTURE.entries())));
+	let newsSlider = document.getElementById('newsSlider');
+	newsSlider = (newsSlider===null)? null : newsSlider.outerHTML;
+	formData.append("sliderContent", JSON.stringify(newsSlider));
 	fetch("", {method: "POST", headers:{"X-CSRFToken": '{{ csrf_token }}'}, body: formData}).then((response) => {return response.json();}).then((data) => {
     location.replace(data['url']);
   });

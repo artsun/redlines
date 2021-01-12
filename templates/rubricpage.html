@@ -16,13 +16,14 @@
 
 	body {
 
-    -moz-background-size: 100%; /* Firefox 3.6+ */
-    -webkit-background-size: 100%; /* Safari 3.1+ и Chrome 4.0+ */
-    -o-background-size: 100%; /* Opera 9.6+ */
-	background-size: 100%; /* Современные браузеры */
-	height:100%;
-	width:100%;
-	/*background-repeat: no-repeat center center fixed;*/
+    -moz-background-size: cover 100%; /* Firefox 3.6+ */
+    -webkit-background-size: cover auto 100%; /* Safari 3.1+ и Chrome 4.0+ */
+    -o-background-size: cover auto 100%; /* Opera 9.6+ */
+	background-size: cover ; /* 100% Современные браузеры */
+	height: 100%;
+	width: 100%;
+	background-repeat: no-repeat; /*center center fixed*/
+	background-position: center center;
 
     z-index: -1;
 	}

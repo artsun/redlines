@@ -13,7 +13,7 @@ from django.contrib.auth.models import User, Group
 import json
 from collections import OrderedDict
 
-from .models import Image, Slide, Slider, Rubric, Article, ArticleToImage, SliderToArticle, ArticleToRubric, EditBlock
+from .models import Image, Slide, Slider, Rubric, Article, SliderToArticle, ArticleToRubric, EditBlock, Icon
 
 
 class ArtListPage(View):
@@ -22,13 +22,13 @@ class ArtListPage(View):
     def get(self, request):
         print(request.GET)
         artlist = []
-        for a in Article.objects.all().order_by('pk'):
-            if ArticleToImage.objects.filter(art=a).exists():
-                artlist.append((a, ArticleToImage.objects.get(art=a).img.image.url))
-            else:
-                artlist.append((a, '/images/question.jpg'))
+        # for a in Article.objects.all().order_by('pk'):
+        #     if ArticleToImage.objects.filter(art=a).exists():
+        #         artlist.append((a, ArticleToImage.objects.get(art=a).img.image.url))
+        #     else:
+        #         artlist.append((a, '/images/question.jpg'))
 
-        context = {'artlist': artlist,}
+        context = {'artlist': Article.objects.all().order_by('pk'),}
         return render(request, 'artlistpage.html', context)
 
 
@@ -46,7 +46,6 @@ class RubricPage(View):
             else:
                 new_art = Article()
                 if new_art.create(rubric, title):
-                    print(f'REDIRECT {new_art.get_edit_url()}')
                     return redirect(new_art.get_edit_url())
                 msg = 'Статья с таким именем существует!'  # дощли сюда если не было redirect раньше
         rubrics = Rubric.objects.all().order_by('pk')
@@ -60,27 +59,32 @@ class Editor(View):
     #login_url = '/login/'
 
     def get(self, request, trans_title=None):
-        print(trans_title)
         if not Article.objects.filter(trans_title=trans_title).exists():
             return redirect('/')
 
         article = Article.objects.get(trans_title=trans_title)
-        rubric = ArticleToRubric.objects.get(art=article).rubric
-        icon = ArticleToImage.objects.get(art=article) if ArticleToImage.objects.filter(art=article).exists() else None
-        print([x.data for x in EditBlock.objects.filter(art=article).order_by('edit_block_num')])
+        if request.GET.get('preview'):
+            context = {'article': article,
+                        'linkback': 1}
+            return render(request, 'newspage.html', context)
 
-        context = {'sliders':  [(sl.pk, json.loads(sl.content)) for sl in Slider.objects.all().order_by('pk')],  # right panel
+        
+        rubric = ArticleToRubric.objects.get(art=article).rubric
+        #icon = ArticleToImage.objects.get(art=article) if ArticleToImage.objects.filter(art=article).exists() else None
+        sliders_in_rubric = Slider.objects.filter(rubric=ArticleToRubric.objects.get(art=article).rubric).order_by('pk')
+
+        context = {'sliders':  [(sl.pk, json.loads(sl.content)) for sl in sliders_in_rubric],  # right panel
                    'sliders_in_content': [[s.edit_block_num, s.slider.pk] for s in SliderToArticle.objects.filter(art=article).order_by('edit_block_num')],
                    'article': article,
                    'rubric': rubric,
-                   'icon': icon,
+                   #'icon': icon,
                    'eblocks': EditBlock.objects.filter(art=article).order_by('edit_block_num'), }
 
         return render(request, 'editpage.html', context)
 
     def post(self, request, trans_title=None):
         if not Article.objects.filter(trans_title=trans_title).exists():
-            return redirect('/')
+            return redirect('/editor')
 
         article = Article.objects.get(trans_title=trans_title)
         if request.POST.get('getContent'):
@@ -96,19 +100,19 @@ class Editor(View):
                 article.update_title(title)
                 article.update_short(short)
             return JsonResponse({'url': f'/editor/{article.trans_title}'})
-        elif request.FILES.get('icon'):
-            if ArticleToImage.objects.filter(art=article).exists():
-                ai = ArticleToImage.objects.get(art=article)
-                ai.update_with_image(article, request.FILES.get('icon'))
-                ai.save(force_update=True)
-            else:
-                ai = ArticleToImage()
-                ai.update_with_image(article, request.FILES.get('icon'))
-                ai.save()
+        # elif request.FILES.get('icon'):
+        #     if ArticleToImage.objects.filter(art=article).exists():
+        #         ai = ArticleToImage.objects.get(art=article)
+        #         ai.update_with_image(article, request.FILES.get('icon'))
+        #         ai.save(force_update=True)
+        #     else:
+        #         ai = ArticleToImage()
+        #         ai.update_with_image(article, request.FILES.get('icon'))
+        #         ai.save()
         elif None not in [request.POST.get(x) for x in ('parts', 'sliders', 'htmls')]:
             args = [request.POST.get(x) for x in ('parts', 'sliders', 'htmls', 'artUpdates')]
             article.full_update(*args)
-            return JsonResponse({'url': f'/news/{article.trans_title}'})
+            return JsonResponse({'url': f'/editor/{article.trans_title}?preview=1'})
         return JsonResponse({'url': f'/editor/{article.trans_title}'})
 
 
@@ -116,24 +120,25 @@ class SliderMake(View):
     #login_url = '/login/'
 
     def get(self, request):
-        print('GET PK', request.GET.get('article'), request.GET.get('spk'))
         trans_title, spk = request.GET.get('article'), request.GET.get('spk')
         if not Article.objects.filter(trans_title=trans_title).exists():
-            return redirect('/')
+            return redirect('/editor')
         article = Article.objects.get(trans_title=trans_title)
         article_edit_url = f"/editor/{trans_title}"
         if spk is None:
             context = {'slides': Slide.objects.all().order_by('pk'),
                        'article_edit_url': article_edit_url,
+                       'article': article,
                        }
         else:
-            if not Slider.objects.filter(pk=spk).exists():
-                return redirect(f'/editor/{trans_title}/slider')
+            if not Slider.objects.filter(pk=spk).exists():  # inside qs incorrect query
+                return redirect(f'/editor/slider?article={trans_title}')
 
             slider_instance = Slider.objects.get(pk=spk)
             context = {'slides': Slide.objects.all().order_by('pk'),
                        'slider_struct': json.dumps(slider_instance.compouse_struct()),
                        'article_edit_url': article_edit_url,
+                       'article': article,
                        }
 
         return render(request, 'sliderpage.html', context)
@@ -143,14 +148,14 @@ class SliderMake(View):
         post_heads = request.POST.keys()
         slider_exists = Slider.objects.filter(pk=spk).exists()
         if not Article.objects.filter(trans_title=trans_title).exists():    # only for url
-            return redirect('/')
+            return redirect('/editor')
         article = Article.objects.get(trans_title=trans_title)  # only for url, because edit only from article
 
         if request.POST.get('delSlide'):
             slide = Slide.objects.get(pk=request.POST.get('delSlide'))
             [slide.remove_from_slider(sl) for sl in set(Slider.objects.filter(slider_slides__slde=slide).all())]
             slide.delete()
-            return redirect(f'/slider?article={trans_title}') if spk is None else redirect(f'/slider?article={trans_title}&spk={spk}')
+            return redirect(f'/editor/slider?article={trans_title}') if spk is None else redirect(f'/editor/slider?article={trans_title}&spk={spk}')
 
         elif request.POST.get("updSlider") and request.POST.get("sliderContent"):
             struct = json.loads(request.POST.get("updSlider"), object_pairs_hook=OrderedDict)
@@ -158,14 +163,15 @@ class SliderMake(View):
                 slider = Slider.objects.get(pk=spk)
                 if len(struct) < 1:
                     slider.delete()
-                    return JsonResponse({'url': f'/slider?article={trans_title}'})
+                    return JsonResponse({'url': f'/editor/slider?article={trans_title}'})
             else:
                 if len(struct) < 1:
-                    return JsonResponse({'url': f'/slider?article={trans_title}'})
+                    return JsonResponse({'url': f'/editor/slider?article={trans_title}'})
                 slider = Slider()
                 slider.save()  # not force update
-            slider.from_struct_and_content(struct, request.POST.get("sliderContent"))
-            return JsonResponse({'url': f'/slider?article={trans_title}&spk={slider.pk}'})
+            rubric = ArticleToRubric.objects.get(art=article).rubric
+            slider.from_struct_and_content(struct, request.POST.get("sliderContent"), rubric)
+            return JsonResponse({'url': f'/editor/slider?article={trans_title}&spk={slider.pk}'})
 
         elif request.FILES.get('photo') and request.POST.get('name'):
             Slide.objects.get(pk=request.POST.get('name')).img.commit(request.FILES.get('photo'), force_update=True)
@@ -178,7 +184,48 @@ class SliderMake(View):
             sl = Slide(img=request.FILES.get('file'), label=request.POST.get('label'), descr=request.POST.get('descr'))
             sl.save()
 
-        return redirect(f'/slider?article={trans_title}') if spk is None else redirect(f'/slider?article={trans_title}&spk={spk}')
+        return redirect(f'/editor/slider?article={trans_title}') if spk is None else redirect(f'/editor/slider?article={trans_title}&spk={spk}')
+
+class IconMake(View):
+    #login_url = '/login/'
+
+    def get(self, request):
+        trans_title = request.GET.get('article')
+        if not Article.objects.filter(trans_title=trans_title).exists():
+            return redirect('/editor')
+        article = Article.objects.get(trans_title=trans_title)
+        rubric = ArticleToRubric.objects.get(art=article).rubric
+        article_edit_url = f"/editor/{trans_title}"
+        icons = Icon.objects.filter(rubric=rubric).order_by('pk')
+
+        context = {'icons': icons,
+                   'article': article, }
+
+        return render(request, 'iconpage.html', context)
+
+    def post(self, request):
+        trans_title = request.GET.get('article')
+        post_heads = request.POST.keys()
+
+        if not Article.objects.filter(trans_title=trans_title).exists():
+            return redirect('/editor')
+        article = Article.objects.get(trans_title=trans_title)
+        rubric = ArticleToRubric.objects.get(art=article).rubric
+
+        if request.POST.get('delIcon'):
+            Icon.objects.get(pk=request.POST.get('delIcon')).delete()
+            return redirect(f'/editor/icon?article={trans_title}')
+        elif request.FILES.get('image') and request.POST.get('ipk'):
+            Icon.objects.get(pk=request.POST.get('ipk')).upd_image(request.FILES.get('image'))
+        elif request.FILES.get('file'):
+            icon = Icon(img=request.FILES.get('file'), rubric=rubric)
+            icon.save()
+        elif request.POST.get('ipk') and request.POST.get('class') and 'val' in post_heads:
+            Icon.objects.get(pk=request.POST.get('ipk')).upd(request.POST.get('class'), request.POST.get('val'))
+        elif request.POST.get('iconStruct'):
+            article.set_icon(json.loads(request.POST.get('iconStruct')))
+        return redirect(f'/editor/icon?article={trans_title}')
+
 
 
 class Uploader(View):

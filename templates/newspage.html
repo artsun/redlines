@@ -13,12 +13,15 @@
 <body>
 	<hr>
 <div class="container-fluid">
+	{% if linkback %}
 	<nav aria-label="breadcrumb">
 	  <ol class="breadcrumb">
 	  		<li class="breadcrumb-item"><a href="/" class="link-info" style="color: black">Статьи</a></li>
-	    	<li class="breadcrumb-item active" aria-current="page">Редактор</li>
+	  		<li class="breadcrumb-item"><a href="/editor/{{ article.trans_title }}" class="link-info" style="color: black">Назад</a></li>
+	    	<li class="breadcrumb-item active" aria-current="page">Предварительный просмотр</li>
 	  </ol>
 	</nav>
+	{% endif %}
 <div class="row mx-0 px-0 justify-content-center">
 
 
@@ -26,7 +29,7 @@
 	<div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mx-0 px-3 justify-content-center">
 	<!-- CENTRAL COLUMN -->
 		<div id="editors" class="container float mx-0 px-0 justify-content-center">
-			<div class="row bg-light p-5 mb-1"><div class="col-12 m-0 p-0">{{content | safe}}</div></div>
+			<div class="row bg-light p-5 mb-1"><div class="col-12 m-0 p-0">{{article.content | safe}}</div></div>
 		</div>
 
 	</div>

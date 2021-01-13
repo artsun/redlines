@@ -40,10 +40,32 @@ class Rubric(models.Model):
         return self.title
 
 
+class Icon(models.Model):
+    img = ResizedImageField(size=[1024, 768], crop=['middle', 'center'],  quality=100, upload_to='images/', blank=True, null=False)
+    label = models.CharField(verbose_name='Заголовок', max_length=128, null=True, blank=True, editable=True, default="")
+    descr = models.CharField(verbose_name='Подпись', max_length=512, null=True, blank=True, editable=True, default="")
+    rubric = models.ForeignKey(Rubric, null=True, blank=False, on_delete=models.CASCADE, related_name='icons')
+
+    def __str__(self):
+        return self.label
+
+    def upd_image(self, img):
+        self.img = img
+        self.save(force_update=True)
+
+    def upd(self, itCl, val):
+        if itCl not in ('card-title', 'card-text'):
+            return
+        self.label = val if itCl == 'card-title' else self.label
+        self.descr = val if itCl == 'card-text' else self.descr
+        self.save(force_update=True)
+
+
 class Article(models.Model):
     title = models.CharField(verbose_name='Название', max_length=128, null=False, editable=True)
     trans_title = models.CharField(verbose_name='Транслитерированное название', max_length=128, null=False, editable=True)
     short = models.CharField(verbose_name='Подводка', max_length=512, null=True, editable=True)
+    icon = models.ForeignKey(Icon, null=True, on_delete=models.SET_NULL)
     content = models.TextField()
     status = models.CharField(max_length=128, default='created', choices=ARTICLE_STATUS_CHOICES)
     active = models.BooleanField(default=False)
@@ -52,7 +74,7 @@ class Article(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.trans_title
+        return f'{self.trans_title} ({self.title})'
 
     def create(self, rubric, title):
         trans_title = '-'.join(transliterate(title).split())
@@ -113,35 +135,37 @@ class Article(models.Model):
             sta.art, sta.slider, sta.edit_block_num = self, sl_instance, num
             sta.save()
 
+    def set_icon(self, icon):
+        icon = Icon.objects.get(pk=icon) if Icon.objects.filter(pk=icon).exists() else None
+        self.icon = icon
+        self.save(force_update=True)
+
     def get_edit_url(self):
         return f'/editor/{self.trans_title}'
-
-
-class ArticleToImage(models.Model):
-    art = models.ForeignKey(Article, null=False, blank=False, on_delete=models.CASCADE)
-    img = models.ForeignKey(Image, null=False, blank=False, on_delete=models.CASCADE)
-
-    def update_with_image(self, article, icon_file):
-        img = Image()
-        img.commit(icon_file)
-        self.img = img
-        self.art = article
 
 
 class ArticleToRubric(models.Model):
     art = models.ForeignKey(Article, null=False, blank=False, on_delete=models.CASCADE, related_name='rub')
     rubric = models.ForeignKey(Rubric, null=False, blank=False, on_delete=models.CASCADE, related_name='arts')
 
+    def __str__(self):
+        return f'{self.rubric.title} ({self.art.title})'
+
 
 class Slider(models.Model):
     content = models.TextField(null=True)
+    rubric = models.ForeignKey(Rubric, null=True, blank=False, on_delete=models.CASCADE, related_name='sliders')
+
+    def __str__(self):
+        return f'{self.pk} {self.rubric.title}. Используется: {", ".join([sta.art.title for sta in SliderToArticle.objects.filter(slider=self)])}'
 
     def compouse_struct(self):
         sts_list = list(SlideToSlider.objects.filter(sld=self).order_by('num'))
         return [[x.slde.pk, x.slde.label, x.slde.descr, x.slde.img.url] for x in sts_list]
 
-    def from_struct_and_content(self, struct, content):
+    def from_struct_and_content(self, struct, content, rubric):
         self.content = rsub('newsSlider', f'slider{self.pk}', content)
+        self.rubric = rubric
         self.save(force_update=True)
         [x.delete() for x in list(SlideToSlider.objects.filter(sld=self))]
         for num, slide in enumerate(struct, start=0):
@@ -157,11 +181,17 @@ class EditBlock(models.Model):
     html_data = models.TextField(null=True)
     edit_block_num = models.IntegerField(verbose_name='Порядок', null=False, editable=True)
 
+    def __str__(self):
+        return f'Блок {self.edit_block_num} <- {self.art.title}'
+
 
 class SliderToArticle(models.Model):
     art = models.ForeignKey(Article, null=False, blank=False, on_delete=models.CASCADE, related_name='sliders')
     slider = models.ForeignKey(Slider, null=False, blank=False, on_delete=models.CASCADE, related_name='arts')
     edit_block_num = models.IntegerField(verbose_name='Блок привязки слайдера', null=True, editable=True)
+
+    def __str__(self):
+        return f'{self.art.title} -> {self.slider.pk} {self.slider.rubric}'
 
 
 class Slide(models.Model):

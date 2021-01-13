@@ -6,7 +6,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-	<title>Слайдер</title>
+	<title>Редактор | Слайдер</title>
 	<link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 
@@ -17,8 +17,8 @@
 <div class="container-fluid">
 	<nav aria-label="breadcrumb">
 	  <ol class="breadcrumb">
-	  		<li class="breadcrumb-item"><a href="/" class="link-info" style="color: black">Статьи</a></li>
-	  		<li class="breadcrumb-item"><a href="{{ article_edit_url }}" class="link-info" style="color: black">Редактор</a></li>
+	  		<li class="breadcrumb-item"><a href="/editor/" class="link-info" style="color: black">Статьи</a></li>
+	  		<li class="breadcrumb-item"><a href="{{ article_edit_url }}" class="link-info" style="color: black">{{article.title}}</a></li>
 	    	<li class="breadcrumb-item active" aria-current="page">Слайдер</li>
 	  </ol>
 	</nav>
@@ -188,7 +188,8 @@ const EXMPL = `<div id="sliderExample" class="carousel slide" data-ride="carouse
 					</div>`
 
 
-window.onload = function (){	
+window.onload = function (){
+	console.log(document.URL);
 	if (sessionStorage.getItem('STRUCTURE')!=null){
 		STRUCTURE = new Map(JSON.parse(sessionStorage.getItem('STRUCTURE')));
 		sessionStorage.removeItem('STRUCTURE');
@@ -301,7 +302,6 @@ function changeFile(pk){
       evt.initEvent("click", true, false);
       elem.dispatchEvent(evt);
    }
-
 }
 
 function updFile(item, pk){

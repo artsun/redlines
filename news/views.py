@@ -17,7 +17,15 @@ from editor.models import Image, Slide, Slider, Rubric, Article, SliderToArticle
 class IndexPage(View):
 
     def get(self, request, trans_title=None):
-        context = {'artlist': Article.objects.all().order_by('pk')}
+        artlist, temp = [], []
+        for x in Article.objects.all().order_by('updated'):
+            temp.append(x)
+            if len(temp) == 5:
+                artlist.append(temp)
+                temp = []
+                
+        #print(artlist)
+        context = {'artlist': artlist}
         return render(request, 'indexpage.html', context)
 
 
@@ -28,5 +36,5 @@ class NewsPage(View):
             return redirect('/')
         article = Article.objects.get(trans_title=trans_title)
 
-        context = {'content': article.content}
+        context = {'article': article}
         return render(request, 'newspage.html', context)

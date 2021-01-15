@@ -108,9 +108,8 @@ class Article(models.Model):
     def full_update(self, parts, sliders, htmls, artUpdates):
         parts, sliders, htmls = [json.loads(x) for x in (parts, sliders, htmls)]
         if artUpdates is not None:
-            short, title = json.loads(artUpdates)
+            title = json.loads(artUpdates)
             self.update_title(title)
-            self.update_short(short)
         self.update_sliders_links(sliders)
         self.content = ''
         EditBlock.objects.filter(art=self).delete()
@@ -142,6 +141,9 @@ class Article(models.Model):
 
     def get_edit_url(self):
         return f'/editor/{self.trans_title}'
+
+    def get_news_url(self):
+        return f'{self.trans_title}'
 
 
 class ArticleToRubric(models.Model):
@@ -198,6 +200,7 @@ class Slide(models.Model):
     img = ResizedImageField(size=[1024, 768], crop=['middle', 'center'],  quality=100, upload_to='images/', blank=True, null=True)
     label = models.CharField(verbose_name='Заголовок', max_length=32, null=True, blank=True, editable=True)
     descr = models.CharField(verbose_name='Подпись', max_length=64, null=True, blank=True, editable=True)
+    rubric = models.ForeignKey(Rubric, null=True, blank=False, on_delete=models.CASCADE, related_name='slides')
 
     def __str__(self):
         return f'{self.label} {self.img.name}' if self.label else f'slide{self.pk} {self.img.name}'

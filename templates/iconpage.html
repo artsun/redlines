@@ -86,7 +86,6 @@
 		</div>
 
 
-
 		<div class="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4 col-xxl-4 ml-5 mr-0 bg-light text-center">
 		<!-- RIGHT COLUMN -->
 		<div class="row mx-0 p-0 justify-content-left">
@@ -94,19 +93,23 @@
 			<div id="card{{ic.pk}}" class="card border rounded border-white shadow m-3" style="width: 14rem;">
 				<img src="{{ ic.img.url }}" class="card-img-top" onclick="changeFile('{{ic.pk}}');">
 				<input type="file" id="chFile{{ic.pk}}" class="inputfile" onchange="updFile(this, '{{ic.pk}}')" style="width: 0.1px; height: 0.1px; opacity: 0; overflow: hidden; position: absolute; z-index: -1;" />
-										
+
 				<div class="card-body">
-					<h5 id="h{{ic.pk}}" class="card-title" onclick="replaceText(this, '{{ic.pk}}', `{{ic.label}}`)">
-						{%if ic.label%}{{ic.label}}{%else%}...{%endif%}
+					<h5 id="h{{ic.pk}}" class="card-title" onclick="replaceText(this, '{{ic.pk}}', `hh{{ic.pk}}`)">
+						<input id="hh{{ic.pk}}" type="text" value="{% if ic.label %}{{ ic.label }}{% else %}null{% endif %}" hidden>
+						{% if ic.label %} {{ ic.label }} {% else %}...{% endif %}
 					</h5>
-					<p id="p{{ic.pk}}" class="card-text" onclick="replaceText(this, '{{ic.pk}}', `{{ic.descr}}`)">{%if ic.descr%}{{ic.descr}}{%else%}...{%endif%}</p>
+					<p id="p{{ic.pk}}" class="card-text" onclick="replaceText(this, '{{ic.pk}}', `pp{{ic.pk}}`)">
+						<input id="pp{{ic.pk}}" type="text" value="{% if ic.descr %}{{ ic.descr }}{% else %}null{% endif %}" hidden>
+						{% if ic.descr %} {{ ic.descr }} {% else %}...{% endif %}
+					</p>
 				</div>
 
 				<div class="card-footer align-center  mx-0 px-0">
 					<div class="row justify-content-center">
 					
 					<button id="delBtn{{ic.pk}}" class="btn btn-outline-danger btn-sm border mt-2 px-1 mx-4" onclick="delIcon('{{ic.pk}}')" name="delBtn" type="submit">Удалить</button>
-					<button id="btn{{ic.pk}}" class="btn btn-outline-dark btn-sm border mt-2 px-1 mx-4" onclick="iconToPreview(this, '{{ic.pk}}', '{{ic.label}}', '{{ic.descr}}', '{{ ic.img.url }}')">Просмотр</button>
+					<button id="btn{{ic.pk}}" class="btn btn-outline-dark btn-sm border mt-2 px-1 mx-4" onclick="iconToPreview(this, '{{ic.pk}}', '{{ ic.img.url }}')">Просмотр</button>
 					</div>
 				</div>
 			</div>		
@@ -121,7 +124,7 @@
 					<div class="card-body">
 						<input type="text" class="form-control my-1" name="label" placeholder="Заголовок (необяз.)">
 						<input type="text" class="form-control my-1" name="descr" placeholder="Подпись (необяз.)">
-						<button id="loadBtn" class="btn btn-success border mt-2" onclick="saveSess()" type="submit" disabled>Добавить</button>
+						<button id="loadBtn" class="btn btn-success border mt-2" type="submit" disabled>Добавить</button>
 					</div>
 				</div>		
 			
@@ -144,46 +147,37 @@ let PREVIEW = new Array(1).fill(0);
 
 window.onload = function (){
 	{%if article.icon %}
-		iconToPreview(document.getElementById(`btn{{article.icon.pk}}`), `{{article.icon.pk}}`, `{{article.icon.label}}`,
-		 `{{article.icon.descr}}`, `{{article.icon.img.url}}`)
+		iconToPreview(document.getElementById(`btn{{article.icon.pk}}`), `{{article.icon.pk}}`, `{{article.icon.img.url}}`);
 	{% endif %}
 	}
 
 
-
-
-function setDefaultSLider(){
-	if (STRUCTURE.size === 0){
-		document.getElementById("car0").innerHTML = EXMPL;
-		return;
-	}
-	document.getElementById("car0").innerHTML = compouseSlider("newsSlider", STRUCTURE);	
-}
-
-
-function iconToPreview(item, pk, label, descr, source){
+function iconToPreview(item, pk, source){
+	label = document.getElementById(`hh${pk}`).value;
+	descr = document.getElementById(`pp${pk}`).value;
+	label = (label===`null`)? "": label;
+	descr = (descr===`null`)? "": descr;
 	if (PREVIEW.length===4){
-		iconFromPreview(document.getElementById(`btn${PREVIEW[0]}`), PREVIEW[0], PREVIEW[1], PREVIEW[2], PREVIEW[3])
+		iconFromPreview(document.getElementById(`btn${PREVIEW[0]}`), PREVIEW[0], PREVIEW[3]);
 	}
 	PREVIEW = new Array(pk, label, descr, source); 
 	document.getElementById("car0").innerHTML = compouseIcon(label, descr, source);
 	document.getElementById(`delBtn${pk}`).disabled = true;
 	document.getElementById(`card${pk}`).className = "card border rounded border-secondary bg-light m-3";
-	item.outerHTML = `<button id="btn${pk}" class="btn btn-dark btn-sm border mt-2 px-1 mx-4" onclick="iconFromPreview(this, '${pk}', '${label}', '${descr}', '${source}')">Убрать</button>`;
+	item.outerHTML = `<button id="btn${pk}" class="btn btn-dark btn-sm border mt-2 px-1 mx-4" onclick="iconFromPreview(this, '${pk}', '${source}')">Убрать</button>`;
 	$('.shadower').on('mouseover', function() {    $(this).toggleClass('special'); });
 	$('.shadower').on('mouseout', function() {    $(this).toggleClass('special'); });
 	$('.shadowersmall').on('mouseover', function() {    $(this).toggleClass('special'); });
 	$('.shadowersmall').on('mouseout', function() {    $(this).toggleClass('special'); });
 }
 
-function iconFromPreview(item, pk, label, descr, source){
+function iconFromPreview(item, pk, source){
 	PREVIEW = new Array(1).fill(0);
 	document.getElementById("car0").innerHTML = "";
 	document.getElementById(`delBtn${pk}`).disabled = false;
 	document.getElementById(`card${pk}`).className = "card border rounded border-white shadow m-3";
-	item.outerHTML = `<button id="btn${pk}" class="btn btn-outline-dark btn-sm border mt-2 px-1 mx-4" onclick="iconToPreview(this, '${pk}', '${label}', '${descr}', '${source}')">Просмотр</button>`;
+	item.outerHTML = `<button id="btn${pk}" class="btn btn-outline-dark btn-sm border mt-2 px-1 mx-4" onclick="iconToPreview(this, '${pk}', '${source}')">Просмотр</button>`;
 }
-
 
 function compouseIcon(label, descr, source){
 	return	`
@@ -200,7 +194,7 @@ function compouseIcon(label, descr, source){
 
 	<div class="row-col m-0 p-0 justify-content-top">
 		<div class="card bg-dark text-white shadowersmall m-0 p-0 ">
-  			<img class="card-img" src="${source}" alt="Card image" style="max-width: 17rem; max-height: 224px; min-width: 17rem; min-height: 224px;">
+  			<img class="card-img" src="${source}" alt="Card image" style="max-width: 20rem; max-height: 224px; min-width: 20rem; min-height: 224px;">
   			<div class="card-img-overlay h-100 d-flex flex-column justify-content-end">
   				<h5 class="card-title" style="z-index: 2;">${label}</h5>
     			<p class="card-text" style="font-size: 80%; z-index: 2;">${descr}</p>
@@ -213,7 +207,6 @@ function compouseIcon(label, descr, source){
 
 
 ////////////////////////////////////
-
 
 function addFile(item) {
 	var fname = item.value.replace(/.*[\/\\]/, '');
@@ -238,15 +231,22 @@ function updFile(item, ipk){
 }
 
 
-function replaceText(item, ipk, val){
-	document.getElementById(item.id).outerHTML = `<input id="${item.id}" type="text" class="form-control my-1" value="${val}">
+function replaceText(item, ipk, storageInput){
+	storageInput = document.getElementById(storageInput).value;
+	storageInput = (storageInput === `null`)? "" : storageInput;
+	document.getElementById(item.id).outerHTML = `<input id="${item.id}" type="text" class="form-control my-1" value="${storageInput}">
 	<button id="b${item.id}" class="btn btn-info btn-sm border mt-2" type="submit" onclick="updText(this, '${item.id}', '${item.className}', ${ipk})">Обновить</button>`;
 }
 
 function updText(btn, itId, itCl, ipk){
 	let txt = document.getElementById(itId);
 	let val = txt.value;
-	txt.outerHTML = (itCl==="card-title")? `<h5 id="${itId}" class="card-title" onclick="replaceText(this, '${ipk}', '${val}')">${(val==="")? '...': val}</h5>` : `<p id="${itId}" class="card-text" onclick="replaceText(this, '${ipk}', '${val}')">${(val==="")? '...': val}</p>`;
+	val = (val === `null`)? "" : val;
+	if (itCl==="card-title") {
+		txt.outerHTML = `<h5 id="${itId}" class="card-title" onclick="replaceText(this, '${ipk}')">${(val==="")? '...': val}</h5>`;
+	} else {
+		txt.outerHTML = `<p id="${itId}" class="card-text" onclick="replaceText(this, '${ipk}')">${(val==="")? '...': val}</p>`;
+	}
 	btn.parentNode.removeChild(btn);
 	let formData = new FormData();
 	formData.append("ipk", ipk);

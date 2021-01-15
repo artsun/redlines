@@ -36,23 +36,27 @@
 			<small id="msgTitle" class="text-danger"></small>
 		</p>
 
-		<p class="text-start">
-		    <label for="artShort" class="form-label"><b>Подводка (116 знаков):</b> </label>
-		    <textarea type="text" class="form-control" id="artShort" style="max-height: 10rem; min-height: 10rem;">{% if article.short %}{{article.short}}{% endif%}</textarea>
-		    <small id="msgShort" class="text-danger"></small>
-		    <button id="artUpd" class="btn btn-outline-secondary btn-sm btn-block" onclick="artUpdClick()" type="submit">Обновить</button>
-		</p>
-
-
 		<input type="file" name="file" id="updIcon" onchange="updIcon(this)" class="inputfile" style="width: 0.1px; height: 0.1px; opacity: 0; overflow: hidden; position: absolute; z-index: -1;" />
 		<p class="text-start"><b>Иконка:</b>
-			{% if icon %}
-			<img src="{{ icon.img.image.url }}" style="max-width: 12rem; max-height: 12rem; min-width: 12rem; min-height: 12rem;"  onclick="changeIcon('{{article.trans_title}}', '{{icon.pk}}');">
+			{% if article.icon %}
+			<div class="row m-0 p-0 justify-content-center" onclick="changeIcon('{{article.trans_title}}', '{{icon.pk}}');">
+				<div class="card bg-dark text-white shadowersmall m-0 p-0 ">
+  					<img class="card-img" src="{{article.icon.img.url}}" alt="Card image" style="max-width: 20rem; max-height: 224px; min-width: 20rem; min-height: 224px;" >
+  					<div class="card-img-overlay h-100 d-flex flex-column justify-content-end">
+  						<h5 class="card-title" style="z-index: 2;">{{article.icon.label}}</h5>
+    					<p class="card-text" style="font-size: 80%; z-index: 2;">{{article.icon.descr}}</p>
+    					<p class="card-text" style="z-index: 2;"><small>Опубликовано</small></p>
+  					</div>
+				</div>
+			</div>
+			
 			{% else %}
 			<button type="button" class="btn btn-outline-secondary btn-sm" onclick="changeIcon('{{article.trans_title}}');">Добавить</button>
 			{% endif %}
 		</p>
-		<button class="btn btn-dark btn-block" onclick="renderNews()">Сверстать страницу</button>
+		<button class="btn btn-outline-dark btn-block" onclick="renderNews()">Сверстать страницу</button>
+		<h><br>
+		<button class="btn btn-outline-danger btn-sm btn-block" onclick="dropArticle()">Удалить страницу</button>
 
 
 
@@ -99,8 +103,6 @@
 
 </div>
 </div>
-
-
 
 <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
@@ -155,9 +157,7 @@ window.onload = function (){
 			SLIDERS_INSERTED.set(spk, n);
 		}
 	}
-	console.log(1);
-	for (let n=0; n<raw_blocks.length; n+=1) { console.log(raw_blocks[n]); PARTS.set(`part${n}`, JSON.parse(raw_blocks[n])); ORDER.push(`part${n}`);}
-	console.log(2);
+	for (let n=0; n<raw_blocks.length; n+=1) { PARTS.set(`part${n}`, JSON.parse(raw_blocks[n])); ORDER.push(`part${n}`);}
 	if (document.getElementById(`part0`)===null){  // new article
 		editorsEl.innerHTML += `<div id="part0" class="row bg-light p-5 mb-1"><div id="editorjs" class="col-12 m-1"></div></div>`;
 		PARTS.set(`part0`, '');
@@ -168,7 +168,6 @@ window.onload = function (){
 		EDITOR = getEdjs(PARTS.get(`part0`), false);
 	}
 	
-
 	for (let eachPart of PARTS.keys()) {
 	 if (eachPart!=`part0`) {
 	 	document.getElementById(eachPart).addEventListener('click', function (e) {switchEditor(this);}, { once: true });
@@ -176,15 +175,10 @@ window.onload = function (){
 	}
 }
 
-
-
 /////////////////////////////////////////////
 function validArtUpdClick(){
 	let msgTitle = document.getElementById('msgTitle');
 	msgTitle.innerHTML = '';
-	let msgShort = document.getElementById('msgShort');
-	msgShort.innerHTML = '';
-	let artShort = document.getElementById(`artShort`).value.trim();
 	let artTitle = document.getElementById(`artTitle`).value.trim();
 	if (artTitle.length > 120){
 		msgTitle.innerHTML = `Слишком длинное название: ${artTitle.length} знаков. Допустимо: 120.`;
@@ -193,44 +187,22 @@ function validArtUpdClick(){
 		msgTitle.innerHTML = `Введите название.`;
 		return false;
 	}
-	if (artShort.length > 126){
-		msgShort.innerHTML = `Слишком длинная подводка: ${artShort.length} знаков. Допустимо: 126.`;
-		return false;
-	}
 	return true;
 }
-
 
 function artUpdClick(){
 	if (!validArtUpdClick()){
 		return;
-	}	
+	}
 	let formData = new FormData();
-	formData.append("artUpd", JSON.stringify(new Array(document.getElementById(`artShort`).value.trim(), document.getElementById(`artTitle`).value.trim())));
+	formData.append("artUpd", JSON.stringify(document.getElementById(`artTitle`).value.trim()));
 	fetch("", {method: "POST", headers:{"X-CSRFToken": '{{ csrf_token }}'}, body: formData}).then((response) => {return response.json();}).then((data) => {
     location.replace(data['url']);});
 }
 
-
-
-function updIcon(item){
-   let formData = new FormData();
-   formData.append("icon", item.files[0]);
-   fetch("", {method: "POST", headers:{"X-CSRFToken": '{{ csrf_token }}'}, body: formData}).then((response) => {return response.json();}).then((data) => {
-    location.replace(data['url']);});
-}
-
-
 function changeIcon(trans_title, ipk=null){
-	(ipk===null)? location.replace(`/editor/icon?article=${trans_title}`) : location.replace(`/editor/icon?article=${trans_title}&ipk=${ipk}`);
-	// var elem = document.getElementById(`updIcon`);
-	// if (elem && document.createEvent) {
- //      var evt = document.createEvent("MouseEvents");
- //      evt.initEvent("click", true, false);
- //      elem.dispatchEvent(evt);
- //   }
+	location.replace(`/editor/icon?article=${trans_title}`);
 }
-
 
 /////////////////////////////////////////////
 
@@ -296,7 +268,6 @@ function convertDataToHtml(blocks) {
             convertedHtml += `<h${block.data.level}>${block.data.text}</h${block.data.level}>`;
             break;
           case "embed":
-          console.log(block.data.source);
             convertedHtml += `<div class='p-3 justify-content-center'><iframe width="560" height="315" src="${block.data.embed}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>`;
             break;
           case "paragraph":
@@ -307,7 +278,6 @@ function convertDataToHtml(blocks) {
             break;
           case "image":
             imgstyle = "";
-            console.log(block.data.file.url);
             if (block.data.withBackground) imgstyle += "cdx-simple-image__picture--with-background";
             if (block.data.withBorder) imgstyle += " cdx-simple-image__picture--with-border";
             //imghtml = `<img class="img-fluid" src="${block.data.url}" title="${block.data.caption}" /><br /><em>${block.data.caption}</em>`;
@@ -472,7 +442,7 @@ function renderNews(){
 			HTMLS.push(convertDataToHtml(value.blocks));
 		});
 		if (validArtUpdClick()){
-			formData.append("artUpdates", JSON.stringify(new Array(document.getElementById(`artShort`).value.trim(), document.getElementById(`artTitle`).value.trim())));
+			formData.append("artUpdates", JSON.stringify(document.getElementById(`artTitle`).value.trim()));
 		}
 		formData.append("parts", JSON.stringify(Array.from(PARTS.values())));
 		formData.append("sliders", JSON.stringify(Array.from(SLIDERS_INSERTED.entries())));
@@ -480,6 +450,12 @@ function renderNews(){
 		fetch("", {method: "POST", headers:{"X-CSRFToken": '{{ csrf_token }}'}, body: formData}).then((response) => {return response.json();}).then((data) => {
     location.replace(data['url']);});
 	 }).catch((error) => {console.log('Save failed: ', error)});
+}
+
+function dropArticle(){
+	let formData = new FormData();
+	formData.append("dropArticle", true);
+	fetch("", {method: "POST", headers:{"X-CSRFToken": '{{ csrf_token }}'}, body: formData}).then(() => { location.replace(`/editor`);});
 }
 
 

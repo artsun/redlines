@@ -14,12 +14,12 @@
 
 <style type="text/css">
 	body {
-        font-family: 'PT Serif', serif;
+        /*font-family: 'PT Serif', serif;*/
         /*background-color: rgb(209,203,193);*/
         background-image: url(/images/redlines.jpg);
       }
-    .inbkg {
-    	background-color: rgb(209,203,193);
+    .redlines {
+    	background: rgba(247, 247, 247, 0.97);
     }
 	.shadowerwhite:before {
     content: '';
@@ -84,15 +84,23 @@
 @media (min-width: 1200px) {  
   .short-text-responsive {font-size:1.0rem;} /*1rem = 16px*/    
 }
+#newsfeed {
+  border-radius: 5px;
+  /*background: #FFFFFF;*/
+  padding: 20px;
+  width: 400px;
+  height: 800px;
+}
 
 
- 
 </style>
 
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-white">
-  <a class="navbar-brand" href="#">Navbar</a>
+<nav class="navbar navbar-expand-lg navbar-light bg-light p-2">
+  
+  <img src="/images/redlines-logo.jpg" class="ml-2" width="90" height="90" loading="lazy">
+  <a class="navbar-brand text-danger ml-3" href="/"><h2>RED8LINES</h2></a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -100,21 +108,16 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="#">Подписаться <span class="sr-only">(current)</span></a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Link</a>
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Обратная связь</a>
       </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Dropdown
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Something else here</a>
-        </div>
+    </ul>
+    <ul class="navbar-nav ml-auto mr-5">
+    	
+    	<li class="nav-item">
+        	<a class="nav-link" href="/editor"><img src="/images/enter-icon.png" class="mr-1" width="40" height="40" alt="" loading="lazy"><b>Вход</b></a>
       </li>
     </ul>
     <form class="form-inline my-2 my-lg-0">
@@ -132,24 +135,63 @@
 
 
 
-<div class="row ml-0 mx-1 px-0 justify-content-center h-100">
+<div class="row justify-content-center h-100">
 
-	<div class="col-1 mt-5 mx-1" >
+	<div class="col-2 mt-5" >
 
-			<ul  class="nav flex-column mx-0" style="position: fixed;">
-			  <li class="nav-item">
-			    <a class="nav-link text-dark active" href="#"><b>Active</b></a>
+			<ul  class="nav flex-column mx-0" style="position: fixed; opacity: 1">
+			  <li class="nav-item p-0 ">
+			  	<div class="row text-center pl-3 redlines" style="border-top-left-radius: 5px; border-top-right-radius: 5px;">
+			  		<img src="/images/archaeology_EgKVrdI.jpg" width="40" height="40" loading="lazy" style="border-radius: 40px;">
+		  			<a class="nav-link text-secondary active" href="#"><h6>Археология</h6></a> 	
+			    </div>
 			  </li>
-			  <li class="nav-item">
-			    <a class="nav-link text-dark" href="#"><b>Link</b></a>
+			  <li class="nav-item p-0 ">
+			  	<div class="row text-center pl-3 redlines">
+			  		<img src="/images/astronomy_uAL4kG9.jpg" width="40" height="40" loading="lazy" style="border-radius: 40px;">
+		  			<a class="nav-link text-secondary active" href="#"><h6>Астрономия</h6></a> 	
+			    </div>
 			  </li>
-			  <li class="nav-item">
-			    <a class="nav-link text-dark" href="#"><b>Link</b></a>
+			  <li class="nav-item p-0 ">
+			  	<div class="row text-center pl-3 redlines">
+			  		<img src="/images/biology_e3dZxoS.jpg" width="40" height="40" loading="lazy" style="border-radius: 40px;">
+		  			<a class="nav-link text-secondary active" href="#"><h6>Биология</h6></a> 	
+			    </div>
+			  </li>
+			  <li class="nav-item p-0 ">
+			  	<div class="row text-center pl-3 redlines">
+			  		<img src="/images/genetics_wlevywr.jpg" width="40" height="40" loading="lazy" style="border-radius: 40px;">
+		  			<a class="nav-link text-secondary active" href="#"><h6>Генетика</h6></a> 	
+			    </div>
+			  </li>
+			  <li class="nav-item p-0 ">
+			  	<div class="row text-center pl-3 redlines" >
+			  		<img src="/images/geography_w32pTnx.jpg" width="40" height="40" loading="lazy" style="border-radius: 40px;">
+		  			<a class="nav-link text-secondary active" href="#"><h6>География</h6></a> 	
+			    </div>
+			  </li>
+			  <li class="nav-item p-0 ">
+			  	<div class="row text-left pl-3 redlines">
+			  		<img src="/images/infotech_Ic0LBUE.jpg" width="40" height="40" loading="lazy" style="border-radius: 40px;">
+		  			<a class="nav-link text-secondary active" href="#"><h6>Информационные<br> технологии</h6></a> 	
+			    </div>
+			  </li>
+			  <li class="nav-item p-0 ">
+			  	<div class="row text-center pl-3 redlines">
+			  		<img src="/images/history_T8zeBBT.jpg" width="40" height="40" loading="lazy" style="border-radius: 40px;">
+		  			<a class="nav-link text-secondary active" href="#"><h6>История</h6></a> 	
+			    </div>
+			  </li>
+			  <li class="nav-item p-0 ">
+			  	<div class="row text-center pl-3 redlines" style="border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;">
+			  		<img src="/images/math_xm8o7FI.jpg" width="40" height="40" loading="lazy" style="border-radius: 40px;">
+		  			<a class="nav-link text-secondary active" href="#"><h6>Математика</h6></a> 	
+			    </div>
 			  </li>
 			</ul>
 	</div>
 
-	<div class="col-8 col-sm-8 col-md-8 col-lg-8 col-xl-8 col-xxl-8 p-1 justify-content-center h-100 " >
+	<div class="col-7 col-sm-7 col-md-7 col-lg-7 col-xl-7 col-xxl-7 p-0 justify-content-center h-100" >
 	<!-- CENTRAL COLUMN <div class="col-5 p-0 m-0 bg-dark" style="overflow: hidden;"></div><div class="col-7 p-0 m-0 h-100" ></div><div class="d-flex flex-row" style="overflow: hidden;">		</div>-->
 	<div class="container-fluid">
 		<br>
@@ -157,26 +199,26 @@
 
 		{% for art in artlist %}
 		<!--main new-->
-		<div class="row row-cols-2 justify-content-between p-0 m-0" >		
+		<div class="row row-cols-2 justify-content-center p-0 m-0" >		
 			<div class="card text-white bg-white border-0 m-0 p-0" style="overflow: hidden;">
-  				<img class="img-fluid rounded " src="{{art.0.icon.img.url}}">
+  				<img class="img-fluid rounded " src="{{art.2.icon.img.url}}">
 
-  				<a href="/news/{{art.0.trans_title}}" class="card-link stretched-link shadowerwhite"></a>
+  				<a href="/news/{{art.2.trans_title}}" class="card-link stretched-link shadowerwhite"></a>
 			</div>		
-			<div class="card text-white shadowerwhite border-0 m-0 bg-dark p-0" style="overflow: hidden;">
-  				<img class="card-img" src="{{art.0.icon.img.url}}" style="opacity: 0;">
+			<div class="card text-black shadowerwhite border-0 m-0 bg-light p-0" style="overflow: hidden;">
+  				<img class="card-img" src="{{art.2.icon.img.url}}" style="opacity: 0;">
   				<div class="card-img-overlay d-flex flex-column justify-content-center">
-  					<h3 class="card-title " >{{art.0.title}}</h3>
-    				<p class="card-text">Как же я люблю международные выставки бытовой электроники! Отдельная радость, что из-за пандемии не нужно получать визы, тратиться на билеты и ехать на другой край света, чтобы увидеть всё своими глазами :) Хотя я и обожаю путешествовать.{{art.0.icon.descr}}</p>
-    				<p class="card-text"><small>{{art.0.updated}}</small></p>
-    				<a href="/news/{{art.0.trans_title}}" class="card-link stretched-link"></a>
+  					<h3 class="card-title " >{{art.2.title}}</h3>
+    				<p class="card-text">Рисунок был обнаружен на острове Сулавеси в 2017 году в пещере Leang Tedongnge, расположенной примерно в часе ходьбы от ближайшей дороги. Доступ к ней возможен только в сухой сезон из-за наводнений, происходящих во время сезона дождей. Местные жители рассказали учёным, что раньше это изображение никогда не видели "жители Запада".{{art.2.icon.descr}}</p>
+    				<p class="card-text"><small>{{art.2.updated}}</small></p>
+    				<a href="/news/{{art.2.trans_title}}" class="card-link stretched-link"></a>
   				</div>
 			</div>
 		</div>
 
 		{% endfor %}
-		<br><hr>
-
+		<hr>
+		<!--small new-->
 		<div class="row row-cols-4 justify-content-between p-0 m-0" >
 		{% for art in artlist %}
 		
@@ -212,56 +254,129 @@
 		{% endfor %}
 		</div>
 
-		<br><hr>		
-		<div class="card-columns p-0 m-0 justify-content-between"> <!--	small main -->
+		<br><hr>
+
+		<!--triple -->
+			<div class="row row-cols-3 justify-content-between p-0 m-0 g-2" >
 			{% for art in artlist %}
-			<div class="card bg-dark text-white shadowerwhite my-2 border-0" onclick="goTo(`{{art.0.trans_title}}`)" style="overflow: hidden;">
+			<div class="col-4 bg-light m-0 px-2">
+			<div class="card bg-dark shadowerwhite p-0 m-0 border-0 " style="overflow: hidden;">
   				<img class="card-img" src="{{art.0.icon.img.url}}"  >
-  				<div class="card-img-overlay  d-flex flex-column justify-content-end">
-  					<h5 class="card-title" style="z-index: 2;">{{art.0.title}}</h5>
-    				<p class="card-text" style="z-index: 2;"><small>{{art.0.updated}}</small></p>
+  				<div class="card-img-overlay  d-flex flex-column justify-content-end">    				
+    				<a href="/news/{{art.0.trans_title}}" class="card-link stretched-link"></a>
   				</div>
 			</div>
-			<div class="card bg-dark text-white shadowerblack my-2 border-0" onclick="goTo(`{{art.1.trans_title}}`)" style="overflow: hidden;">
-  				<img class="card-img" src="{{art.1.icon.img.url}}"  >
-  				<div class="card-img-overlay d-flex flex-column justify-content-end">
-  					<h5 class="card-title" style="z-index: 2;">{{art.1.title}}</h5>
-    				<p class="card-text" style="z-index: 2;"><small>{{art.1.updated}}</small></p>
+			<div class="card bg-dark text-white shadowerblack p-0 m-0 border-0" style="overflow: hidden;">
+  				<img class="card-img" src="{{art.1.icon.img.url}}" style="opacity: 0">
+  				<div class="card-img-overlay d-flex flex-column justify-content-center">
+  					<h5 class="card-title" >{{art.0.title}}</h5>
+    				<p class="card-text" ><small>{{art.0.updated}}</small></p>
+    				<a href="/news/{{art.0.trans_title}}" class="card-link stretched-link"></a>
   				</div>
 			</div>
-			<div class="card bg-dark text-white shadowerblack my-2 border-0" onclick="goTo(`{{art.2.trans_title}}`)" style="overflow: hidden;">
-  				<img class="card-img" src="{{art.2.icon.img.url}}"  >
-  				<div class="card-img-overlay d-flex flex-column justify-content-end">
-  					<h5 class="card-title" style="z-index: 2;">{{art.2.title}}</h5>
-    				<p class="card-text" style="z-index: 2;"><small>{{art.2.updated}}</small></p>
+			</div>
+
+			<div class="col-4 bg-light m-0 px-2">
+			<div class="card bg-light text-dark shadowerblack m-0 m-0 border-0" style="overflow: hidden;">
+  				<img class="card-img" src="{{art.3.icon.img.url}}"  style="opacity: 0">
+  				<div class="card-img-overlay d-flex flex-column justify-content-center">
+  					<h5 class="card-title" >{{art.3.title}}</h5>
+    				<p class="card-text" ><small>{{art.3.updated}}</small></p>
+    				<a href="/news/{{art.3.trans_title}}" class="card-link stretched-link"></a>
   				</div>
 			</div>
-			<div class="card bg-dark text-white shadowerblack my-2 border-0" onclick="goTo(`{{art.3.trans_title}}`)" style="overflow: hidden;">
-  				<img class="card-img" src="{{art.3.icon.img.url}}"  >
+			<div class="card bg-dark shadowerblack m-0 m-0 border-0" style="overflow: hidden;">
+  				<img class="card-img" src="{{art.3.icon.img.url}}" >
   				<div class="card-img-overlay h-100 d-flex flex-column justify-content-end">
-  					<h5 class="card-title" style="z-index: 2;">{{art.3.title}}</h5>
-    				<p class="card-text" style="z-index: 2;"><small>{{art.3.updated}}</small></p>
+    				<a href="/news/{{art.3.trans_title}}" class="card-link stretched-link"></a>
   				</div>
 			</div>
-			<div class="card bg-dark text-white shadowerblack my-2 border-0" onclick="goTo(`{{art.4.trans_title}}`)" style="overflow: hidden;">
-  				<img class="card-img" src="{{art.4.icon.img.url}}"  >
+			</div>
+
+			<div class="col-4 bg-light m-0 px-2">
+			<div class="card bg-dark shadowerblack m-0 m-0 border-0" style="overflow: hidden;">
+  				<img class="card-img" src="{{art.5.icon.img.url}}"  >
   				<div class="card-img-overlay h-100 d-flex flex-column justify-content-end">
-  					<h5 class="card-title" style="z-index: 2;">{{art.4.title}}</h5>
-    				<p class="card-text" style="z-index: 2;"><small>{{art.4.updated}}</small></p>
+    				<a href="/news/{{art.5.trans_title}}" class="card-link stretched-link"></a>
   				</div>
 			</div>
-
-	
-
-
-
+			<div class="card bg-dark text-white shadowerwhite m-0 m-0 border-0" style="overflow: hidden;">
+  				<img class="card-img" src="{{art.5.icon.img.url}}" style="opacity: 0">
+  				<div class="card-img-overlay h-100 d-flex flex-column justify-content-center">
+  					<h5 class="card-title" >{{art.5.title}}</h5>
+    				<p class="card-text" ><small>{{art.5.updated}}</small></p>
+    				<a href="/news/{{art.5.trans_title}}" class="card-link stretched-link"></a>
+  				</div>
+			</div>
+			</div>
 			{% endfor %}
-	</div>
+		</div>
+	<hr>
+
+
 
 
 	</div>
-<div class="col-1"></div>
+
+
 </div>
+
+<!--RIGHTCOL <div id="newsfeed" class="col-12 bg-light" style="opacity: 0.9;"></div>-->
+	<div class="col-2 mt-5" >
+
+			<ul  class="nav flex-column mx-0" style="position: fixed; opacity: 1">
+			  <li class="nav-item p-0 ">
+			  	<div class="row redlines pr-3 justify-content-end" style="border-top-left-radius: 5px; border-top-right-radius: 5px;">
+		  			<a class="nav-link text-secondary active" href="#"><h6>Медицина</h6></a>
+		  			<img src="/images/medicine_LknAqL8.jpg" width="40" height="40" loading="lazy" style="border-radius: 40px;">
+			    </div>
+			  </li>
+			  <li class="nav-item p-0 " >
+			  	<div class="row redlines pr-3 justify-content-end" >
+		  			<a class="nav-link text-secondary active" href="#"><h6>Психология</h6></a>
+		  			<img src="/images/psycho_o5qCiCD.jpg" width="40" height="40" loading="lazy" style="border-radius: 40px;">
+			    </div>
+			  </li>
+			  <li class="nav-item p-0 ">
+			  	<div class="row redlines pr-3 justify-content-end" >
+		  			<a class="nav-link text-secondary active" href="#"><h6>Робототехника</h6></a>
+		  			<img src="/images/robo_erZg1Ok.jpg" width="40" height="40" loading="lazy" style="border-radius: 40px;">
+			    </div>
+			  </li>
+			  <li class="nav-item p-0 " >
+			  	<div class="row redlines pr-3 justify-content-end" >
+			  		<a class="nav-link text-secondary active" href="#"><h6>Социология</h6></a> 	
+			  		<img src="/images/sociology_7QlvgM2.jpg" width="40" height="40" loading="lazy" style="border-radius: 40px;">
+			    </div>
+			  </li>
+			  <li class="nav-item p-0 " >
+			  	<div class="row redlines pr-3 justify-content-end" >
+			  		<a class="nav-link text-secondary active" href="#"><h6>Физика</h6></a> 	
+			  		<img src="/images/physics_gRXMLjV.jpg" width="40" height="40" loading="lazy" style="border-radius: 40px;">
+			    </div>
+			  </li>
+			  <li class="nav-item p-0 " >
+			  	<div class="row redlines pr-3 justify-content-end" >
+			  		<a class="nav-link text-secondary active" href="#"><h6>Химия</h6></a> 	
+			  		<img src="/images/chemistry_O5ZC08c.jpg" width="40" height="40" loading="lazy" style="border-radius: 40px;">
+			    </div>
+			  </li>
+			  <li class="nav-item p-0 " >
+			  	<div class="row redlines pr-3 justify-content-end" >
+			  		<a class="nav-link text-secondary active" href="#"><h6>Экология</h6></a> 	
+			  		<img src="/images/ecology_3qppdVp.jpg" width="40" height="40" loading="lazy" style="border-radius: 40px;">
+			    </div>
+			  </li>
+			  <li class="nav-item p-0 " >
+			  	<div class="row redlines pr-3 justify-content-end" style="border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;">
+			  		<a class="nav-link text-secondary active" href="#"><h6>Экономика</h6></a> 	
+			  		<img src="/images/economics_01Rcbbl.jpg" width="40" height="40" loading="lazy" style="border-radius: 40px;">
+			    </div>
+			  </li>
+			</ul>
+	</div>
+
+
 </div>
 
 
@@ -281,6 +396,42 @@ integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNm
 	$('.shadowerblack').on('mouseover', function() {    $(this).toggleClass('special'); });
 	$('.shadowerblack').on('mouseout', function() {    $(this).toggleClass('special'); });
 
+const RSS_URL = ``;
+
+function rssFetcher(){
+	$.ajax(RSS_URL, {
+  accepts: {
+    xml: "application/rss+xml"
+  },
+
+  dataType: "xml",
+
+  success: function(data) {
+    $(data)
+      .find("item")
+      .each(function() {
+        const el = $(this);
+
+        const template = `
+          <article>
+            <img src="${el.find("link").text()}/image/large.png" alt="">
+            <h2>
+              <a href="${el
+                .find("link")
+                .text()}" target="_blank" rel="noopener">
+                ${el.find("title").text()}
+              </a>
+            </h2>
+          </article>
+        `;
+        document.getElementById("newsfeed").innerHTML += template;
+
+        //document.body.insertAdjacentHTML("newsfeed", template);
+      });
+  }
+});
+}
+//rssFetcher();
 </script>
 
 

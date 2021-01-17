@@ -11,7 +11,24 @@
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 
 <style type="text/css">
-	.shadower:before {
+	body {
+		background-image: url(/images/icon-make-background.jpg);
+	
+
+    -moz-background-size: cover 100%; /* Firefox 3.6+ */
+     -webkit-background-size: cover auto 100%; /*Safari 3.1+ и Chrome 4.0+ */
+    -o-background-size: cover auto 100%; /* Opera 9.6+ */
+	background-size: cover ; /* 100% Современные браузеры */
+	height: 100%;
+	width: 100%;
+	background-repeat: no-repeat;/* center center fixed */
+	background-position: center center;
+	
+
+    z-index: -1;
+	}
+
+	.shadowerwhite:before {
     content: '';
     position:absolute;
     top:0;
@@ -20,18 +37,20 @@
     bottom: 0;
     background: linear-gradient(to bottom, rgba(0,0,0,0) 40%,rgba(0,0,0,0.7 ) 100%);
     z-index: 1;
+    /*border-radius: 10px;*/
 }
-	.shadower.special:before {
+	.shadowerwhite.special:before {
     content: '';
     position:absolute;
     top:0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,1 ) 100%);
+    background: linear-gradient(to bottom, rgba(200,200,200,0) 0%,rgba(200,200,200,1 ) 100%);
     z-index: 1;
+
 }
-	.shadowersmall:before {
+	.shadowerblack:before {
     content: '';
     position:absolute;
     top:0;
@@ -40,8 +59,9 @@
     bottom: 0;
     background: linear-gradient(to bottom, rgba(0,0,0,0) 40%,rgba(0,0,0,0.7 ) 100%);
     z-index: 1;
+    /*border-radius: 10px;*/
 }
-	.shadowersmall.special:before {
+	.shadowerblack.special:before {
     content: '';
     position:absolute;
     top:0;
@@ -50,13 +70,14 @@
     bottom: 0;
     background: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,1 ) 100%);
     z-index: 1;
+
 }
 </style>
 </head>
 
 <body>
 	<hr>
-<div class="container-fluid">
+<div class="container-fluid" >
 	<nav aria-label="breadcrumb">
 	  <ol class="breadcrumb">
 	  		<li class="breadcrumb-item"><a href="/editor/" class="link-info" style="color: black">Статьи</a></li>
@@ -65,28 +86,29 @@
 	  </ol>
 	</nav>
 
-	<div class="row mx-0 px-0 justify-content-center">
+	<div class="row mx-0 p-0 justify-content-center" >
 
-		<div class="col-7 col-sm-7 col-md-7 col-lg-7 col-xl-7 col-xxl-7 mx-0 px-0 justify-content-center">
+		<div class="col-8 col-sm-8 col-md-8 col-lg-8 col-xl-8 col-xxl-8 justify-content-center" >
 		<!-- LEFT COLUMN and CENTRAL COLUMN -->
-			<div id="editors" class="container float mx-0 px-0">
-				<div class="row bg-light p-5 mb-1">
-					<div class="col-12 m-0 p-0">
+			<div id="editors" class="container float" >
+				<div class="row bg-light" style="background: rgba(247,247,247,0.1);">
+					<div class="col-12" >
 					
-						<div id="car0" class="row mt-5 justify-content-center">
+						<div id="car0" class="row justify-content-center" >
 							<!-- ICONS -->				
 						</div>				
 					
 					</div>	
 				</div>
+				<div class="row">
+					<button class="btn btn-light btn-block" onclick="sendResult()">Применить</button>
+				</div>
 			</div>
-			<div class="row my-5">
-				<div class="col-12"><button class="btn btn-light btn-block" onclick="sendResult()">Применить</button></div>
-			</div>
+
 		</div>
 
 
-		<div class="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4 col-xxl-4 ml-5 mr-0 bg-light text-center">
+		<div class="col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xxl-2 ml-2 mr-0 bg-light text-center" style="background: rgba(247,247,247,0.1);">
 		<!-- RIGHT COLUMN -->
 		<div class="row mx-0 p-0 justify-content-left">
 		{% for ic in icons %}
@@ -165,10 +187,10 @@ function iconToPreview(item, pk, source){
 	document.getElementById(`delBtn${pk}`).disabled = true;
 	document.getElementById(`card${pk}`).className = "card border rounded border-secondary bg-light m-3";
 	item.outerHTML = `<button id="btn${pk}" class="btn btn-dark btn-sm border mt-2 px-1 mx-4" onclick="iconFromPreview(this, '${pk}', '${source}')">Убрать</button>`;
-	$('.shadower').on('mouseover', function() {    $(this).toggleClass('special'); });
-	$('.shadower').on('mouseout', function() {    $(this).toggleClass('special'); });
-	$('.shadowersmall').on('mouseover', function() {    $(this).toggleClass('special'); });
-	$('.shadowersmall').on('mouseout', function() {    $(this).toggleClass('special'); });
+	$('.shadowerwhite').on('mouseover', function() {    $(this).toggleClass('special'); });
+	$('.shadowerwhite').on('mouseout', function() {    $(this).toggleClass('special'); });
+	$('.shadowerblack').on('mouseover', function() {    $(this).toggleClass('special'); });
+	$('.shadowerblack').on('mouseout', function() {    $(this).toggleClass('special'); });
 }
 
 function iconFromPreview(item, pk, source){
@@ -180,29 +202,47 @@ function iconFromPreview(item, pk, source){
 }
 
 function compouseIcon(label, descr, source){
-	return	`
-	<div class="row m-0 p-0">
-		<div class="card bg-dark text-white shadower">
-  			<img class="card-img" src="${source}" alt="Card image" style="max-width: 34rem; max-height: 448px; min-width: 34rem; min-height: 448px;">
-  			<div class="card-img-overlay h-100 d-flex flex-column justify-content-end">
-  				<h5 class="card-title" style="z-index: 2;">${label}</h5>
-    			<p class="card-text" style="z-index: 2;">${descr}</p>
-    			<p class="card-text" style="z-index: 2;">Опубликовано 3 минуты назад</p>
-  			</div>   
+	return `
+		<div class="row row-cols-2 justify-content-center p-0 m-0" >		
+			<div class="card text-white bg-white border-0 m-0 p-0" style="overflow: hidden; border-top-right-radius: 0px; border-bottom-right-radius: 0px;">
+  				<img class="img-fluid" src="${source}" >
+  				<a class="card-link stretched-link shadowerblack"></a>
+			</div>		
+			<div class="card text-black shadowerwhite border-0 m-0 bg-light p-0" style="overflow: hidden; border-top-left-radius: 0px; border-bottom-left-radius: 0px;">
+  				<img class="card-img" src="${source}" style="opacity: 0;">
+  				<div class="card-img-overlay d-flex flex-column justify-content-center">
+  					<h3 class="card-text h3-title-resp" >${label}</h3>
+    				<p class="card-text short-text-resp">${descr}</p>
+    				<p class="card-text "><small>3 минуты назад</small></p>
+    				<a href="/news/{{art.2.trans_title}}" class="card-link stretched-link"></a>
+  				</div>
+			</div>
 		</div>
-	</div>
 
-	<div class="row-col m-0 p-0 justify-content-top">
-		<div class="card bg-dark text-white shadowersmall m-0 p-0 ">
-  			<img class="card-img" src="${source}" alt="Card image" style="max-width: 20rem; max-height: 224px; min-width: 20rem; min-height: 224px;">
-  			<div class="card-img-overlay h-100 d-flex flex-column justify-content-end">
-  				<h5 class="card-title" style="z-index: 2;">${label}</h5>
-    			<p class="card-text" style="font-size: 80%; z-index: 2;">${descr}</p>
-    			<p class="card-text" style="z-index: 2;"><small>Опубликовано 3 минуты назад</small></p>
-  			</div>
-		</div>
-	</div>
-			`;
+	`
+	// return	`
+	// <div class="row m-0 p-0">
+	// 	<div class="card bg-dark text-white shadower">
+ //  			<img class="card-img" src="${source}" alt="Card image" style="max-width: 34rem; max-height: 448px; min-width: 34rem; min-height: 448px;">
+ //  			<div class="card-img-overlay h-100 d-flex flex-column justify-content-end">
+ //  				<h5 class="card-title" style="z-index: 2;">${label}</h5>
+ //    			<p class="card-text" style="z-index: 2;">${descr}</p>
+ //    			<p class="card-text" style="z-index: 2;">Опубликовано 3 минуты назад</p>
+ //  			</div>   
+	// 	</div>
+	// </div>
+
+	// <div class="row-col m-0 p-0 justify-content-top">
+	// 	<div class="card bg-dark text-white shadowersmall m-0 p-0 ">
+ //  			<img class="card-img" src="${source}" alt="Card image" style="max-width: 20rem; max-height: 224px; min-width: 20rem; min-height: 224px;">
+ //  			<div class="card-img-overlay h-100 d-flex flex-column justify-content-end">
+ //  				<h5 class="card-title" style="z-index: 2;">${label}</h5>
+ //    			<p class="card-text" style="font-size: 80%; z-index: 2;">${descr}</p>
+ //    			<p class="card-text" style="z-index: 2;"><small>Опубликовано 3 минуты назад</small></p>
+ //  			</div>
+	// 	</div>
+	// </div>
+	// 		`;
 }
 
 

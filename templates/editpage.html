@@ -8,7 +8,13 @@
 	<title>Редактор | {{ article.title }} </title>
 	<link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-
+<style type="text/css">
+	body {
+	background-image: url(/images/art-make-background.jpg);
+	background-position: center center;
+	z-index: -1;
+	}
+</style>
 </head>
 <body>
 	<hr>
@@ -19,14 +25,14 @@
 	    	<li class="breadcrumb-item active" aria-current="page">{{article.title}}</li>
 	  </ol>
 	</nav>
-<div class="row mx-0 px-0 justify-content-center">
+<div class="row justify-content-center">
 
-	<div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 col-xxl-3 ml-0 mr-5 bg-light">
+	<div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 col-xxl-3 bg-light">
 	<!-- LEFT COLUMN -->
 
 		<p class="text-start"><b>Рубрика:</b> {{rubric.title}} </p>
 		<p class="text-start"><b>Автор:</b> Фамилия, Имя </p>
-		<p class="text-start"><b>Последняя правка:</b> {{article.updated}} </p>
+		<p class="text-start"><b>Последняя правка:</b> {{article.print_time_updated}} </p>
 		<p class="text-start"><b>Статус:</b> {{article.status}} </p>
 		<p class="text-start"><b>Deadline:</b> Дата, время </p>
 
@@ -39,19 +45,19 @@
 		<input type="file" name="file" id="updIcon" onchange="updIcon(this)" class="inputfile" style="width: 0.1px; height: 0.1px; opacity: 0; overflow: hidden; position: absolute; z-index: -1;" />
 		<p class="text-start"><b>Иконка:</b>
 			{% if article.icon %}
-			<div class="row m-0 p-0 justify-content-center" onclick="changeIcon('{{article.trans_title}}', '{{icon.pk}}');">
+			<div class="row m-0 p-0 justify-content-center">
 				<div class="card bg-dark text-white shadowersmall m-0 p-0 ">
   					<img class="card-img" src="{{article.icon.img.url}}" alt="Card image" style="max-width: 20rem; max-height: 224px; min-width: 20rem; min-height: 224px;" >
   					<div class="card-img-overlay h-100 d-flex flex-column justify-content-end">
+  						<a href="/editor/icon?article={{article.trans_title}}" class="card-link stretched-link"></a>
   						<h5 class="card-title" style="z-index: 2;">{{article.icon.label}}</h5>
-    					<p class="card-text" style="font-size: 80%; z-index: 2;">{{article.icon.descr}}</p>
     					<p class="card-text" style="z-index: 2;"><small>Опубликовано</small></p>
   					</div>
 				</div>
 			</div>
-			
+
 			{% else %}
-			<button type="button" class="btn btn-outline-secondary btn-sm" onclick="changeIcon('{{article.trans_title}}');">Добавить</button>
+			<a href="/editor/icon?article={{article.trans_title}}" class="btn btn-outline-secondary btn-sm">Добавить</a>
 			{% endif %}
 		</p>
 		<button class="btn btn-outline-dark btn-block" onclick="renderNews()">Сверстать страницу</button>
@@ -62,9 +68,9 @@
 
 	</div>
 
-	<div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-5 col-xxl-6 mx-0 px-0 justify-content-center">
+	<div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-5 col-xxl-6 justify-content-center">
 	<!-- CENTRAL COLUMN -->
-		<div id="editors" class="container float mx-0 px-0 justify-content-center">
+		<div id="editors" class="container float justify-content-center">
 			
 		</div>
 
@@ -198,10 +204,6 @@ function artUpdClick(){
 	formData.append("artUpd", JSON.stringify(document.getElementById(`artTitle`).value.trim()));
 	fetch("", {method: "POST", headers:{"X-CSRFToken": '{{ csrf_token }}'}, body: formData}).then((response) => {return response.json();}).then((data) => {
     location.replace(data['url']);});
-}
-
-function changeIcon(trans_title, ipk=null){
-	location.replace(`/editor/icon?article=${trans_title}`);
 }
 
 /////////////////////////////////////////////

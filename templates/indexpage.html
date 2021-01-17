@@ -8,13 +8,17 @@
 	<title>Выбрать статью</title>
 	<link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+	<script src="{% static 'fontawesome_free/js/all.min.js' %}"></script>
+	<link href="{% static 'fontawesome_free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+
 	<link rel="preconnect" href="https://fonts.gstatic.com">
 	<link href="https://fonts.googleapis.com/css2?family=PT+Serif&display=swap" rel="stylesheet">
 
 
 <style type="text/css">
 	body {
-        /*font-family: 'PT Serif', serif;*/
+        /*font-family: "Font Awesome 5 Free";, serif*/
         /*background-color: rgb(209,203,193);*/
         background-image: url(/images/redlines.jpg);
       }
@@ -66,24 +70,54 @@
 
 }
 /* Small devices (landscape phones, 544px and up) */
-@media (min-width: 544px) {  
-  .short-text-responsive {font-size:.3rem;} /*1rem = 16px*/
+@media (max-width: 544px) {
+	.h3-title-resp {font-size: 0.4rem;} /*1rem = 16px*/
+	.short-text-resp {display: none;} /*1rem = 16px*/
+	.h6-title-resp {display: none;}
+	.h5-title-resp {font-size: 0.4rem;}
+	small {display: none;}
+
 }
  
 /* Medium devices (tablets, 768px and up) The navbar toggle appears at this breakpoint */
-@media (min-width: 768px) {  
-  .short-text-responsive {font-size:.4rem;} /*1rem = 16px*/
+@media (min-width: 544px) and (max-width: 768px) {
+	.h3-title-resp {font-size: 0.7rem;} /*1rem = 16px*/
+  .short-text-resp {display: none;} /*1rem = 16px*/
+  .h6-title-resp {font-size: 0.5rem;}
+  .h5-title-resp {font-size: 0.5rem;}
+  small {display: none;}
+  .rubric-logo { width: 20px; height: 20px; }
 }
  
 /* Large devices (desktops, 992px and up) */
-@media (min-width: 992px) { 
-  .short-text-responsive {font-size:0.8rem;} /*1rem = 16px*/
+@media (min-width: 768px) and (max-width: 992px) { 
+  .short-text-resp {display: none;}
+  .h3-title-resp {font-size: 1.0rem;} /*1rem = 16px*/
+  .h6-title-resp {font-size: 0.6rem;}
+  .h5-title-resp {font-size: 0.7rem;}
+  small {display: none;}
+  .rubric-logo { width: 25px; height: 25px; }
 }
  
 /* Extra large devices (large desktops, 1200px and up) */
-@media (min-width: 1200px) {  
-  .short-text-responsive {font-size:1.0rem;} /*1rem = 16px*/    
+@media (min-width: 992px) and (max-width: 1200px) {
+	.h3-title-resp {font-size: 1.1rem;}
+	.short-text-resp {font-size: 0.9rem;}
+	.h6-title-resp {font-size: 0.8rem;}
+	.h5-title-resp {font-size: 0.8rem;}
+	small {font-size: 0.6rem;}
+	.rubric-logo { width: 30px; height: 30px; }
+	
 }
+
+@media (min-width: 1200px) and (max-width: 1400px) {
+  .h3-title-resp {font-size: 1.3rem;} /*1rem = 16px*/
+  .h6-title-resp {font-size: 0.9rem;}
+  .h5-title-resp {font-size: 1.0rem;}
+  small {font-size: 0.7rem;}
+  .rubric-logo { width: 35px; height: 35px; }
+}
+
 #newsfeed {
   border-radius: 5px;
   /*background: #FFFFFF;*/
@@ -137,55 +171,87 @@
 
 <div class="row justify-content-center h-100">
 
-	<div class="col-2 mt-5" >
+	<div class="col-2 mt-4" >
 
 			<ul  class="nav flex-column mx-0" style="position: fixed; opacity: 1">
 			  <li class="nav-item p-0 ">
 			  	<div class="row text-center pl-3 redlines" style="border-top-left-radius: 5px; border-top-right-radius: 5px;">
-			  		<img src="/images/archaeology_EgKVrdI.jpg" width="40" height="40" loading="lazy" style="border-radius: 40px;">
-		  			<a class="nav-link text-secondary active" href="#"><h6>Археология</h6></a> 	
+		  			<a class="nav-link text-secondary active" href="#">
+		  				<div class="row">
+		  					<img src="/images/archaeology_EgKVrdI.jpg" width="40" height="40" class="rubric-logo" loading="lazy" style="border-radius: 40px;">
+		  					<h6 class="h6-title-resp ml-2 mt-2">Археология</h6>
+		  				</div>
+		  			</a> 	
 			    </div>
 			  </li>
 			  <li class="nav-item p-0 ">
 			  	<div class="row text-center pl-3 redlines">
-			  		<img src="/images/astronomy_uAL4kG9.jpg" width="40" height="40" loading="lazy" style="border-radius: 40px;">
-		  			<a class="nav-link text-secondary active" href="#"><h6>Астрономия</h6></a> 	
+		  			<a class="nav-link text-secondary active" href="#">
+		  				<div class="row">
+		  					<img src="/images/astronomy_uAL4kG9.jpg" width="40" height="40" class="rubric-logo" loading="lazy" style="border-radius: 40px;">
+		  					<h6 class="h6-title-resp ml-2 mt-2">Астрономия</h6>
+		  				</div>
+		  			</a> 	
 			    </div>
 			  </li>
 			  <li class="nav-item p-0 ">
 			  	<div class="row text-center pl-3 redlines">
-			  		<img src="/images/biology_e3dZxoS.jpg" width="40" height="40" loading="lazy" style="border-radius: 40px;">
-		  			<a class="nav-link text-secondary active" href="#"><h6>Биология</h6></a> 	
+		  			<a class="nav-link text-secondary active" href="#">
+		  				<div class="row">
+		  					<img src="/images/biology_e3dZxoS.jpg" width="40" height="40" class="rubric-logo" loading="lazy" style="border-radius: 40px;">
+		  					<h6 class="h6-title-resp ml-2 mt-2">Биология</h6>
+		  				</div>
+		  			</a> 	
 			    </div>
 			  </li>
 			  <li class="nav-item p-0 ">
 			  	<div class="row text-center pl-3 redlines">
-			  		<img src="/images/genetics_wlevywr.jpg" width="40" height="40" loading="lazy" style="border-radius: 40px;">
-		  			<a class="nav-link text-secondary active" href="#"><h6>Генетика</h6></a> 	
+		  			<a class="nav-link text-secondary active" href="#">
+		  				<div class="row">
+		  					<img src="/images/genetics_wlevywr.jpg" width="40" height="40" class="rubric-logo" loading="lazy" style="border-radius: 40px;">
+		  					<h6 class="h6-title-resp ml-2 mt-2">Генетика</h6>
+		  				</div>
+		  			</a> 	
 			    </div>
 			  </li>
 			  <li class="nav-item p-0 ">
 			  	<div class="row text-center pl-3 redlines" >
-			  		<img src="/images/geography_w32pTnx.jpg" width="40" height="40" loading="lazy" style="border-radius: 40px;">
-		  			<a class="nav-link text-secondary active" href="#"><h6>География</h6></a> 	
+		  			<a class="nav-link text-secondary active" href="#">
+		  				<div class="row">
+		  					<img src="/images/geography_w32pTnx.jpg" width="40" height="40" class="rubric-logo" loading="lazy" style="border-radius: 40px;">
+		  					<h6 class="h6-title-resp ml-2 mt-2">География</h6>
+		  				</div>
+		  			</a> 	
 			    </div>
 			  </li>
 			  <li class="nav-item p-0 ">
 			  	<div class="row text-left pl-3 redlines">
-			  		<img src="/images/infotech_Ic0LBUE.jpg" width="40" height="40" loading="lazy" style="border-radius: 40px;">
-		  			<a class="nav-link text-secondary active" href="#"><h6>Информационные<br> технологии</h6></a> 	
+		  			<a class="nav-link text-secondary active" href="#">
+		  				<div class="row">
+		  					<img src="/images/infotech_Ic0LBUE.jpg" width="40" height="40" class="rubric-logo" loading="lazy" style="border-radius: 40px;">
+		  					<h6 class="h6-title-resp ml-2 mt-2 mr-3">Информационные<br> технологии</h6>
+		  				</div>
+		  			</a> 	
 			    </div>
 			  </li>
 			  <li class="nav-item p-0 ">
 			  	<div class="row text-center pl-3 redlines">
-			  		<img src="/images/history_T8zeBBT.jpg" width="40" height="40" loading="lazy" style="border-radius: 40px;">
-		  			<a class="nav-link text-secondary active" href="#"><h6>История</h6></a> 	
+		  			<a class="nav-link text-secondary active" href="#">
+		  				<div class="row">
+		  					<img src="/images/history_T8zeBBT.jpg" width="40" height="40" class="rubric-logo" loading="lazy" style="border-radius: 40px;">
+		  					<h6 class="h6-title-resp ml-2 mt-2">История</h6>
+		  				</div>
+		  			</a> 	
 			    </div>
 			  </li>
 			  <li class="nav-item p-0 ">
 			  	<div class="row text-center pl-3 redlines" style="border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;">
-			  		<img src="/images/math_xm8o7FI.jpg" width="40" height="40" loading="lazy" style="border-radius: 40px;">
-		  			<a class="nav-link text-secondary active" href="#"><h6>Математика</h6></a> 	
+		  			<a class="nav-link text-secondary active" href="#">
+		  				<div class="row">
+		  					<img src="/images/math_xm8o7FI.jpg" width="40" height="40" class="rubric-logo" loading="lazy" style="border-radius: 40px;">
+		  					<h6 class="h6-title-resp ml-2 mt-2">Математика</h6>
+		  				</div>
+		  			</a> 	
 			    </div>
 			  </li>
 			</ul>
@@ -200,17 +266,17 @@
 		{% for art in artlist %}
 		<!--main new-->
 		<div class="row row-cols-2 justify-content-center p-0 m-0" >		
-			<div class="card text-white bg-white border-0 m-0 p-0" style="overflow: hidden;">
-  				<img class="img-fluid rounded " src="{{art.2.icon.img.url}}">
+			<div class="card text-white bg-white border-0 m-0 p-0" style="overflow: hidden; border-top-right-radius: 0px; border-bottom-right-radius: 0px;">
+  				<img class="img-fluid" src="{{art.2.icon.img.url}}">
 
   				<a href="/news/{{art.2.trans_title}}" class="card-link stretched-link shadowerwhite"></a>
 			</div>		
-			<div class="card text-black shadowerwhite border-0 m-0 bg-light p-0" style="overflow: hidden;">
+			<div class="card text-black shadowerwhite border-0 m-0 bg-light p-0" style="overflow: hidden; border-top-left-radius: 0px; border-bottom-left-radius: 0px;">
   				<img class="card-img" src="{{art.2.icon.img.url}}" style="opacity: 0;">
   				<div class="card-img-overlay d-flex flex-column justify-content-center">
-  					<h3 class="card-title " >{{art.2.title}}</h3>
-    				<p class="card-text">Рисунок был обнаружен на острове Сулавеси в 2017 году в пещере Leang Tedongnge, расположенной примерно в часе ходьбы от ближайшей дороги. Доступ к ней возможен только в сухой сезон из-за наводнений, происходящих во время сезона дождей. Местные жители рассказали учёным, что раньше это изображение никогда не видели "жители Запада".{{art.2.icon.descr}}</p>
-    				<p class="card-text"><small>{{art.2.updated}}</small></p>
+  					<h3 class="card-text h3-title-resp" >{{art.2.title}}</h3>
+    				<p class="card-text short-text-resp">Some quick example text to build on the card title and make up the bulk of the card's content.{{art.2.icon.descr}}</p>
+    				<p class="card-text "><small>{{art.2.print_time_updated}}</small></p>
     				<a href="/news/{{art.2.trans_title}}" class="card-link stretched-link"></a>
   				</div>
 			</div>
@@ -226,28 +292,32 @@
 			  <img src="{{art.1.icon.img.url}}" class="card-img-top" alt="...">
 			  <div class="card-body">
 			  	<a href="/news/{{art.1.trans_title}}" class="card-link stretched-link"></a>
-			    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the</p>
+			  	<h6 class="card-title h6-title-resp" >{{art.1.title}}</h6>
+			  	<p class="card-text "><small>{{art.1.print_time_updated}}</small></p>
 			  </div>
 			</div>
 			<div class="card border-0 bg-light" style="overflow: hidden; max-height: 350px;">
 			  <img src="{{art.2.icon.img.url}}" class="card-img-top" alt="...">
 			  <div class="card-body">
 			    <a href="/news/{{art.2.trans_title}}" class="card-link stretched-link"></a>
-			    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the</p>
+			    <h6 class="card-title h6-title-resp" >{{art.2.title}}</h6>
+			    <p class="card-text "><small>{{art.2.print_time_updated}}</small></p>
 			  </div>
 			</div>
 			<div class="card border-0 bg-light" style="overflow: hidden; max-height: 350px;">
 			  <img src="{{art.3.icon.img.url}}" class="card-img-top" alt="...">
 			  <div class="card-body">
 			  	<a href="/news/{{art.3.trans_title}}" class="card-link stretched-link"></a>
-			    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the</p>
+			  	<h6 class="card-title h6-title-resp" >{{art.3.title}}</h6>
+			  	<p class="card-text "><small>{{art.3.print_time_updated}}</small></p>
 			  </div>
 			</div>
 			<div class="card border-0 bg-light" style="overflow: hidden; max-height: 350px;">
 			  <img src="{{art.4.icon.img.url}}" class="card-img-top" alt="...">
-			  <div class="card-body ">
+			  <div class="card-body">
 			  	<a href="/news/{{art.4.trans_title}}" class="card-link stretched-link"></a>
-			    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the</p>
+			  	<h6 class="card-title h6-title-resp" >{{art.4.title}}</h6>
+			  	<p class="card-text "><small>{{art.4.print_time_updated}}</small></p>
 			  </div>
 			</div>
 		
@@ -260,32 +330,32 @@
 			<div class="row row-cols-3 justify-content-between p-0 m-0 g-2" >
 			{% for art in artlist %}
 			<div class="col-4 bg-light m-0 px-2">
-			<div class="card bg-dark shadowerwhite p-0 m-0 border-0 " style="overflow: hidden;">
+			<div class="card bg-dark shadowerwhite p-0 m-0 border-0 " style="overflow: hidden; border-bottom-left-radius: 0px; border-bottom-right-radius: 0px;">
   				<img class="card-img" src="{{art.0.icon.img.url}}"  >
   				<div class="card-img-overlay  d-flex flex-column justify-content-end">    				
     				<a href="/news/{{art.0.trans_title}}" class="card-link stretched-link"></a>
   				</div>
 			</div>
-			<div class="card bg-dark text-white shadowerblack p-0 m-0 border-0" style="overflow: hidden;">
-  				<img class="card-img" src="{{art.1.icon.img.url}}" style="opacity: 0">
+			<div class="card bg-dark text-white shadowerwhite p-0 m-0 border-0" style="overflow: hidden; border-top-left-radius: 0px; border-top-right-radius: 0px;">
+  				<img class="card-img" src="{{art.1.icon.img.url}}" style="opacity: 0; ">
   				<div class="card-img-overlay d-flex flex-column justify-content-center">
-  					<h5 class="card-title" >{{art.0.title}}</h5>
-    				<p class="card-text" ><small>{{art.0.updated}}</small></p>
+  					<h5 class="card-title h5-title-resp" >{{art.0.title}}</h5>
+    				<p class="card-text" ><small>{{art.0.print_time_updated}}</small></p>
     				<a href="/news/{{art.0.trans_title}}" class="card-link stretched-link"></a>
   				</div>
 			</div>
 			</div>
 
 			<div class="col-4 bg-light m-0 px-2">
-			<div class="card bg-light text-dark shadowerblack m-0 m-0 border-0" style="overflow: hidden;">
+			<div class="card bg-light text-dark shadowerblack m-0 m-0 border-0" style="overflow: hidden; border-bottom-left-radius: 0px; border-bottom-right-radius: 0px;">
   				<img class="card-img" src="{{art.3.icon.img.url}}"  style="opacity: 0">
   				<div class="card-img-overlay d-flex flex-column justify-content-center">
-  					<h5 class="card-title" >{{art.3.title}}</h5>
-    				<p class="card-text" ><small>{{art.3.updated}}</small></p>
+  					<h5 class="card-title h5-title-resp" >{{art.3.title}}</h5>
+    				<p class="card-text" ><small>{{art.3.print_time_updated}}</small></p>
     				<a href="/news/{{art.3.trans_title}}" class="card-link stretched-link"></a>
   				</div>
 			</div>
-			<div class="card bg-dark shadowerblack m-0 m-0 border-0" style="overflow: hidden;">
+			<div class="card bg-dark shadowerwhite m-0 m-0 border-0" style="overflow: hidden; border-top-left-radius: 0px; border-top-right-radius: 0px;">
   				<img class="card-img" src="{{art.3.icon.img.url}}" >
   				<div class="card-img-overlay h-100 d-flex flex-column justify-content-end">
     				<a href="/news/{{art.3.trans_title}}" class="card-link stretched-link"></a>
@@ -294,17 +364,17 @@
 			</div>
 
 			<div class="col-4 bg-light m-0 px-2">
-			<div class="card bg-dark shadowerblack m-0 m-0 border-0" style="overflow: hidden;">
+			<div class="card bg-dark shadowerblack m-0 m-0 border-0" style="overflow: hidden; border-bottom-left-radius: 0px; border-bottom-right-radius: 0px;">
   				<img class="card-img" src="{{art.5.icon.img.url}}"  >
   				<div class="card-img-overlay h-100 d-flex flex-column justify-content-end">
     				<a href="/news/{{art.5.trans_title}}" class="card-link stretched-link"></a>
   				</div>
 			</div>
-			<div class="card bg-dark text-white shadowerwhite m-0 m-0 border-0" style="overflow: hidden;">
+			<div class="card bg-dark text-white shadowerwhite m-0 m-0 border-0" style="overflow: hidden; border-top-left-radius: 0px; border-top-right-radius: 0px;">
   				<img class="card-img" src="{{art.5.icon.img.url}}" style="opacity: 0">
   				<div class="card-img-overlay h-100 d-flex flex-column justify-content-center">
-  					<h5 class="card-title" >{{art.5.title}}</h5>
-    				<p class="card-text" ><small>{{art.5.updated}}</small></p>
+  					<h5 class="card-title h5-title-resp" >{{art.5.title}}</h5>
+    				<p class="card-text " ><small>{{art.5.print_time_updated}}</small></p>
     				<a href="/news/{{art.5.trans_title}}" class="card-link stretched-link"></a>
   				</div>
 			</div>
@@ -322,55 +392,87 @@
 </div>
 
 <!--RIGHTCOL <div id="newsfeed" class="col-12 bg-light" style="opacity: 0.9;"></div>-->
-	<div class="col-2 mt-5" >
+	<div class="col-2 mt-4" >
 
-			<ul  class="nav flex-column mx-0" style="position: fixed; opacity: 1">
+			<ul  class="nav flex-column mx-0 px-3" style="position: fixed; opacity: 1">
 			  <li class="nav-item p-0 ">
-			  	<div class="row redlines pr-3 justify-content-end" style="border-top-left-radius: 5px; border-top-right-radius: 5px;">
-		  			<a class="nav-link text-secondary active" href="#"><h6>Медицина</h6></a>
-		  			<img src="/images/medicine_LknAqL8.jpg" width="40" height="40" loading="lazy" style="border-radius: 40px;">
+			  	<div class="row redlines px-3 justify-content-end" style="border-top-left-radius: 5px; border-top-right-radius: 5px;">
+		  			<a class="nav-link text-secondary active" href="#">
+		  				<div class="row">
+		  					<h6 class="h6-title-resp mr-2 mt-2">Медицина</h6>
+		  					<img src="/images/medicine_LknAqL8.jpg" width="40" height="40" class="rubric-logo" loading="lazy" style="border-radius: 40px;">
+		  				</div>
+		  			</a>
 			    </div>
 			  </li>
 			  <li class="nav-item p-0 " >
-			  	<div class="row redlines pr-3 justify-content-end" >
-		  			<a class="nav-link text-secondary active" href="#"><h6>Психология</h6></a>
-		  			<img src="/images/psycho_o5qCiCD.jpg" width="40" height="40" loading="lazy" style="border-radius: 40px;">
+			  	<div class="row redlines px-3 justify-content-end" >
+		  			<a class="nav-link text-secondary active " href="#">
+		  				<div class="row">
+		  					<h6 class="h6-title-resp mr-2 mt-2">Психология</h6>
+		  					<img src="/images/psycho_o5qCiCD.jpg" width="40" height="40" class="rubric-logo" loading="lazy" style="border-radius: 40px;">
+		  				</div>
+		  			</a>
 			    </div>
 			  </li>
-			  <li class="nav-item p-0 ">
-			  	<div class="row redlines pr-3 justify-content-end" >
-		  			<a class="nav-link text-secondary active" href="#"><h6>Робототехника</h6></a>
-		  			<img src="/images/robo_erZg1Ok.jpg" width="40" height="40" loading="lazy" style="border-radius: 40px;">
-			    </div>
-			  </li>
-			  <li class="nav-item p-0 " >
-			  	<div class="row redlines pr-3 justify-content-end" >
-			  		<a class="nav-link text-secondary active" href="#"><h6>Социология</h6></a> 	
-			  		<img src="/images/sociology_7QlvgM2.jpg" width="40" height="40" loading="lazy" style="border-radius: 40px;">
-			    </div>
-			  </li>
-			  <li class="nav-item p-0 " >
-			  	<div class="row redlines pr-3 justify-content-end" >
-			  		<a class="nav-link text-secondary active" href="#"><h6>Физика</h6></a> 	
-			  		<img src="/images/physics_gRXMLjV.jpg" width="40" height="40" loading="lazy" style="border-radius: 40px;">
+			  <li class="nav-item px-0">
+			  	<div class="row redlines px-3 justify-content-end" >
+		  			<a class="nav-link text-secondary active" href="#">
+		  				<div class="row">
+		  					<h6 class="h6-title-resp mr-2 mt-2 ">Робототехника</h6>
+		  					<img src="/images/robo_erZg1Ok.jpg" width="40" height="40" class="rubric-logo " loading="lazy" style="border-radius: 40px;">
+		  				</div>
+		  			</a>
 			    </div>
 			  </li>
 			  <li class="nav-item p-0 " >
-			  	<div class="row redlines pr-3 justify-content-end" >
-			  		<a class="nav-link text-secondary active" href="#"><h6>Химия</h6></a> 	
-			  		<img src="/images/chemistry_O5ZC08c.jpg" width="40" height="40" loading="lazy" style="border-radius: 40px;">
+			  	<div class="row redlines px-3 justify-content-end" >
+			  		<a class="nav-link text-secondary active" href="#">
+			  			<div class="row">
+			  				<h6 class="h6-title-resp mr-2 mt-2">Социология</h6>
+			  				<img src="/images/sociology_7QlvgM2.jpg" width="40" height="40" class="rubric-logo" loading="lazy" style="border-radius: 40px;">
+			  			</div>
+			  		</a>
 			    </div>
 			  </li>
 			  <li class="nav-item p-0 " >
-			  	<div class="row redlines pr-3 justify-content-end" >
-			  		<a class="nav-link text-secondary active" href="#"><h6>Экология</h6></a> 	
-			  		<img src="/images/ecology_3qppdVp.jpg" width="40" height="40" loading="lazy" style="border-radius: 40px;">
+			  	<div class="row redlines px-3 justify-content-end" >
+			  		<a class="nav-link text-secondary active" href="#">
+			  			<div class="row">
+			  				<h6 class="h6-title-resp mr-2 mt-2">Физика</h6>
+			  				<img src="/images/physics_gRXMLjV.jpg" width="40" height="40" class="rubric-logo" loading="lazy" style="border-radius: 40px;">
+			  			</div>
+			  		</a>
 			    </div>
 			  </li>
 			  <li class="nav-item p-0 " >
-			  	<div class="row redlines pr-3 justify-content-end" style="border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;">
-			  		<a class="nav-link text-secondary active" href="#"><h6>Экономика</h6></a> 	
-			  		<img src="/images/economics_01Rcbbl.jpg" width="40" height="40" loading="lazy" style="border-radius: 40px;">
+			  	<div class="row redlines px-3 justify-content-end" >
+			  		<a class="nav-link text-secondary active" href="#">
+			  			<div class="row">
+			  				<h6 class="h6-title-resp mr-2 mt-2">Химия</h6>
+			  				<img src="/images/chemistry_O5ZC08c.jpg" width="40" height="40" class="rubric-logo" loading="lazy" style="border-radius: 40px;">
+			  			</div>
+			  		</a>
+			    </div>
+			  </li>
+			  <li class="nav-item p-0 " >
+			  	<div class="row redlines px-3 justify-content-end" >
+			  		<a class="nav-link text-secondary active" href="#">
+			  			<div class="row">
+			  				<h6 class="h6-title-resp mr-2 mt-2">Экология</h6>
+			  				<img src="/images/ecology_3qppdVp.jpg" width="40" height="40" class="rubric-logo" loading="lazy" style="border-radius: 40px;">			  			
+			  			</div>
+			  		</a>
+			    </div>
+			  </li>
+			  <li class="nav-item p-0 " >
+			  	<div class="row redlines px-3 justify-content-end" style="border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;">
+			  		<a class="nav-link text-secondary active" href="#">
+			  			<div class="row">
+			  				<h6 class="h6-title-resp mr-2 mt-2">Экономика</h6>
+			  				<img src="/images/economics_01Rcbbl.jpg" width="40" height="40" class="rubric-logo" loading="lazy" style="border-radius: 40px;">
+			  			</div>
+			  		</a>
 			    </div>
 			  </li>
 			</ul>

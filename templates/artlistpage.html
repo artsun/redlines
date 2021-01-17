@@ -10,6 +10,12 @@
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 
 <style type="text/css">
+	body {
+	background-image: url(/images/art-make-background.jpg);
+	background-position: center center;
+	z-index: -1;
+	}
+
 	.shadowersmall:before {
     content: '';
     position:absolute;
@@ -38,33 +44,39 @@
 <div class="container-fluid h-100">
 	<nav aria-label="breadcrumb">
 	  <ol class="breadcrumb">
-	  		<li class="breadcrumb-itema active" aria-current="page">Статьи | <a href="/editor/new" class="link-info" style="color: black">Создать публикацию</a></li>
+	  	<li class="breadcrumb-item active" aria-current="page">Статьи </li>
+	  	<li class="breadcrumb-item" aria-current="page"><a href="/editor/new" class="link-info" style="color: black">Создать публикацию</a></li>
+	  	<li class="ml-auto" aria-current="page"><a href="/" class="link-info" style="color: black">На главную</a></li>
+
+	  		
 	  </ol>
+	  
+	  
 	</nav>
 <div class="row mx-0 px-0 justify-content-center h-100">
 
 	<div class="col-10 col-sm-10 col-md-10 col-lg-10 col-xl-10 col-xxl-10 mx-0 px-0 justify-content-center h-100 " >
 	<!-- CENTRAL COLUMN -->
-		<div class="row mt-5 mx-0 px-1 justify-content-start h-70 border rounded" >
+		<div class="row mt-5 mx-0 px-1 justify-content-start h-70 " >
 
 			{% for art in artlist %}
 			{% if art.icon %}
 			
-			<div class="card bg-dark text-white shadowersmall m-1 p-0" onclick="goTo(`{{art.trans_title}}`)">
+			<div class="card bg-dark text-white m-1 p-0">
   				<img class="card-img" src="{{art.icon.img.url}}" style="max-width: 20rem; max-height: 224px; min-width: 20rem; min-height: 224px;" >
   				<div class="card-img-overlay h-100 d-flex flex-column justify-content-end">
-  					<h5 class="card-title" style="z-index: 2;">{{art.title}}</h5>
-    				<p class="card-text" style="font-size: 80%; z-index: 2;">{{art.icon.descr}}</p>
-    				<p class="card-text" style="z-index: 2;"><small>Редактировалась: {{art.updated}}</small></p>
+  					<a href="/editor/{{art.trans_title}}" class="card-link stretched-link"></a>
+  					<h5 class="card-title">{{art.title}}</h5>
+    				<p class="card-text text-white"><small>Редактировалась: {{art.print_time_updated}}</small></p>
   				</div>
 			</div>
 			{% else %}
-			<div class="card bg-dark text-white shadowersmall m-0 p-0" onclick="goTo(`{{art.trans_title}}`)">
+			<div class="card bg-dark text-white shadowersmall m-0 p-0">
   				<img class="card-img" src="/images/question.jpg" style="max-width: 20rem; max-height: 224px; min-width: 20rem; min-height: 224px;" >
   				<div class="card-img-overlay h-100 d-flex flex-column justify-content-end">
-  					<h5 class="card-title text-dark" style="z-index: 2;">{{art.title}}</h5>
-    				<p class="card-text text-dark" style="font-size: 80%; z-index: 2;">{{art.icon.descr}}</p>
-    				<p class="card-text text-dark" style="z-index: 2;"><small>Редактировалась: {{art.updated}}</small></p>
+  					<a href="/editor/{{art.trans_title}}" class="card-link stretched-link"></a>
+  					<h5 class="card-title text-dark" >{{art.title}}</h5>
+    				<p class="card-text text-white" ><small>Редактировалась: {{art.print_time_updated}}</small></p>
   				</div>
 			</div>
 			{% endif %}
@@ -97,9 +109,6 @@ integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNm
 	$('.shadowersmall').on('mouseover', function() {    $(this).toggleClass('special'); });
 	$('.shadowersmall').on('mouseout', function() {    $(this).toggleClass('special'); });
 
-function goTo(trans_title){
-	location.replace(`/editor/${trans_title}`);
-}
 
 </script>
 

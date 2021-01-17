@@ -1,11 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import User, Group
+from django.utils import timezone
+
+from django_resized import ResizedImageField
 
 import json
 from re import sub as rsub
 from collections import OrderedDict
-
-from django_resized import ResizedImageField
+from datetime import datetime
 
 from .translators import transliterate
 
@@ -75,6 +77,20 @@ class Article(models.Model):
 
     def __str__(self):
         return f'{self.trans_title} ({self.title})'
+
+    def print_time_updated(self):
+        one_hour = 3600  # sec
+        timedelta = (datetime.now() - self.updated.replace(tzinfo=None)).seconds
+        if timedelta < one_hour:
+            return 'Менее часа назад'
+        elif one_hour < timedelta < one_hour*2:
+            return 'Час назад'
+        elif one_hour*2 < timedelta < one_hour*3:
+            return 'Два часа назад'
+        else:
+            dt = self.updated.astimezone(timezone.get_default_timezone())
+            cal = {1: 'января', 2: 'февраля', 3: 'марта', 4: 'апреля', 5: 'мая', 6: 'июня', 7: 'июля', 8: 'августа', 9: 'сентября', 10: 'октября', 11: 'ноября', 12: 'декабря'}
+            return dt.strftime(f'%d {cal[dt.month]} %Y ')  # %H:%M
 
     def create(self, rubric, title):
         trans_title = '-'.join(transliterate(title).split())

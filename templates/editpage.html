@@ -6,6 +6,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<title>Редактор | {{ article.title }} </title>
+	<link rel="icon" type="image/png" href="/images/redlines-logo.jpg"/>
 	<link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 <style type="text/css">
@@ -21,7 +22,7 @@
 <div class="container-fluid">
 	<nav aria-label="breadcrumb">
 	  <ol class="breadcrumb">
-	  		<li class="breadcrumb-item"><a href="/editor/" class="link-info" style="color: black">Статьи</a></li>
+	  		<li class="breadcrumb-item"><a href="/editor" class="link-info" style="color: black">Статьи</a></li>
 	    	<li class="breadcrumb-item active" aria-current="page">{{article.title}}</li>
 	  </ol>
 	</nav>
@@ -50,8 +51,8 @@
   					<img class="card-img" src="{{article.icon.img.url}}" alt="Card image" style="max-width: 20rem; max-height: 224px; min-width: 20rem; min-height: 224px;" >
   					<div class="card-img-overlay h-100 d-flex flex-column justify-content-end">
   						<a href="/editor/icon?article={{article.trans_title}}" class="card-link stretched-link"></a>
-  						<h5 class="card-title" style="z-index: 2;">{{article.icon.label}}</h5>
-    					<p class="card-text" style="z-index: 2;"><small>Опубликовано</small></p>
+  						<h5 class="card-title">{{article.icon.label}}</h5>
+    					<p class="card-text"><small>Опубликовано</small></p>
   					</div>
 				</div>
 			</div>
@@ -270,7 +271,7 @@ function convertDataToHtml(blocks) {
             convertedHtml += `<h${block.data.level}>${block.data.text}</h${block.data.level}>`;
             break;
           case "embed":
-            convertedHtml += `<div class='p-3 justify-content-center'><iframe width="560" height="315" src="${block.data.embed}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>`;
+            convertedHtml += `<div class="row justify-content-center"><iframe width="560" height="315" style="position:relative; top:0px; width:90vh; height:50vh;" src="${block.data.embed}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div><br>`;
             break;
           case "paragraph":
             convertedHtml += `<p>${block.data.text}</p>`;
@@ -283,8 +284,8 @@ function convertDataToHtml(blocks) {
             if (block.data.withBackground) imgstyle += "cdx-simple-image__picture--with-background";
             if (block.data.withBorder) imgstyle += " cdx-simple-image__picture--with-border";
             //imghtml = `<img class="img-fluid" src="${block.data.url}" title="${block.data.caption}" /><br /><em>${block.data.caption}</em>`;
-            imghtml = `<img class="img-fluid" src="${block.data.file.url}" title="${block.data.caption}" /><br /><em>${block.data.caption}</em>`;
-            imghtml = `<div class="cdx-simple-image__picture ${imgstyle}">${imghtml}</div>`;
+            imghtml = `<img class="img-fluid" src="${block.data.file.url}" title="${block.data.caption}" /><br /><em>${block.data.caption}</em><br>`;
+            imghtml = `<div class="row justify-content-center"><div class="cdx-simple-image__picture ${imgstyle}">${imghtml}</div></div><br>`;
             convertedHtml += imghtml;
             break;
           case "list":

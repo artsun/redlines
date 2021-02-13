@@ -121,6 +121,12 @@
                             <li class="nav-item">
                                 <a class="nav-link color-pink-hover" href="#">Археология</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link color-yellow-hover" href="#">Робототехника</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link color-yellow-hover" href="#">IT</a>
+                            </li>
                             <li class="nav-item dropdown has-submenu menu-large hidden-md-down hidden-sm-down hidden-xs-down">
                                 <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Естественные науки
@@ -129,23 +135,24 @@
                                     <li>
                                         <div class="mega-menu-content clearfix">
                                             <div class="tab">
-                                                <button class="tablinks active" onclick="openCategory(event, 'catBiology')">Биология</button>
-                                                <button class="tablinks" onclick="openCategory(event, 'catGenetics')">Генетика</button>
-                                                <button class="tablinks" onclick="openCategory(event, 'catGeography')">География</button>
-                                                <button class="tablinks" onclick="openCategory(event, 'catMath')">Математика</button>
-                                                <button class="tablinks" onclick="openCategory(event, 'catMedicine')">Медицина</button>
-                                                <button class="tablinks" onclick="openCategory(event, 'catPhysics')">Физика</button>
-                                                <button class="tablinks" onclick="openCategory(event, 'catChemistry')">Химия</button>
+                             {% if catBiology %}<button class="tablinks active" onclick="openCategory(event, 'catBiology')">Биология</button> {% endif %}
+                            {% if catGenetics %}<button class="tablinks" onclick="openCategory(event, 'catGenetics')">Генетика</button> {% endif %}
+                           {% if catGeography %}<button class="tablinks" onclick="openCategory(event, 'catGeography')">География</button> {% endif %}
+                                {% if catMath %}<button class="tablinks" onclick="openCategory(event, 'catMath')">Математика</button> {% endif %}
+                            {% if catMedicine %}<button class="tablinks" onclick="openCategory(event, 'catMedicine')">Медицина</button> {% endif %}
+                             {% if catPhysics %}<button class="tablinks" onclick="openCategory(event, 'catPhysics')">Физика</button> {% endif %}
+                           {% if catChemistry %}<button class="tablinks" onclick="openCategory(event, 'catChemistry')">Химия</button> {% endif %}
+                             {% if catEcology %}<button class="tablinks" onclick="openCategory(event, 'catEcology')">Экология</button> {% endif %}
                                             </div>
 
                                             <div class="tab-details clearfix">
-                                                <div id="catBiology" class="tabcontent active">
+                             {% if catBiology %}<div id="catBiology" class="tabcontent active">
                                                     <div class="row">
                                                         {% for article in catBiology %}
                                                         <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                                                             <div class="blog-box">
                                                                 <div class="post-media">
-                                                                    <a href="{{article.get_news_url}}" title="">
+                                                                    <a href="{{article.get_news_url}}" title="{{article.icon.label}}">
                                                                         <img src="{{article.icon.new_right.url}}" alt="{{article.icon.label}}" class="img-fluid">
                                                                         <div class="hovereffect">
                                                                         </div><!-- end hover -->
@@ -153,20 +160,21 @@
                                                                     </a>
                                                                 </div><!-- end media -->
                                                                 <div class="blog-meta">
-                                                                    <h4><a href="{{article.get_news_url}}" title="">{{article.icon.label}}</a></h4>
+                                                                    <!--<h4><a href="{{article.get_news_url}}" title="">{{article.icon.label}}</a></h4>-->
                                                                 </div><!-- end meta -->
                                                             </div><!-- end blog-box -->
                                                         </div>
                                                         {% endfor %}
                                                     </div>
                                                 </div>
-                                                <div id="catGenetics" class="tabcontent">
+                                            {% endif %}
+                            {% if catGenetics %}<div id="catGenetics" class="tabcontent">
                                                     <div class="row">
                                                         {% for article in catGenetics %}
                                                         <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                                                             <div class="blog-box">
                                                                 <div class="post-media">
-                                                                    <a href="{{article.get_news_url}}" title="">
+                                                                    <a href="{{article.get_news_url}}" title="{{article.icon.label}}">
                                                                         <img src="{{article.icon.new_right.url}}" alt="{{article.icon.label}}" class="img-fluid">
                                                                         <div class="hovereffect">
                                                                         </div><!-- end hover -->
@@ -174,20 +182,21 @@
                                                                     </a>
                                                                 </div><!-- end media -->
                                                                 <div class="blog-meta">
-                                                                    <h4><a href="{{article.get_news_url}}" title="">{{article.icon.label}}</a></h4>
+                                                                    <!--<h4><a href="{{article.get_news_url}}" title="">{{article.icon.label}}</a></h4>-->
                                                                 </div><!-- end meta -->
                                                             </div><!-- end blog-box -->
                                                         </div>
                                                         {% endfor %}
                                                     </div>
                                                 </div>
-                                                <div id="catGeography" class="tabcontent">
+                                            {% endif %}
+                           {% if catGeography %}<div id="catGeography" class="tabcontent">
                                                     <div class="row">
                                                         {% for article in catGeography %}
                                                         <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                                                             <div class="blog-box">
                                                                 <div class="post-media">
-                                                                    <a href="{{article.get_news_url}}" title="">
+                                                                    <a href="{{article.get_news_url}}" title="{{article.icon.label}}">
                                                                         <img src="{{article.icon.new_right.url}}" alt="{{article.icon.label}}" class="img-fluid">
                                                                         <div class="hovereffect">
                                                                         </div><!-- end hover -->
@@ -195,20 +204,21 @@
                                                                     </a>
                                                                 </div><!-- end media -->
                                                                 <div class="blog-meta">
-                                                                    <h4><a href="{{article.get_news_url}}" title="">{{article.icon.label}}</a></h4>
+                                                                    <!--<h4><a href="{{article.get_news_url}}" title="">{{article.icon.label}}</a></h4>-->
                                                                 </div><!-- end meta -->
                                                             </div><!-- end blog-box -->
                                                         </div>
                                                         {% endfor %}
                                                     </div>
                                                 </div>
-                                                <div id="catMath" class="tabcontent">
+                                            {% endif %}
+                                {% if catMath %}<div id="catMath" class="tabcontent">
                                                     <div class="row">
                                                         {% for article in catMath %}
                                                         <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                                                             <div class="blog-box">
                                                                 <div class="post-media">
-                                                                    <a href="{{article.get_news_url}}" title="">
+                                                                    <a href="{{article.get_news_url}}" title="{{article.icon.label}}">
                                                                         <img src="{{article.icon.new_right.url}}" alt="{{article.icon.label}}" class="img-fluid">
                                                                         <div class="hovereffect">
                                                                         </div><!-- end hover -->
@@ -216,20 +226,21 @@
                                                                     </a>
                                                                 </div><!-- end media -->
                                                                 <div class="blog-meta">
-                                                                    <h4><a href="{{article.get_news_url}}" title="">{{article.icon.label}}</a></h4>
+                                                                    <!--<h4><a href="{{article.get_news_url}}" title="">{{article.icon.label}}</a></h4>-->
                                                                 </div><!-- end meta -->
                                                             </div><!-- end blog-box -->
                                                         </div>
                                                         {% endfor %}
                                                     </div>
                                                 </div>
-                                                <div id="catMedicine" class="tabcontent">
+                                            {% endif %}
+                            {% if catMedicine %}<div id="catMedicine" class="tabcontent">
                                                     <div class="row">
                                                         {% for article in catMedicine %}
                                                         <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                                                             <div class="blog-box">
                                                                 <div class="post-media">
-                                                                    <a href="{{article.get_news_url}}" title="">
+                                                                    <a href="{{article.get_news_url}}" title="{{article.icon.label}}">
                                                                         <img src="{{article.icon.new_right.url}}" alt="{{article.icon.label}}" class="img-fluid">
                                                                         <div class="hovereffect">
                                                                         </div><!-- end hover -->
@@ -237,20 +248,21 @@
                                                                     </a>
                                                                 </div><!-- end media -->
                                                                 <div class="blog-meta">
-                                                                    <h4><a href="{{article.get_news_url}}" title="">{{article.icon.label}}</a></h4>
+                                                                    <!--<h4><a href="{{article.get_news_url}}" title="">{{article.icon.label}}</a></h4>-->
                                                                 </div><!-- end meta -->
                                                             </div><!-- end blog-box -->
                                                         </div>
                                                         {% endfor %}
                                                     </div>
                                                 </div>
-                                                <div id="catPhysics" class="tabcontent">
+                                            {% endif %}
+                             {% if catPhysics %}<div id="catPhysics" class="tabcontent">
                                                     <div class="row">
                                                         {% for article in catPhysics %}
                                                         <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                                                             <div class="blog-box">
                                                                 <div class="post-media">
-                                                                    <a href="{{article.get_news_url}}" title="">
+                                                                    <a href="{{article.get_news_url}}" title="{{article.icon.label}}">
                                                                         <img src="{{article.icon.new_right.url}}" alt="{{article.icon.label}}" class="img-fluid">
                                                                         <div class="hovereffect">
                                                                         </div><!-- end hover -->
@@ -258,20 +270,21 @@
                                                                     </a>
                                                                 </div><!-- end media -->
                                                                 <div class="blog-meta">
-                                                                    <h4><a href="{{article.get_news_url}}" title="">{{article.icon.label}}</a></h4>
+                                                                    <!--<h4><a href="{{article.get_news_url}}" title="">{{article.icon.label}}</a></h4>-->
                                                                 </div><!-- end meta -->
                                                             </div><!-- end blog-box -->
                                                         </div>
                                                         {% endfor %}
                                                     </div>
                                                 </div>
-                                                <div id="catChemistry" class="tabcontent">
+                                            {% endif %}
+                           {% if catChemistry %}<div id="catChemistry" class="tabcontent">
                                                     <div class="row">
                                                         {% for article in catChemistry %}
                                                         <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                                                             <div class="blog-box">
                                                                 <div class="post-media">
-                                                                    <a href="{{article.get_news_url}}" title="">
+                                                                    <a href="{{article.get_news_url}}" title="{{article.icon.label}}">
                                                                         <img src="{{article.icon.new_right.url}}" alt="{{article.icon.label}}" class="img-fluid">
                                                                         <div class="hovereffect">
                                                                         </div><!-- end hover -->
@@ -279,61 +292,46 @@
                                                                     </a>
                                                                 </div><!-- end media -->
                                                                 <div class="blog-meta">
-                                                                    <h4><a href="{{article.get_news_url}}" title="">{{article.icon.label}}</a></h4>
+                                                                    <!--<h4><a href="{{article.get_news_url}}" title="">{{article.icon.label}}</a></h4>-->
                                                                 </div><!-- end meta -->
                                                             </div><!-- end blog-box -->
                                                         </div>
                                                         {% endfor %}
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="nav-item dropdown has-submenu menu-large hidden-md-down hidden-sm-down hidden-xs-down">
-                                <a class="nav-link dropdown-toggle color-yellow-hover" href="#" id="dropdown02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Технологии
-                                </a>
-                                <ul class="dropdown-menu megamenu" aria-labelledby="dropdown02">
-                                    <li>
-                                        <div class="mega-menu-content clearfix">
-                                            <div class="tab">
-                                                <button class="tablinks active" onclick="openCategory(event, 'catRobo')">Робототехника</button>
-                                                <button class="tablinks" onclick="openCategory(event, 'catInfotech')">IT</button>
-                                            </div>
-
-                                            <div class="tab-details clearfix">
-                                                <div id="catRobo" class="tabcontent active">
+                                            {% endif %}
+                             {% if catEcology %}<div id="catEcology" class="tabcontent">
                                                     <div class="row">
+                                                        {% for article in catEcology %}
                                                         <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                                                             <div class="blog-box">
                                                                 <div class="post-media">
-                                                                    <a href="single.html" title="">
-                                                                        <img src="upload/menu_01.jpg" alt="" class="img-fluid">
+                                                                    <a href="{{article.get_news_url}}" title="{{article.icon.label}}">
+                                                                        <img src="{{article.icon.new_right.url}}" alt="{{article.icon.label}}" class="img-fluid">
                                                                         <div class="hovereffect">
                                                                         </div><!-- end hover -->
-                                                                        <span class="menucat">Spa</span>
+                                                                        <span class="menucat">{{article.rub.first.rubric.title}}</span>
                                                                     </a>
                                                                 </div><!-- end media -->
                                                                 <div class="blog-meta">
-                                                                    <h4><a href="single.html" title="">Top 10+ care advice for your toenails</a></h4>
+                                                                    <!--<h4><a href="{{article.get_news_url}}" title="">{{article.icon.label}}</a></h4>-->
                                                                 </div><!-- end meta -->
                                                             </div><!-- end blog-box -->
                                                         </div>
-
+                                                        {% endfor %}
                                                     </div>
                                                 </div>
+                                            {% endif %}
                                             </div>
                                         </div>
                                     </li>
                                 </ul>
                             </li>
                             <li class="nav-item dropdown has-submenu menu-large hidden-md-down hidden-sm-down hidden-xs-down">
-                                <a class="nav-link dropdown-toggle color-aqua-hover" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <a class="nav-link dropdown-toggle color-aqua-hover" href="#" id="dropdown02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Общественные науки
                                 </a>
-                                <ul class="dropdown-menu megamenu" aria-labelledby="dropdown03">
+                                <ul class="dropdown-menu megamenu" aria-labelledby="dropdown02">
                                     <li>
                                         <div class="mega-menu-content clearfix">
                                             <div class="tab">
@@ -346,31 +344,95 @@
                                             <div class="tab-details clearfix">
                                                 <div id="catHistory" class="tabcontent active">
                                                     <div class="row">
+                                                        {% for article in catHistory %}
                                                         <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                                                             <div class="blog-box">
                                                                 <div class="post-media">
-                                                                    <a href="single.html" title="">
-                                                                        <img src="upload/menu_01.jpg" alt="" class="img-fluid">
+                                                                    <a href="{{article.get_news_url}}" title="{{article.icon.label}}">
+                                                                        <img src="{{article.icon.new_right.url}}" alt="{{article.icon.label}}" class="img-fluid">
                                                                         <div class="hovereffect">
                                                                         </div><!-- end hover -->
-                                                                        <span class="menucat">Spa</span>
+                                                                        <span class="menucat">{{article.rub.first.rubric.title}}</span>
                                                                     </a>
                                                                 </div><!-- end media -->
                                                                 <div class="blog-meta">
-                                                                    <h4><a href="single.html" title="">Top 10+ care advice for your toenails</a></h4>
+                                                                    <!--<h4><a href="{{article.get_news_url}}" title="{{article.icon.label}}">{{article.icon.label}}</a></h4>-->
                                                                 </div><!-- end meta -->
                                                             </div><!-- end blog-box -->
                                                         </div>
-
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
+                                            
+                                                <div id="catPsycho" class="tabcontent">
+                                                    <div class="row">
+                                                        {% for article in catPsycho %}
+                                                        <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                                                            <div class="blog-box">
+                                                                <div class="post-media">
+                                                                    <a href="{{article.get_news_url}}" title="{{article.icon.label}}">
+                                                                        <img src="{{article.icon.new_right.url}}" alt="{{article.icon.label}}" class="img-fluid">
+                                                                        <div class="hovereffect">
+                                                                        </div><!-- end hover -->
+                                                                        <span class="menucat">{{article.rub.first.rubric.title}}</span>
+                                                                    </a>
+                                                                </div><!-- end media -->
+                                                                <div class="blog-meta">
+                                                                    <!--<h4><a href="{{article.get_news_url}}" title="{{article.icon.label}}">{{article.icon.label}}</a></h4>-->
+                                                                </div><!-- end meta -->
+                                                            </div><!-- end blog-box -->
+                                                        </div>
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
+                                            
+                                                <div id="catSociology" class="tabcontent">
+                                                    <div class="row">
+                                                        {% for article in catSociology %}
+                                                        <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                                                            <div class="blog-box">
+                                                                <div class="post-media">
+                                                                    <a href="{{article.get_news_url}}" title="{{article.icon.label}}">
+                                                                        <img src="{{article.icon.new_right.url}}" alt="{{article.icon.label}}" class="img-fluid">
+                                                                        <div class="hovereffect">
+                                                                        </div><!-- end hover -->
+                                                                        <span class="menucat">{{article.rub.first.rubric.title}}</span>
+                                                                    </a>
+                                                                </div><!-- end media -->
+                                                                <div class="blog-meta">
+                                                                    <!--<h4><a href="{{article.get_news_url}}" title="{{article.icon.label}}">{{article.icon.label}}</a></h4>-->
+                                                                </div><!-- end meta -->
+                                                            </div><!-- end blog-box -->
+                                                        </div>
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
+                                            
+                                                <div id="catEconomics" class="tabcontent">
+                                                    <div class="row">
+                                                        {% for article in catEconomics %}
+                                                        <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                                                            <div class="blog-box">
+                                                                <div class="post-media">
+                                                                    <a href="{{article.get_news_url}}" title="{{article.icon.label}}">
+                                                                        <img src="{{article.icon.new_right.url}}" alt="{{article.icon.label}}" class="img-fluid">
+                                                                        <div class="hovereffect">
+                                                                        </div><!-- end hover -->
+                                                                        <span class="menucat">{{article.rub.first.rubric.title}}</span>
+                                                                    </a>
+                                                                </div><!-- end media -->
+                                                                <div class="blog-meta">
+                                                                    <!--<h4><a href="{{article.get_news_url}}" title="{{article.icon.label}}">{{article.icon.label}}</a></h4>-->
+                                                                </div><!-- end meta -->
+                                                            </div><!-- end blog-box -->
+                                                        </div>
+                                                        {% endfor %}
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </li>
                                 </ul>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link color-green-hover" href="#">Экология</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link color-red-hover" href="#">COVID-19</a>
@@ -389,7 +451,7 @@
 
         <footer class="footer">
             <div class="container">
-                <h2 class="widget-title">Popular Categories</h2>
+                <h2 class="widget-title">Рубрики</h2>
                 <div class="row">
 
                     <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">

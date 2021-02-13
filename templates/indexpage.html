@@ -1,541 +1,226 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<html>
-<head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-	<title>Выбрать статью</title>
-	<link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+{% extends "baseCloap.html" %}
 
-	<script src="{% static 'fontawesome_free/js/all.min.js' %}"></script>
-	<link href="{% static 'fontawesome_free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+{% block title %} Главная | Redlines  {% endblock title %}
 
-	<link rel="preconnect" href="https://fonts.gstatic.com">
-	<link href="https://fonts.googleapis.com/css2?family=PT+Serif&display=swap" rel="stylesheet">
+{% block main_content %}
+        <section class="section first-section">
+            <div class="container-fluid">
+                <div class="masonry-blog clearfix">
+                    <div class="left-side">
+                        <div class="masonry-box post-media">
+                             <img src="{{flist.0.article.icon.fresh_lg.url}}" alt="{{flist.0.article.icon.label}}" class="img-fluid">
+                             <div class="shadoweffect">
+                                <div class="shadow-desc">
+                                    <div class="blog-meta">
+                                        <span class="bg-aqua"><a href="#" title="{{flist.0.article.rub.first.rubric.title}}">{{flist.0.article.rub.first.rubric.title}}</a></span>
+                                        <h4><a href="{{flist.0.article.get_news_url}}" title="{{flist.0.article.icon.label}}">{{flist.0.article.icon.label}}</a></h4>
+                                        <small><a href="#" title="">{{flist.0.article.print_time_updated}}</a></small>
+                                        <small><a href="#" title="">{{flist.0.article.author.fname}} {{flist.0.article.author.lname}}</a></small>
+                                    </div><!-- end meta -->
+                                </div><!-- end shadow-desc -->
+                            </div><!-- end shadow -->
+                        </div><!-- end post-media -->
+                    </div><!-- end left-side -->
+
+                    <div class="center-side">
+                        <div class="masonry-box post-media">
+                             <img src="{{flist.1.article.icon.fresh_med.url}}" alt="{{flist.1.article.icon.label}}" class="img-fluid">
+                             <div class="shadoweffect">
+                                <div class="shadow-desc">
+                                    <div class="blog-meta">
+                                        <span class="bg-red"><a href="#" title="{{flist.1.article.rub.first.rubric.title}}">{{flist.1.article.rub.first.rubric.title}}</a></span>
+                                        <h4><a href="{{flist.1.article.get_news_url}}" title="{{flist.1.article.icon.label}}">{{flist.1.article.icon.label}}</a></h4>
+                                        <small><a href="#" title="">{{flist.1.article.print_time_updated}}</a></small>
+                                        <small><a href="#" title="">{{flist.1.article.author.fname}} {{flist.1.article.author.lname}}</a></small>
+                                    </div><!-- end meta -->
+                                </div><!-- end shadow-desc -->
+                            </div><!-- end shadow -->
+                        </div><!-- end post-media -->
+
+                        <div class="masonry-box small-box post-media">
+                             <img src="{{flist.2.article.icon.fresh_sm.url}}" alt="{{flist.2.article.icon.label}}" class="img-fluid">
+                             <div class="shadoweffect">
+                                <div class="shadow-desc">
+                                    <div class="blog-meta">
+                                        <span class="bg-grey"><a href="#" title="{{flist.2.article.rub.first.rubric.title}}">{{flist.2.article.rub.first.rubric.title}}</a></span>
+                                        <h4><a href="{{flist.2.article.get_news_url}}" title="">{{flist.2.article.icon.label}}</a></h4>
+                                    </div><!-- end meta -->
+                                </div><!-- end shadow-desc -->
+                            </div><!-- end shadow -->
+                        </div><!-- end post-media -->
+
+                        <div class="masonry-box small-box post-media">
+                             <img src="{{flist.3.article.icon.fresh_sm.url}}" alt="{{flist.3.article.icon.label}}" class="img-fluid">
+                             <div class="shadoweffect">
+                                <div class="shadow-desc">
+                                    <div class="blog-meta">
+                                        <span class="bg-green"><a href="#" title="{{flist.3.article.rub.first.rubric.title}}">{{flist.3.article.rub.first.rubric.title}}</a></span>
+                                        <h4><a href="{{flist.3.article.get_news_url}}" title="{{flist.3.article.icon.label}}">{{flist.3.article.icon.label}}</a></h4>
+                                    </div><!-- end meta -->
+                                </div><!-- end shadow-desc -->
+                            </div><!-- end shadow -->
+                        </div><!-- end post-media -->
+                    </div><!-- end left-side -->
+
+                    <div class="right-side hidden-md-down">
+                        <div class="masonry-box post-media">
+                             <img src="{{flist.4.article.icon.fresh_lg.url}}" alt="{{flist.4.article.icon.label}}" class="img-fluid">
+                             <div class="shadoweffect">
+                                <div class="shadow-desc">
+                                    <div class="blog-meta">
+                                        <span class="bg-aqua"><a href="#" title="{{flist.4.article.rub.first.rubric.title}}">{{flist.4.article.rub.first.rubric.title}}</a></span>
+                                        <h4><a href="{{flist.4.article.get_news_url}}" title="{{flist.4.article.icon.label}}">{{flist.4.article.icon.label}}</a></h4>
+                                        <small><a href="#" title="">{{flist.4.article.print_time_updated}}</a></small>
+                                        <small><a href="#" title="">{{flist.4.article.author.fname}} {{flist.4.article.author.lname}}</a></small>
+                                    </div><!-- end meta -->
+                                </div><!-- end shadow-desc -->
+                             </div><!-- end shadow -->
+                        </div><!-- end post-media -->
+                    </div><!-- end right-side -->
+                </div><!-- end masonry -->
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        
+
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                
+                                <div class="blog-box">
+                                    <div class="post-media">
+                                        <a href="{{hlist.0.article.get_news_url}}" title="{{hlist.0.article.icon.label}}">
+                                            <img src="{{hlist.0.article.icon.hot_hz.url}}" alt="{{hlist.0.article.icon.label}}" class="img-fluid">
+                                            <div class="hovereffect">
+                                                
+                                            </div><!-- end hover -->
+                                        </a>
+                                    </div><!-- end media -->
+                                    <div class="blog-meta big-meta">
+                                        <h4><a href="{{hlist.0.article.get_news_url}}" title="">{{hlist.0.article.icon.label}}</a></h4>
+                                        <p>{{hlist.0.article.icon.short}}</p>
+                                        <small><a href="#" title="">{{hlist.0.article.rub.first.rubric.title}}</a></small>
+                                        <small><a href="#" title="">{{hlist.0.article.print_time_updated}}</a></small>
+                                        <small><a href="#" title="">{{hlist.0.article.author.fname}} {{hlist.0.article.author.lname}}</a></small>
+                                    </div><!-- end meta -->
+                                </div><!-- end blog-box -->
+
+                                <hr class="invis">
+
+                            </div><!-- end col -->
+                        </div><!-- end row -->
+                    </div><!-- end col -->
+
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <div class="blog-box">
+                                    <div class="post-media">
+                                        <a href="{{hlist.1.article.get_news_url}}" title="{{hlist.1.article.icon.label}}">
+                                            <img src="{{hlist.1.article.icon.hot_vert.url}}" alt="{{hlist.1.article.icon.label}}" class="img-fluid">
+                                            <div class="hovereffect">
+                                                
+                                            </div><!-- end hover -->
+                                        </a>
+                                    </div><!-- end media -->
+                                    <div class="blog-meta">
+                                        <h4><a href="{{hlist.1.article.get_news_url}}" title="">{{hlist.1.article.icon.label}}</a></h4>
+                                        <small><a href="#" title="">{{hlist.1.article.rub.first.rubric.title}}</a></small>
+                                        <small><a href="#" title="">{{hlist.1.article.print_time_updated}}</a></small>
+                                    </div><!-- end meta -->
+                                </div><!-- end blog-box -->
+
+                                <hr class="invis">
 
 
-<style type="text/css">
-	body {
-        /*font-family: "Font Awesome 5 Free";, serif*/
-        /*background-color: rgb(209,203,193);*/
-        background-image: url(/images/redlines.jpg);
-      }
-    .redlines {
-    	background: rgba(247, 247, 247, 0.97);
-    }
-	.shadowerwhite:before {
-    content: '';
-    position:absolute;
-    top:0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(to bottom, rgba(0,0,0,0) 40%,rgba(0,0,0,0.7 ) 100%);
-    z-index: 1;
-    /*border-radius: 10px;*/
-}
-	.shadowerwhite.special:before {
-    content: '';
-    position:absolute;
-    top:0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(to bottom, rgba(200,200,200,0) 0%,rgba(200,200,200,1 ) 100%);
-    z-index: 1;
+                            </div><!-- end col -->
 
-}
-	.shadowerblack:before {
-    content: '';
-    position:absolute;
-    top:0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(to bottom, rgba(0,0,0,0) 40%,rgba(0,0,0,0.7 ) 100%);
-    z-index: 1;
-    /*border-radius: 10px;*/
-}
-	.shadowerblack.special:before {
-    content: '';
-    position:absolute;
-    top:0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,1 ) 100%);
-    z-index: 1;
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <div class="blog-box">
+                                    <div class="post-media">
+                                        <a href="{{hlist.2.article.get_news_url}}" title="{{hlist.2.article.icon.label}}">
+                                            <img src="{{hlist.2.article.icon.hot_vert.url}}" alt="{{hlist.2.article.icon.label}}" class="img-fluid">
+                                            <div class="hovereffect">
+                                                
+                                            </div><!-- end hover -->
+                                        </a>
+                                    </div><!-- end media -->
+                                    <div class="blog-meta">
+                                        <h4><a href="{{hlist.2.article.get_news_url}}" title="">{{hlist.2.article.icon.label}}</a></h4>
+                                        <small><a href="#" title="">{{hlist.2.article.rub.first.rubric.title}}</a></small>
+                                        <small><a href="#" title="">{{hlist.2.article.print_time_updated}}</a></small>
+                                    </div><!-- end meta -->
+                                </div><!-- end blog-box -->
 
-}
-/* Small devices (landscape phones, 544px and up) */
-@media (max-width: 544px) {
-	.h3-title-resp {font-size: 0.4rem;} /*1rem = 16px*/
-	.short-text-resp {display: none;} /*1rem = 16px*/
-	.h6-title-resp {display: none;}
-	.h5-title-resp {font-size: 0.4rem;}
-	small {display: none;}
+                                <hr class="invis">
+                            </div><!-- end col -->
+                        </div><!-- end row -->
+                    </div><!-- end col -->
+                </div><!-- end row -->
 
-}
  
-/* Medium devices (tablets, 768px and up) The navbar toggle appears at this breakpoint */
-@media (min-width: 544px) and (max-width: 768px) {
-	.h3-title-resp {font-size: 0.7rem;} /*1rem = 16px*/
-  .short-text-resp {display: none;} /*1rem = 16px*/
-  .h6-title-resp {font-size: 0.5rem;}
-  .h5-title-resp {font-size: 0.5rem;}
-  small {display: none;}
-  .rubric-logo { width: 20px; height: 20px; }
-}
- 
-/* Large devices (desktops, 992px and up) */
-@media (min-width: 768px) and (max-width: 992px) { 
-  .short-text-resp {display: none;}
-  .h3-title-resp {font-size: 1.0rem;} /*1rem = 16px*/
-  .h6-title-resp {font-size: 0.6rem;}
-  .h5-title-resp {font-size: 0.7rem;}
-  small {display: none;}
-  .rubric-logo { width: 25px; height: 25px; }
-}
- 
-/* Extra large devices (large desktops, 1200px and up) */
-@media (min-width: 992px) and (max-width: 1200px) {
-	.h3-title-resp {font-size: 1.1rem;}
-	.short-text-resp {font-size: 0.9rem;}
-	.h6-title-resp {font-size: 0.8rem;}
-	.h5-title-resp {font-size: 0.8rem;}
-	small {font-size: 0.6rem;}
-	.rubric-logo { width: 30px; height: 30px; }
-	
-}
 
-@media (min-width: 1200px) and (max-width: 1400px) {
-  .h3-title-resp {font-size: 1.3rem;} /*1rem = 16px*/
-  .h6-title-resp {font-size: 0.9rem;}
-  .h5-title-resp {font-size: 1.0rem;}
-  small {font-size: 0.7rem;}
-  .rubric-logo { width: 35px; height: 35px; }
-}
+                <hr class="invis1">
 
-#newsfeed {
-  border-radius: 5px;
-  /*background: #FFFFFF;*/
-  padding: 20px;
-  width: 400px;
-  height: 800px;
-}
+                {% for pair in nlist %}
 
+                <div class="row">
+                    <div class="col-lg-9">
+                        <div class="blog-list clearfix">
 
-</style>
+                            <div class="blog-box row">
+                                <div class="col-md-4">
+                                    <div class="post-media">
+                                        <a href="{{pair.0.get_news_url}}" title="">
+                                            <img src="{{pair.0.icon.new_left}}" alt="{{pair.0.icon.label}}" class="img-fluid">
+                                            <div class="hovereffect"></div>
+                                        </a>
+                                    </div><!-- end media -->
+                                </div><!-- end col -->
 
-</head>
-<body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light p-2">
-  
-  <img src="/images/redlines-logo.jpg" class="ml-2" width="90" height="90" loading="lazy">
-  <a class="navbar-brand text-danger ml-3" href="/"><h2>RED8LINES</h2></a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+                                <div class="blog-meta big-meta col-md-8">
+                                    <h4><a href="{{pair.0.get_news_url}}" title="">{{pair.0.icon.label}}</a></h4>
+                                    <p>{{pair.0.icon.short}}</p>
+                                    <small><a href="#" title="">{{pair.0.rub.first.rubric.title}}</a></small>
+                                    <small><a href="#" title="">{{pair.0.print_time_updated}}</a></small>
+                                    <small><a href="#" title="">{{pair.0.author.fname}} {{pair.0.author.lname}}</a></small>
+                                </div><!-- end meta -->
+                            </div><!-- end blog-box -->
 
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Подписаться <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Обратная связь</a>
-      </li>
-    </ul>
-    <ul class="navbar-nav ml-auto mr-5">
-    	
-    	<li class="nav-item">
-        	<a class="nav-link" href="/editor"><img src="/images/enter-icon.png" class="mr-1" width="40" height="40" alt="" loading="lazy"><b>Вход</b></a>
-      </li>
-    </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search"  aria-label="Search">
-      <button class="btn btn-outline-dark my-2 my-sm-0" type="submit">Найти</button>
-    </form>
-  </div>
-</nav>
+                            <hr class="invis">
 
+                        </div><!-- end blog-list -->
 
+                    </div><!-- end col -->
 
+                    <div class="col-lg-3">
+                        <div class="blog-box">
+                            <div class="post-media">
+                                <a href="{{pair.1.get_news_url}}" title="{{pair.1.icon.label}}">
+                                    <img src="{{pair.1.icon.new_right}}" alt="{{pair.1.icon.label}}" class="img-fluid">
+                                    <div class="hovereffect">
+                                    </div><!-- end hover -->
+                                </a>
+                            </div><!-- end media -->
+                            <div class="blog-meta">
+                                <h4><a href="{{pair.1.get_news_url}}" title="">{{pair.1.icon.label}}</a></h4>
+                                <small><a href="#" title="">{{pair.1.print_time_updated}}</a></small>
+                                <small><a href="#" title="">{{pair.1.author.fname}} {{pair.1.author.lname}}</a></small>
+                            </div><!-- end meta -->
+                        </div><!-- end blog-box -->
 
-	<hr>
-<div class="container-fluid h-100">
+                        <hr class="invis">
 
+                    </div><!-- end col -->
+                </div><!-- end row -->
 
+                {% endfor %}
 
-<div class="row justify-content-center h-100">
-
-	<div class="col-2 mt-4" >
-
-			<ul  class="nav flex-column mx-0" style="position: fixed; opacity: 1">
-			  <li class="nav-item p-0 ">
-			  	<div class="row text-center pl-3 redlines" style="border-top-left-radius: 5px; border-top-right-radius: 5px;">
-		  			<a class="nav-link text-secondary active" href="#">
-		  				<div class="row">
-		  					<img src="/images/archaeology_EgKVrdI.jpg" width="40" height="40" class="rubric-logo" loading="lazy" style="border-radius: 40px;">
-		  					<h6 class="h6-title-resp ml-2 mt-2">Археология</h6>
-		  				</div>
-		  			</a> 	
-			    </div>
-			  </li>
-			  <li class="nav-item p-0 ">
-			  	<div class="row text-center pl-3 redlines">
-		  			<a class="nav-link text-secondary active" href="#">
-		  				<div class="row">
-		  					<img src="/images/astronomy_uAL4kG9.jpg" width="40" height="40" class="rubric-logo" loading="lazy" style="border-radius: 40px;">
-		  					<h6 class="h6-title-resp ml-2 mt-2">Астрономия</h6>
-		  				</div>
-		  			</a> 	
-			    </div>
-			  </li>
-			  <li class="nav-item p-0 ">
-			  	<div class="row text-center pl-3 redlines">
-		  			<a class="nav-link text-secondary active" href="#">
-		  				<div class="row">
-		  					<img src="/images/biology_e3dZxoS.jpg" width="40" height="40" class="rubric-logo" loading="lazy" style="border-radius: 40px;">
-		  					<h6 class="h6-title-resp ml-2 mt-2">Биология</h6>
-		  				</div>
-		  			</a> 	
-			    </div>
-			  </li>
-			  <li class="nav-item p-0 ">
-			  	<div class="row text-center pl-3 redlines">
-		  			<a class="nav-link text-secondary active" href="#">
-		  				<div class="row">
-		  					<img src="/images/genetics_wlevywr.jpg" width="40" height="40" class="rubric-logo" loading="lazy" style="border-radius: 40px;">
-		  					<h6 class="h6-title-resp ml-2 mt-2">Генетика</h6>
-		  				</div>
-		  			</a> 	
-			    </div>
-			  </li>
-			  <li class="nav-item p-0 ">
-			  	<div class="row text-center pl-3 redlines" >
-		  			<a class="nav-link text-secondary active" href="#">
-		  				<div class="row">
-		  					<img src="/images/geography_w32pTnx.jpg" width="40" height="40" class="rubric-logo" loading="lazy" style="border-radius: 40px;">
-		  					<h6 class="h6-title-resp ml-2 mt-2">География</h6>
-		  				</div>
-		  			</a> 	
-			    </div>
-			  </li>
-			  <li class="nav-item p-0 ">
-			  	<div class="row text-left pl-3 redlines">
-		  			<a class="nav-link text-secondary active" href="#">
-		  				<div class="row">
-		  					<img src="/images/infotech_Ic0LBUE.jpg" width="40" height="40" class="rubric-logo" loading="lazy" style="border-radius: 40px;">
-		  					<h6 class="h6-title-resp ml-2 mt-2 mr-3">Информационные<br> технологии</h6>
-		  				</div>
-		  			</a> 	
-			    </div>
-			  </li>
-			  <li class="nav-item p-0 ">
-			  	<div class="row text-center pl-3 redlines">
-		  			<a class="nav-link text-secondary active" href="#">
-		  				<div class="row">
-		  					<img src="/images/history_T8zeBBT.jpg" width="40" height="40" class="rubric-logo" loading="lazy" style="border-radius: 40px;">
-		  					<h6 class="h6-title-resp ml-2 mt-2">История</h6>
-		  				</div>
-		  			</a> 	
-			    </div>
-			  </li>
-			  <li class="nav-item p-0 ">
-			  	<div class="row text-center pl-3 redlines" style="border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;">
-		  			<a class="nav-link text-secondary active" href="#">
-		  				<div class="row">
-		  					<img src="/images/math_xm8o7FI.jpg" width="40" height="40" class="rubric-logo" loading="lazy" style="border-radius: 40px;">
-		  					<h6 class="h6-title-resp ml-2 mt-2">Математика</h6>
-		  				</div>
-		  			</a> 	
-			    </div>
-			  </li>
-			</ul>
-	</div>
-
-	<div class="col-7 col-sm-7 col-md-7 col-lg-7 col-xl-7 col-xxl-7 p-0 justify-content-center h-100" >
-	<!-- CENTRAL COLUMN <div class="col-5 p-0 m-0 bg-dark" style="overflow: hidden;"></div><div class="col-7 p-0 m-0 h-100" ></div><div class="d-flex flex-row" style="overflow: hidden;">		</div>-->
-	<div class="container-fluid">
-		<br>
-
-
-		{% for art in artlist %}
-		<!--main new-->
-		<div class="row row-cols-2 justify-content-center p-0 m-0" >		
-			<div class="card text-white bg-white border-0 m-0 p-0" style="overflow: hidden; border-top-right-radius: 0px; border-bottom-right-radius: 0px;">
-  				<img class="img-fluid" src="{{art.2.icon.img.url}}">
-
-  				<a href="/news/{{art.2.trans_title}}" class="card-link stretched-link shadowerwhite"></a>
-			</div>		
-			<div class="card text-black shadowerwhite border-0 m-0 bg-light p-0" style="overflow: hidden; border-top-left-radius: 0px; border-bottom-left-radius: 0px;">
-  				<img class="card-img" src="{{art.2.icon.img.url}}" style="opacity: 0;">
-  				<div class="card-img-overlay d-flex flex-column justify-content-center">
-  					<h3 class="card-text h3-title-resp" >{{art.2.title}}</h3>
-    				<p class="card-text short-text-resp">Some quick example text to build on the card title and make up the bulk of the card's content.{{art.2.icon.descr}}</p>
-    				<p class="card-text "><small>{{art.2.print_time_updated}}</small></p>
-    				<a href="/news/{{art.2.trans_title}}" class="card-link stretched-link"></a>
-  				</div>
-			</div>
-		</div>
-
-		{% endfor %}
-		<hr>
-		<!--small new-->
-		<div class="row row-cols-4 justify-content-between p-0 m-0" >
-		{% for art in artlist %}
-		
-			<div class="card border-0 bg-light" style="overflow: hidden; max-height: 350px;">
-			  <img src="{{art.1.icon.img.url}}" class="card-img-top" alt="...">
-			  <div class="card-body">
-			  	<a href="/news/{{art.1.trans_title}}" class="card-link stretched-link"></a>
-			  	<h6 class="card-title h6-title-resp" >{{art.1.title}}</h6>
-			  	<p class="card-text "><small>{{art.1.print_time_updated}}</small></p>
-			  </div>
-			</div>
-			<div class="card border-0 bg-light" style="overflow: hidden; max-height: 350px;">
-			  <img src="{{art.2.icon.img.url}}" class="card-img-top" alt="...">
-			  <div class="card-body">
-			    <a href="/news/{{art.2.trans_title}}" class="card-link stretched-link"></a>
-			    <h6 class="card-title h6-title-resp" >{{art.2.title}}</h6>
-			    <p class="card-text "><small>{{art.2.print_time_updated}}</small></p>
-			  </div>
-			</div>
-			<div class="card border-0 bg-light" style="overflow: hidden; max-height: 350px;">
-			  <img src="{{art.3.icon.img.url}}" class="card-img-top" alt="...">
-			  <div class="card-body">
-			  	<a href="/news/{{art.3.trans_title}}" class="card-link stretched-link"></a>
-			  	<h6 class="card-title h6-title-resp" >{{art.3.title}}</h6>
-			  	<p class="card-text "><small>{{art.3.print_time_updated}}</small></p>
-			  </div>
-			</div>
-			<div class="card border-0 bg-light" style="overflow: hidden; max-height: 350px;">
-			  <img src="{{art.4.icon.img.url}}" class="card-img-top" alt="...">
-			  <div class="card-body">
-			  	<a href="/news/{{art.4.trans_title}}" class="card-link stretched-link"></a>
-			  	<h6 class="card-title h6-title-resp" >{{art.4.title}}</h6>
-			  	<p class="card-text "><small>{{art.4.print_time_updated}}</small></p>
-			  </div>
-			</div>
-		
-		{% endfor %}
-		</div>
-
-		<br><hr>
-
-		<!--triple -->
-			<div class="row row-cols-3 justify-content-between p-0 m-0 g-2" >
-			{% for art in artlist %}
-			<div class="col-4 bg-light m-0 px-2">
-			<div class="card bg-dark shadowerwhite p-0 m-0 border-0 " style="overflow: hidden; border-bottom-left-radius: 0px; border-bottom-right-radius: 0px;">
-  				<img class="card-img" src="{{art.0.icon.img.url}}"  >
-  				<div class="card-img-overlay  d-flex flex-column justify-content-end">    				
-    				<a href="/news/{{art.0.trans_title}}" class="card-link stretched-link"></a>
-  				</div>
-			</div>
-			<div class="card bg-dark text-white shadowerwhite p-0 m-0 border-0" style="overflow: hidden; border-top-left-radius: 0px; border-top-right-radius: 0px;">
-  				<img class="card-img" src="{{art.1.icon.img.url}}" style="opacity: 0; ">
-  				<div class="card-img-overlay d-flex flex-column justify-content-center">
-  					<h5 class="card-title h5-title-resp" >{{art.0.title}}</h5>
-    				<p class="card-text" ><small>{{art.0.print_time_updated}}</small></p>
-    				<a href="/news/{{art.0.trans_title}}" class="card-link stretched-link"></a>
-  				</div>
-			</div>
-			</div>
-
-			<div class="col-4 bg-light m-0 px-2">
-			<div class="card bg-light text-dark shadowerblack m-0 m-0 border-0" style="overflow: hidden; border-bottom-left-radius: 0px; border-bottom-right-radius: 0px;">
-  				<img class="card-img" src="{{art.3.icon.img.url}}"  style="opacity: 0">
-  				<div class="card-img-overlay d-flex flex-column justify-content-center">
-  					<h5 class="card-title h5-title-resp" >{{art.3.title}}</h5>
-    				<p class="card-text" ><small>{{art.3.print_time_updated}}</small></p>
-    				<a href="/news/{{art.3.trans_title}}" class="card-link stretched-link"></a>
-  				</div>
-			</div>
-			<div class="card bg-dark shadowerwhite m-0 m-0 border-0" style="overflow: hidden; border-top-left-radius: 0px; border-top-right-radius: 0px;">
-  				<img class="card-img" src="{{art.3.icon.img.url}}" >
-  				<div class="card-img-overlay h-100 d-flex flex-column justify-content-end">
-    				<a href="/news/{{art.3.trans_title}}" class="card-link stretched-link"></a>
-  				</div>
-			</div>
-			</div>
-
-			<div class="col-4 bg-light m-0 px-2">
-			<div class="card bg-dark shadowerblack m-0 m-0 border-0" style="overflow: hidden; border-bottom-left-radius: 0px; border-bottom-right-radius: 0px;">
-  				<img class="card-img" src="{{art.5.icon.img.url}}"  >
-  				<div class="card-img-overlay h-100 d-flex flex-column justify-content-end">
-    				<a href="/news/{{art.5.trans_title}}" class="card-link stretched-link"></a>
-  				</div>
-			</div>
-			<div class="card bg-dark text-white shadowerwhite m-0 m-0 border-0" style="overflow: hidden; border-top-left-radius: 0px; border-top-right-radius: 0px;">
-  				<img class="card-img" src="{{art.5.icon.img.url}}" style="opacity: 0">
-  				<div class="card-img-overlay h-100 d-flex flex-column justify-content-center">
-  					<h5 class="card-title h5-title-resp" >{{art.5.title}}</h5>
-    				<p class="card-text " ><small>{{art.5.print_time_updated}}</small></p>
-    				<a href="/news/{{art.5.trans_title}}" class="card-link stretched-link"></a>
-  				</div>
-			</div>
-			</div>
-			{% endfor %}
-		</div>
-	<hr>
-
-
-
-
-	</div>
-
-
-</div>
-
-<!--RIGHTCOL <div id="newsfeed" class="col-12 bg-light" style="opacity: 0.9;"></div>-->
-	<div class="col-2 mt-4" >
-
-			<ul  class="nav flex-column mx-0 px-3" style="position: fixed; opacity: 1">
-			  <li class="nav-item p-0 ">
-			  	<div class="row redlines px-3 justify-content-end" style="border-top-left-radius: 5px; border-top-right-radius: 5px;">
-		  			<a class="nav-link text-secondary active" href="#">
-		  				<div class="row">
-		  					<h6 class="h6-title-resp mr-2 mt-2">Медицина</h6>
-		  					<img src="/images/medicine_LknAqL8.jpg" width="40" height="40" class="rubric-logo" loading="lazy" style="border-radius: 40px;">
-		  				</div>
-		  			</a>
-			    </div>
-			  </li>
-			  <li class="nav-item p-0 " >
-			  	<div class="row redlines px-3 justify-content-end" >
-		  			<a class="nav-link text-secondary active " href="#">
-		  				<div class="row">
-		  					<h6 class="h6-title-resp mr-2 mt-2">Психология</h6>
-		  					<img src="/images/psycho_o5qCiCD.jpg" width="40" height="40" class="rubric-logo" loading="lazy" style="border-radius: 40px;">
-		  				</div>
-		  			</a>
-			    </div>
-			  </li>
-			  <li class="nav-item px-0">
-			  	<div class="row redlines px-3 justify-content-end" >
-		  			<a class="nav-link text-secondary active" href="#">
-		  				<div class="row">
-		  					<h6 class="h6-title-resp mr-2 mt-2 ">Робототехника</h6>
-		  					<img src="/images/robo_erZg1Ok.jpg" width="40" height="40" class="rubric-logo " loading="lazy" style="border-radius: 40px;">
-		  				</div>
-		  			</a>
-			    </div>
-			  </li>
-			  <li class="nav-item p-0 " >
-			  	<div class="row redlines px-3 justify-content-end" >
-			  		<a class="nav-link text-secondary active" href="#">
-			  			<div class="row">
-			  				<h6 class="h6-title-resp mr-2 mt-2">Социология</h6>
-			  				<img src="/images/sociology_7QlvgM2.jpg" width="40" height="40" class="rubric-logo" loading="lazy" style="border-radius: 40px;">
-			  			</div>
-			  		</a>
-			    </div>
-			  </li>
-			  <li class="nav-item p-0 " >
-			  	<div class="row redlines px-3 justify-content-end" >
-			  		<a class="nav-link text-secondary active" href="#">
-			  			<div class="row">
-			  				<h6 class="h6-title-resp mr-2 mt-2">Физика</h6>
-			  				<img src="/images/physics_gRXMLjV.jpg" width="40" height="40" class="rubric-logo" loading="lazy" style="border-radius: 40px;">
-			  			</div>
-			  		</a>
-			    </div>
-			  </li>
-			  <li class="nav-item p-0 " >
-			  	<div class="row redlines px-3 justify-content-end" >
-			  		<a class="nav-link text-secondary active" href="#">
-			  			<div class="row">
-			  				<h6 class="h6-title-resp mr-2 mt-2">Химия</h6>
-			  				<img src="/images/chemistry_O5ZC08c.jpg" width="40" height="40" class="rubric-logo" loading="lazy" style="border-radius: 40px;">
-			  			</div>
-			  		</a>
-			    </div>
-			  </li>
-			  <li class="nav-item p-0 " >
-			  	<div class="row redlines px-3 justify-content-end" >
-			  		<a class="nav-link text-secondary active" href="#">
-			  			<div class="row">
-			  				<h6 class="h6-title-resp mr-2 mt-2">Экология</h6>
-			  				<img src="/images/ecology_3qppdVp.jpg" width="40" height="40" class="rubric-logo" loading="lazy" style="border-radius: 40px;">			  			
-			  			</div>
-			  		</a>
-			    </div>
-			  </li>
-			  <li class="nav-item p-0 " >
-			  	<div class="row redlines px-3 justify-content-end" style="border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;">
-			  		<a class="nav-link text-secondary active" href="#">
-			  			<div class="row">
-			  				<h6 class="h6-title-resp mr-2 mt-2">Экономика</h6>
-			  				<img src="/images/economics_01Rcbbl.jpg" width="40" height="40" class="rubric-logo" loading="lazy" style="border-radius: 40px;">
-			  			</div>
-			  		</a>
-			    </div>
-			  </li>
-			</ul>
-	</div>
-
-
-</div>
-
-
-</div>
-
-
-
-<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
-integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-
-<script>
-
-	$('.shadowerwhite').on('mouseover', function() {    $(this).toggleClass('special'); });
-	$('.shadowerwhite').on('mouseout', function() {    $(this).toggleClass('special'); });
-	$('.shadowerblack').on('mouseover', function() {    $(this).toggleClass('special'); });
-	$('.shadowerblack').on('mouseout', function() {    $(this).toggleClass('special'); });
-
-const RSS_URL = ``;
-
-function rssFetcher(){
-	$.ajax(RSS_URL, {
-  accepts: {
-    xml: "application/rss+xml"
-  },
-
-  dataType: "xml",
-
-  success: function(data) {
-    $(data)
-      .find("item")
-      .each(function() {
-        const el = $(this);
-
-        const template = `
-          <article>
-            <img src="${el.find("link").text()}/image/large.png" alt="">
-            <h2>
-              <a href="${el
-                .find("link")
-                .text()}" target="_blank" rel="noopener">
-                ${el.find("title").text()}
-              </a>
-            </h2>
-          </article>
-        `;
-        document.getElementById("newsfeed").innerHTML += template;
-
-        //document.body.insertAdjacentHTML("newsfeed", template);
-      });
-  }
-});
-}
-//rssFetcher();
-</script>
-
-
-</body>
-</html>
+                <hr class="invis1">
+            </div><!-- end container -->
+        </section>
+{% endblock main_content %}

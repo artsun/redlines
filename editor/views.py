@@ -20,7 +20,7 @@ class ArtListPage(View):
     #login_url = '/login/'
 
     def get(self, request):
-        context = {'artlist': Article.objects.all().order_by('pk'),}
+        context = {'artlist': Article.objects.all().order_by('-updated'),}
         return render(request, 'artlistpage.html', context)
 
 
@@ -198,7 +198,7 @@ class IconMake(View):
         elif request.FILES.get('image') and request.POST.get('ipk'):
             Icon.objects.get(pk=request.POST.get('ipk')).upd_image(request.FILES.get('image'))
         elif request.FILES.get('file'):
-            icon = Icon(img=request.FILES.get('file'), rubric=rubric, label=request.POST.get('label'), descr=request.POST.get('descr'))
+            icon = Icon(img=request.FILES.get('file'), rubric=rubric, label=request.POST.get('label'), short=request.POST.get('descr'))
             icon.save()
         elif request.POST.get('ipk') and request.POST.get('class') and 'val' in post_heads:
             Icon.objects.get(pk=request.POST.get('ipk')).upd(request.POST.get('class'), request.POST.get('val'))

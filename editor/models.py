@@ -9,6 +9,7 @@ from re import sub as rsub
 from collections import OrderedDict
 from datetime import datetime
 
+import management
 from .translators import transliterate
 
 
@@ -41,17 +42,44 @@ class Rubric(models.Model):
     def __str__(self):
         return self.title
 
+    @staticmethod
+    def statistics():
+        return {r.codename: r.arts.count() for r in Rubric.objects.all()}
+
+    @staticmethod
+    def navbar_catalogs():
+        return {
+            'catBiology': Article.objects.filter(rub__rubric__codename='biology').order_by('updated')[:4],
+            'catGenetics': Article.objects.filter(rub__rubric__codename='genetics').order_by('updated')[:4],
+            'catGeography': Article.objects.filter(rub__rubric__codename='geography').order_by('updated')[:4],
+            'catMath': Article.objects.filter(rub__rubric__codename='math').order_by('updated')[:4],
+            'catMedicine': Article.objects.filter(rub__rubric__codename='medicine').order_by('updated')[:4],
+            'catPhysics': Article.objects.filter(rub__rubric__codename='physics').order_by('updated')[:4],
+            'catChemistry': Article.objects.filter(rub__rubric__codename='chemistry').order_by('updated')[:4],
+            'catEcology': Article.objects.filter(rub__rubric__codename='ecology').order_by('updated')[:4],
+            'catHistory': Article.objects.filter(rub__rubric__codename='history').order_by('updated')[:4],
+            'catPsycho': Article.objects.filter(rub__rubric__codename='psycho').order_by('updated')[:4],
+            'catSociology': Article.objects.filter(rub__rubric__codename='sociology').order_by('updated')[:4],
+            'catEconomics': Article.objects.filter(rub__rubric__codename='economics').order_by('updated')[:4]
+        }
+
 
 class Icon(models.Model):
-    img = ResizedImageField(size=[1024, 768], crop=['middle', 'center'],  quality=100, upload_to='images/', blank=True, null=False)
+    fresh_lg = ResizedImageField(size=[534, 468], crop=['middle', 'center'],  quality=100, upload_to='images/', blank=True, null=True)
+    fresh_med = ResizedImageField(size=[533, 261], crop=['middle', 'center'], quality=100, upload_to='images/', blank=True, null=True)
+    fresh_sm = ResizedImageField(size=[800, 598], crop=['middle', 'center'], quality=100, upload_to='images/', blank=True, null=True)
+    hot_hz = ResizedImageField(size=[1024, 550], crop=['middle', 'center'], quality=100, upload_to='images/', blank=True, null=True)
+    hot_vert = ResizedImageField(size=[690, 1024], crop=['middle', 'center'], quality=100, upload_to='images/', blank=True, null=True)
+    new_left = ResizedImageField(size=[800, 800], crop=['middle', 'center'], quality=100, upload_to='images/', blank=True, null=True)
+    new_right = ResizedImageField(size=[800, 460], crop=['middle', 'center'], quality=100, upload_to='images/', blank=True, null=True)
     label = models.CharField(verbose_name='Заголовок', max_length=128, null=True, blank=True, editable=True, default="")
-    descr = models.CharField(verbose_name='Подпись', max_length=512, null=True, blank=True, editable=True, default="")
+    short = models.CharField(verbose_name='Подпись', max_length=512, null=True, blank=True, editable=True, default="")
     rubric = models.ForeignKey(Rubric, null=True, blank=False, on_delete=models.CASCADE, related_name='icons')
 
     def __str__(self):
         return self.label
 
-    def upd_image(self, img):
+    def upd_image(self, img):  # TODO ref
         self.img = img
         self.save(force_update=True)
 
@@ -59,15 +87,15 @@ class Icon(models.Model):
         if itCl not in ('card-title', 'card-text'):
             return
         self.label = val if itCl == 'card-title' else self.label
-        self.descr = val if itCl == 'card-text' else self.descr
+        self.short = val if itCl == 'card-text' else self.short
         self.save(force_update=True)
 
 
 class Article(models.Model):
     title = models.CharField(verbose_name='Название', max_length=128, null=False, editable=True)
     trans_title = models.CharField(verbose_name='Транслитерированное название', max_length=128, null=False, editable=True)
-    short = models.CharField(verbose_name='Подводка', max_length=512, null=True, editable=True)
     icon = models.ForeignKey(Icon, null=True, on_delete=models.SET_NULL)
+    author = models.ForeignKey('management.Author', null=True, on_delete=models.SET_NULL)
     content = models.TextField()
     status = models.CharField(max_length=128, default='created', choices=ARTICLE_STATUS_CHOICES)
     active = models.BooleanField(default=False)
@@ -90,7 +118,7 @@ class Article(models.Model):
         else:
             dt = self.updated.astimezone(timezone.get_default_timezone())
             cal = {1: 'января', 2: 'февраля', 3: 'марта', 4: 'апреля', 5: 'мая', 6: 'июня', 7: 'июля', 8: 'августа', 9: 'сентября', 10: 'октября', 11: 'ноября', 12: 'декабря'}
-            return dt.strftime(f'%d {cal[dt.month]} %Y ')  # %H:%M
+            return f'{dt.day} {cal[dt.month]} {dt.year}'#dt.strftime(f'%d {cal[dt.month]} %Y ')  # %H:%M
 
     def create(self, rubric, title):
         trans_title = '-'.join(transliterate(title).split())
@@ -159,7 +187,7 @@ class Article(models.Model):
         return f'/editor/{self.trans_title}'
 
     def get_news_url(self):
-        return f'{self.trans_title}'
+        return f'/news/{self.trans_title}'
 
 
 class ArticleToRubric(models.Model):

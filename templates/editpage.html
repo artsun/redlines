@@ -11,7 +11,7 @@
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 <style type="text/css">
 	body {
-	background-image: url(/images/art-make-background.jpg);
+	background-image: url(/images/icon-make-background.jpg);
 	background-position: center center;
 	z-index: -1;
 	}
@@ -28,62 +28,141 @@
 	</nav>
 <div class="row justify-content-center">
 
-	<div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 col-xxl-3 bg-light">
+	<div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 col-xxl-3 bg-light pt-3 rounded">
 	<!-- LEFT COLUMN -->
-
-		<p class="text-start"><b>Рубрика:</b> {{rubric.title}} </p>
-		<p class="text-start"><b>Автор:</b> Фамилия, Имя </p>
-		<p class="text-start"><b>Последняя правка:</b> {{article.print_time_updated}} </p>
-		<p class="text-start"><b>Статус:</b> {{article.status}} </p>
-		<p class="text-start"><b>Deadline:</b> Дата, время </p>
-
-		<p class="text-start">
-			<label for="artTitle" class="form-label"><b>Заголовок:</b> </label>
-			<input class="form-control" type="text" id="artTitle" value="{{article.title}}">
-			<small id="msgTitle" class="text-danger"></small>
-		</p>
-
-		<input type="file" name="file" id="updIcon" onchange="updIcon(this)" class="inputfile" style="width: 0.1px; height: 0.1px; opacity: 0; overflow: hidden; position: absolute; z-index: -1;" />
-		<p class="text-start"><b>Иконка:</b>
-			{% if article.icon %}
-			<div class="row m-0 p-0 justify-content-center">
-				<div class="card bg-dark text-white shadowersmall m-0 p-0 ">
-  					<img class="card-img" src="{{article.icon.img.url}}" alt="Card image" style="max-width: 20rem; max-height: 224px; min-width: 20rem; min-height: 224px;" >
-  					<div class="card-img-overlay h-100 d-flex flex-column justify-content-end">
-  						<a href="/editor/icon?article={{article.trans_title}}" class="card-link stretched-link"></a>
-  						<h5 class="card-title">{{article.icon.label}}</h5>
-    					<p class="card-text"><small>Опубликовано</small></p>
-  					</div>
-				</div>
-			</div>
-
-			{% else %}
-			<a href="/editor/icon?article={{article.trans_title}}" class="btn btn-outline-secondary btn-sm">Добавить</a>
-			{% endif %}
-		</p>
-		<button class="btn btn-outline-dark btn-block" onclick="renderNews()">Сверстать страницу</button>
-		<h><br>
-		<button class="btn btn-outline-danger btn-sm btn-block" onclick="dropArticle()">Удалить страницу</button>
-
-
+        <table class="table table-hover mb-0">
+            <tbody>
+                <tr>
+                    <th scope="row">Рубрика:</th>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="chRub" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {{rubric.title}}
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="chRub">
+                                {% for rub in rubrics  %}
+                                    {% if rub != rubric %}
+                                        <button class="dropdown-item" onclick="savePageAndGo('?setRub={{ rub.pk}}')" type="button">{{ rub }}</button>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">Автор:</th>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="chAuth" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {{ article.author }}
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="chAuth">
+                                {% for author in authors  %}
+                                    {% if author != article.author %}
+                                        <button class="dropdown-item" onclick="savePageAndGo('?setAuth={{ author.pk}}')" type="button">{{ author }}</button>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">Изменено:</th>
+                    <td>{{article.print_time_updated}}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Статус:</th>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="chAuth" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {{article.get_status_display}} {{article.get_status_display.all}}
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="chAuth">
+                                {% for choice in status_choices  %}
+                                    {% if choice.0 != article.status %}
+                                        <button class="dropdown-item" onclick="savePageAndGo('?setStatus={{ choice.0}}')" type="button">{{ choice.1 }}</button>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        {% if article.status == 'approved' %}
+                            {% if article.active %}
+                                <button class="btn btn-success btn-block btn-sm" onclick="savePageAndGo('?setActive=0')">Опубликована</button>
+                                {% else %}
+                                <button class="btn btn-primary btn-block btn-sm" onclick="savePageAndGo('?setActive=1')">Опубликовать</button>
+                                {% endif %}
+                        {% else %}
+                            <button class="btn btn-outline-primary btn-block btn-sm" disabled>Опубликовать</button>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">Deadline:</th>
+                    <td> Дата, время </td>
+                </tr>
+                <tr>
+                    <th scope="row">Заголовок:</th>
+                    <td><input class="form-control" type="text" id="artTitle" value="{{article.title}}">
+                    <button class="btn btn-outline-dark btn-block btn-sm" onclick="savePageAndGo('', true)">Обновить заголовок</button>
+			        <small id="msgTitle" class="text-danger"></small></td>
+                </tr>
+                <tr>
+                    <th scope="row">Иконка:</th>
+                    <td>
+			            {% if article.icon %}
+			            <div class="row m-0 p-0 justify-content-center">
+				            <div class="card bg-dark text-white m-0 p-0 ">
+  					            <img class="card-img" src="{{article.icon.new_right.url}}">
+  					                <div class="card-img-overlay h-100 d-flex flex-column justify-content-end">
+  						                <a href="/editor/icon?article={{article.trans_title}}" class="card-link stretched-link"></a>
+  					                </div>
+				            </div>
+			            </div>
+			            {% else %}
+			            <a href="/editor/icon?article={{article.trans_title}}" class="btn btn-outline-secondary btn-sm">Добавить</a>
+			            {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <button class="btn btn-outline-info btn-block btn-sm" onclick="renderNews()">Сверстать страницу</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <button class="btn btn-outline-danger btn-block btn-sm" onclick="dropArticle()">Удалить страницу</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <br>
+        <br>
 
 	</div>
 
-	<div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-5 col-xxl-6 justify-content-center">
+	<div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-5 col-xxl-6 justify-content-center rounded">
 	<!-- CENTRAL COLUMN -->
 		<div id="editors" class="container float justify-content-center">
 			
 		</div>
 
-		<div class="row my-5">
-			<div class="col-6"><button class="btn btn-light" onclick="addEditor()">Добавить блок</button></div>
-			<div class="col-6"><button class="btn btn-light" onclick="delEditor()">Удалить блок</button></div>
+		<div class="row my-5 justify-content-center">
+			<div class="col-3"><button class="btn btn-light" onclick="addEditor()">Добавить блок</button></div>
+			<div class="col-3"><button class="btn btn-light" onclick="delEditor()">Удалить блок</button></div>
 		</div>
-
+        <div class="row px-5 py-1 justify-content-center">
+            <button class="btn btn-light btn-block btn-sm" onclick="savePageAndGo('')">Сохранить страницу</button>
+		</div>
+        <br>
+        <br>
 
 	</div>
 
-	<div id="rightCol" class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 col-xxl-3 ml-5 mr-0 bg-light text-center">
+	<div id="rightCol" class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 col-xxl-3 ml-5 mr-0 bg-light text-center rounded">
 	<!-- RIGHT COLUMN -->
 	
 		<div id="sliderList" class="row mx-0 p-3 justify-content-center">
@@ -99,10 +178,8 @@
 			{% endfor %}
 			
 		</div>
-	
 
-		<a href="/editor/slider?article={{article.trans_title}}" class="btn btn-light border my-5" role="button">Новый слайдер</a>
-			
+        <button class="btn btn-light border my-5" onclick="savePageAndGo('/editor/slider?article={{article.trans_title}}', updateTitle=false)">Новый слайдер</button>
 
 	
 	</div>
@@ -176,11 +253,11 @@ window.onload = function (){
 	}
 	
 	for (let eachPart of PARTS.keys()) {
-	 if (eachPart!=`part0`) {
+	 if (eachPart!= `part0`) {
 	 	document.getElementById(eachPart).addEventListener('click', function (e) {switchEditor(this);}, { once: true });
 	 }
 	}
-}
+};
 
 /////////////////////////////////////////////
 function validArtUpdClick(){
@@ -195,16 +272,6 @@ function validArtUpdClick(){
 		return false;
 	}
 	return true;
-}
-
-function artUpdClick(){
-	if (!validArtUpdClick()){
-		return;
-	}
-	let formData = new FormData();
-	formData.append("artUpd", JSON.stringify(document.getElementById(`artTitle`).value.trim()));
-	fetch("", {method: "POST", headers:{"X-CSRFToken": '{{ csrf_token }}'}, body: formData}).then((response) => {return response.json();}).then((data) => {
-    location.replace(data['url']);});
 }
 
 /////////////////////////////////////////////
@@ -285,7 +352,7 @@ function convertDataToHtml(blocks) {
             if (block.data.withBorder) imgstyle += " cdx-simple-image__picture--with-border";
             //imghtml = `<img class="img-fluid" src="${block.data.url}" title="${block.data.caption}" /><br /><em>${block.data.caption}</em>`;
             imghtml = `<img class="img-fluid" src="${block.data.file.url}" title="${block.data.caption}" /><br /><em>${block.data.caption}</em><br>`;
-            imghtml = `<div class="row justify-content-center"><div class="cdx-simple-image__picture ${imgstyle}">${imghtml}</div></div><br>`;
+            imghtml = `<div class="cdx-simple-image__picture ${imgstyle}">${imghtml}</div><br>`;
             convertedHtml += imghtml;
             break;
           case "list":
@@ -436,6 +503,27 @@ function getEdjs(data, readonly) {
 
 }
 
+function savePageAndGo(url, updateTitle=false) {
+    let formData = new FormData();
+	var HTMLS = new Array();
+	EDITOR.save().then((outputData) => {
+		PARTS.set(ACTUAL_PART, outputData);
+		PARTS.forEach(function(value, key) {
+			HTMLS.push(convertDataToHtml(value.blocks));
+		});
+		if (updateTitle && validArtUpdClick()){
+			formData.append("artTitle", JSON.stringify(document.getElementById(`artTitle`).value.trim()));
+		}
+		formData.append("url", url);
+		formData.append("partSave", "true");
+		formData.append("parts", JSON.stringify(Array.from(PARTS.values())));
+		formData.append("sliders", JSON.stringify(Array.from(SLIDERS_INSERTED.entries())));
+		formData.append("htmls", JSON.stringify(HTMLS));
+		fetch("", {method: "POST", headers:{"X-CSRFToken": '{{ csrf_token }}'}, body: formData}).then((response) => {return response.json();}).then((data) => {
+    location.replace(data['url']);});
+	 }).catch((error) => {console.log('Save failed: ', error)});
+}
+
 function renderNews(){
 	let formData = new FormData();
 	var HTMLS = new Array();
@@ -445,7 +533,7 @@ function renderNews(){
 			HTMLS.push(convertDataToHtml(value.blocks));
 		});
 		if (validArtUpdClick()){
-			formData.append("artUpdates", JSON.stringify(document.getElementById(`artTitle`).value.trim()));
+			formData.append("artTitle", JSON.stringify(document.getElementById(`artTitle`).value.trim()));
 		}
 		formData.append("parts", JSON.stringify(Array.from(PARTS.values())));
 		formData.append("sliders", JSON.stringify(Array.from(SLIDERS_INSERTED.entries())));

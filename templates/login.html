@@ -1,0 +1,47 @@
+{% extends "baseCloap.html" %}
+
+{% block title %} Вход | Redlines  {% endblock title %}
+
+{% block mainContent %}
+<div class="container">
+    <div class="row justify-content-center">
+            {% if form.errors %}
+            <p>Некорректное имя пользователя или пароль</p>
+            {% endif %}
+
+            {% if next %}
+                {% if user.is_authenticated %}
+                <p>Your account doesn't have access to this page. To proceed, please login with an account that has access.</p>
+                {% else %}
+                <p>Необходимо осуществить вход</p>
+                {% endif %}
+            {% endif %}
+
+    </div>
+    <div class="row justify-content-center">
+
+        <form method="post" action="/login">
+            {% csrf_token %}
+            <table>
+            <tr>
+                <td>Пользователь: </td>
+                <td>{{ form.username }}</td>
+            </tr>
+            <tr>
+                <td>Пароль:</td>
+                <td>{{ form.password }}</td>
+            </tr>
+            </table>
+
+            <input class="btn-block btn-sm bg-light mt-3" type="submit" value="Войти">
+            <input type="hidden" name="next" value="{{ next }}">
+        </form>
+
+    </div>
+    <div class="row justify-content-center mt-2">
+        {# Assumes you setup the password_reset view in your URLconf #}
+        <p><a href="/login">Забыли пароль?</a></p>
+    </div>
+
+</div>
+{% endblock mainContent %}

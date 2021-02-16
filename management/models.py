@@ -34,6 +34,7 @@ class Author(models.Model):
     login = models.CharField(verbose_name='Логин', max_length=64, null=False, editable=True)
     short = models.CharField(verbose_name='Подпись', max_length=512, null=True, blank=True, editable=True, default="")
     avatar = ResizedImageField(size=[400, 400], crop=['middle', 'center'], quality=100, upload_to='images/', blank=True, null=True)
+    is_manager = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.fname} {self.lname}'

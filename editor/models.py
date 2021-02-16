@@ -19,7 +19,7 @@ ARTICLE_STATUS_CHOICES = (
     ('approved', 'К публикации'),
     ('examine', 'На рассмотрении'),
 )
-
+ARTICLE_STATUS_CHOICES_KEYS = ('created', 'fixes', 'approved', 'examine')
 
 
 class Image(models.Model):
@@ -79,8 +79,12 @@ class Icon(models.Model):
     def __str__(self):
         return self.label
 
-    def upd_image(self, img):  # TODO ref
-        self.img = img
+    def set_image(self, fl, image_type):
+        if getattr(self, image_type):
+            setattr(self, image_type, fl)
+
+    def set_all_images(self, fl):
+        [self.set_image(fl, image_type) for image_type in ('fresh_lg', 'fresh_med', 'fresh_sm', 'hot_hz', 'hot_vert', 'new_left', 'new_right')]
         self.save(force_update=True)
 
     def upd(self, itCl, val):
@@ -145,9 +149,21 @@ class Article(models.Model):
         self.trans_title = trans_title
         self.save(force_update=True)
 
-    def update_short(self, short):
-        self.short = short
-        self.save(force_update=True)
+    def part_update(self, parts, sliders, htmls, title):
+        parts, sliders, htmls = [json.loads(x) for x in (parts, sliders, htmls)]
+        if title is not None:
+            title = json.loads(title)
+            self.update_title(title) if 5 < len(title) < 120 else None
+
+        self.update_sliders_links(sliders)
+        EditBlock.objects.filter(art=self).delete()
+
+        for num, (html, block) in enumerate(zip(htmls, parts)):
+            eb = EditBlock()
+            eb.art, eb.edit_block_num, eb.data, eb.html_data = self, num, rsub(r'\\"', "'", json.dumps(block)), html
+            eb.save()
+        self.save()
+
 
     def full_update(self, parts, sliders, htmls, artUpdates):
         parts, sliders, htmls = [json.loads(x) for x in (parts, sliders, htmls)]

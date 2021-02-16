@@ -2,7 +2,7 @@
 
 {% block title %} Главная | Redlines  {% endblock title %}
 
-{% block main_content %}
+{% block mainContent %}
         <section class="section first-section">
             <div class="container-fluid">
                 <div class="masonry-blog clearfix">
@@ -85,17 +85,17 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                        
+
 
                         <div class="row">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                
+
                                 <div class="blog-box">
                                     <div class="post-media">
                                         <a href="{{hlist.0.article.get_news_url}}" title="{{hlist.0.article.icon.label}}">
                                             <img src="{{hlist.0.article.icon.hot_hz.url}}" alt="{{hlist.0.article.icon.label}}" class="img-fluid">
                                             <div class="hovereffect">
-                                                
+
                                             </div><!-- end hover -->
                                         </a>
                                     </div><!-- end media -->
@@ -123,7 +123,7 @@
                                         <a href="{{hlist.1.article.get_news_url}}" title="{{hlist.1.article.icon.label}}">
                                             <img src="{{hlist.1.article.icon.hot_vert.url}}" alt="{{hlist.1.article.icon.label}}" class="img-fluid">
                                             <div class="hovereffect">
-                                                
+
                                             </div><!-- end hover -->
                                         </a>
                                     </div><!-- end media -->
@@ -145,7 +145,7 @@
                                         <a href="{{hlist.2.article.get_news_url}}" title="{{hlist.2.article.icon.label}}">
                                             <img src="{{hlist.2.article.icon.hot_vert.url}}" alt="{{hlist.2.article.icon.label}}" class="img-fluid">
                                             <div class="hovereffect">
-                                                
+
                                             </div><!-- end hover -->
                                         </a>
                                     </div><!-- end media -->
@@ -162,7 +162,7 @@
                     </div><!-- end col -->
                 </div><!-- end row -->
 
- 
+
 
                 <hr class="invis1">
 
@@ -223,4 +223,4 @@
                 <hr class="invis1">
             </div><!-- end container -->
         </section>
-{% endblock main_content %}
+{% endblock mainContent %}

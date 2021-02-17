@@ -110,6 +110,33 @@ class Article(models.Model):
     def __str__(self):
         return f'{self.trans_title} ({self.title})'
 
+    def isicon(self, imgtype):
+        if self.icon:
+            if getattr(self.icon, imgtype):
+                return getattr(self.icon, imgtype).url
+        return None
+
+    def fresh_lg(self):
+        return self.isicon('fresh_lg')
+
+    def fresh_med(self):
+        return self.isicon('fresh_med')
+
+    def fresh_sm(self):
+        return self.isicon('fresh_sm')
+
+    def hot_hz(self):
+        return self.isicon('hot_hz')
+
+    def hot_vert(self):
+        return self.isicon('hot_vert')
+
+    def new_left(self):
+        return self.isicon('new_left')
+
+    def new_right(self):
+        return self.isicon('new_right')
+
     def print_time_updated(self):
         one_hour = 3600  # sec
         timedelta = (datetime.now() - self.updated.replace(tzinfo=None)).seconds

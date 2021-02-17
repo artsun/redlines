@@ -59,7 +59,7 @@ class NewsPage(View):
         context = {
             'article': article,
             'similar': Article.objects.filter(rub__rubric=rubric).exclude(pk=article.pk).order_by('updated')[:5],
-            'news': Article.objects.exclude(rub__rubric=rubric)[:5],
+            'news': Article.objects.order_by('updated').exclude(rub__rubric=rubric)[:5],
             'statistics': Rubric.statistics(),
             'prev': prev,
             'next': next,
@@ -68,3 +68,22 @@ class NewsPage(View):
         }
         context.update(Rubric.navbar_catalogs())
         return render(request, 'newspage.html', context)
+
+
+class NewsSorter(View):
+
+    def get(self, request):
+        if not request.GET.get('rubric') or not Rubric.objects.filter(codename=request.GET.get('rubric')).exists():
+            return redirect('/')
+        rubric = Rubric.objects.get(codename=request.GET.get('rubric'))
+        rubric_news = [a.art for a in ArticleToRubric.objects.filter(rubric=rubric).order_by('art__updated')]
+
+        print(rubric)
+        context = {
+            'rubric': rubric,
+            'rubric_news': rubric_news,
+            'statistics': Rubric.statistics(),
+            'news': Article.objects.order_by('updated').exclude(rub__rubric=rubric)[:5],
+        }
+        context.update(Rubric.navbar_catalogs())
+        return render(request, 'byRubric.html', context)

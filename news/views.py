@@ -11,6 +11,7 @@ from django.contrib.auth.models import User, Group
 import json
 from collections import OrderedDict
 
+
 from editor.models import Image, Slide, Slider, Rubric, Article, SliderToArticle, ArticleToRubric
 from management.models import IndexArticleFresh, IndexArticleHot
 
@@ -42,6 +43,8 @@ class IndexPage(View):
         return render(request, 'indexpage.html', context)
 
 
+from datetime import datetime
+
 class NewsPage(View):
 
     def get(self, request, trans_title=None):
@@ -54,7 +57,7 @@ class NewsPage(View):
         you_may_also_like = [a.article for a in IndexArticleHot.objects.exclude(article=article) if a.article != prev and a.article != next]
         also_like_one = you_may_also_like[0] if len(you_may_also_like) > 0 else []
         also_like_two = you_may_also_like[1] if len(you_may_also_like) > 1 else []
-        print(article.comments.count())
+        #print(article.comments.count())
 
         context = {
             'article': article,
@@ -73,17 +76,24 @@ class NewsPage(View):
 class NewsSorter(View):
 
     def get(self, request):
-        if not request.GET.get('rubric') or not Rubric.objects.filter(codename=request.GET.get('rubric')).exists():
+        #print('GETTED', request.GET)
+        if request.GET.get('rubric'):
+            if not Rubric.objects.filter(codename=request.GET.get('rubric')).exists():
+                return redirect('/')
+            rubric = Rubric.objects.get(codename=request.GET.get('rubric'))
+            rubric_news = [a.art for a in ArticleToRubric.objects.filter(rubric=rubric).order_by('art__updated')]
+            context = {
+                'rubric': rubric,
+                'rubric_news': rubric_news,
+                'news': Article.objects.order_by('updated').exclude(rub__rubric=rubric)[:5],
+            }
+            html_templ = 'byRubric.html'
+        elif request.GET.get('date'):
+            context = Article.by_datetime(request.GET.get('date'))
+            html_templ = 'byDate.html'
+        else:
             return redirect('/')
-        rubric = Rubric.objects.get(codename=request.GET.get('rubric'))
-        rubric_news = [a.art for a in ArticleToRubric.objects.filter(rubric=rubric).order_by('art__updated')]
 
-        print(rubric)
-        context = {
-            'rubric': rubric,
-            'rubric_news': rubric_news,
-            'statistics': Rubric.statistics(),
-            'news': Article.objects.order_by('updated').exclude(rub__rubric=rubric)[:5],
-        }
         context.update(Rubric.navbar_catalogs())
-        return render(request, 'byRubric.html', context)
+        context.update({'statistics': Rubric.statistics()})
+        return render(request, html_templ, context)

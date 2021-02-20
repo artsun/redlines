@@ -44,23 +44,23 @@ class Rubric(models.Model):
 
     @staticmethod
     def statistics():
-        return {r.codename: r.arts.count() for r in Rubric.objects.all()}
+        return {r.codename: r.arts.count() for r in Rubric.objects.prefetch_related('arts').all()}
 
     @staticmethod
     def navbar_catalogs():
         return {
-            'catBiology': Article.objects.filter(rub__rubric__codename='biology').order_by('updated')[:4],
-            'catGenetics': Article.objects.filter(rub__rubric__codename='genetics').order_by('updated')[:4],
-            'catGeography': Article.objects.filter(rub__rubric__codename='geography').order_by('updated')[:4],
-            'catMath': Article.objects.filter(rub__rubric__codename='math').order_by('updated')[:4],
-            'catMedicine': Article.objects.filter(rub__rubric__codename='medicine').order_by('updated')[:4],
-            'catPhysics': Article.objects.filter(rub__rubric__codename='physics').order_by('updated')[:4],
-            'catChemistry': Article.objects.filter(rub__rubric__codename='chemistry').order_by('updated')[:4],
-            'catEcology': Article.objects.filter(rub__rubric__codename='ecology').order_by('updated')[:4],
-            'catHistory': Article.objects.filter(rub__rubric__codename='history').order_by('updated')[:4],
-            'catPsycho': Article.objects.filter(rub__rubric__codename='psycho').order_by('updated')[:4],
-            'catSociology': Article.objects.filter(rub__rubric__codename='sociology').order_by('updated')[:4],
-            'catEconomics': Article.objects.filter(rub__rubric__codename='economics').order_by('updated')[:4]
+            'catBiology': Article.objects.select_related('icon', 'author', 'rubric').filter(rubric__codename='biology').order_by('updated')[:4],
+            'catGenetics': Article.objects.select_related('icon', 'author', 'rubric').filter(rubric__codename='genetics').order_by('updated')[:4],
+            'catGeography': Article.objects.select_related('icon', 'author', 'rubric').filter(rubric__codename='geography').order_by('updated')[:4],
+            'catMath': Article.objects.select_related('icon', 'author', 'rubric').filter(rubric__codename='math').order_by('updated')[:4],
+            'catMedicine': Article.objects.select_related('icon', 'author', 'rubric').filter(rubric__codename='medicine').order_by('updated')[:4],
+            'catPhysics': Article.objects.select_related('icon', 'author', 'rubric').filter(rubric__codename='physics').order_by('updated')[:4],
+            'catChemistry': Article.objects.select_related('icon', 'author', 'rubric').filter(rubric__codename='chemistry').order_by('updated')[:4],
+            'catEcology': Article.objects.select_related('icon', 'author', 'rubric').filter(rubric__codename='ecology').order_by('updated')[:4],
+            'catHistory': Article.objects.select_related('icon', 'author', 'rubric').filter(rubric__codename='history').order_by('updated')[:4],
+            'catPsycho': Article.objects.select_related('icon', 'author', 'rubric').filter(rubric__codename='psycho').order_by('updated')[:4],
+            'catSociology': Article.objects.select_related('icon', 'author', 'rubric').filter(rubric__codename='sociology').order_by('updated')[:4],
+            'catEconomics': Article.objects.select_related('icon', 'author', 'rubric').filter(rubric__codename='economics').order_by('updated')[:4]
         }
 
 
@@ -99,7 +99,8 @@ class Article(models.Model):
     title = models.CharField(verbose_name='Название', max_length=128, null=False, editable=True)
     trans_title = models.CharField(verbose_name='Транслитерированное название', max_length=128, null=False, editable=True)
     icon = models.ForeignKey(Icon, null=True, on_delete=models.SET_NULL)
-    author = models.ForeignKey('management.Author', null=True, on_delete=models.SET_NULL)
+    author = models.ForeignKey('management.Author', null=True, on_delete=models.SET_NULL, related_name='articles')
+    rubric = models.ForeignKey(Rubric, null=True, blank=False, on_delete=models.CASCADE, related_name='arts')
     content = models.TextField()
     status = models.CharField(max_length=128, default='created', choices=ARTICLE_STATUS_CHOICES)
     active = models.BooleanField(default=False)
@@ -137,9 +138,25 @@ class Article(models.Model):
     def new_right(self):
         return self.isicon('new_right')
 
+    @staticmethod
+    def by_datetime(req_date: str) -> dict:
+        dt = [x for x in req_date.split('-') if x.isdigit()]
+        if len(dt) == 3:
+            dt = datetime(year=int(dt[0]), month=int(dt[1]), day=int(dt[2]), tzinfo=timezone.get_default_timezone())  #.replace(tzinfo=None)
+        else:
+            dt = timezone.now()
+        return {'articles': Article.objects.select_related('icon', 'author', 'rubric').filter(updated__day=dt.day, updated__year=dt.year, updated__month=dt.month).order_by('updated'),
+                'req_date': Article.date_printer(dt)}
+
+    @staticmethod
+    def date_printer(dt: datetime) -> str:
+        cal = {1: 'января', 2: 'февраля', 3: 'марта', 4: 'апреля', 5: 'мая', 6: 'июня', 7: 'июля', 8: 'августа',
+               9: 'сентября', 10: 'октября', 11: 'ноября', 12: 'декабря'}
+        return f'{dt.day} {cal[dt.month]} {dt.year}'  # dt.strftime(f'%d {cal[dt.month]} %Y ')  # %H:%M
+
     def print_time_updated(self):
         one_hour = 3600  # sec
-        timedelta = (datetime.now() - self.updated.replace(tzinfo=None)).seconds
+        timedelta = (datetime.now() - self.updated.replace(tzinfo=None)).seconds  # (timezone.now() - self.updated).seconds
         if timedelta < one_hour:
             return 'Менее часа назад'
         elif one_hour < timedelta < one_hour*2:
@@ -147,9 +164,9 @@ class Article(models.Model):
         elif one_hour*2 < timedelta < one_hour*3:
             return 'Два часа назад'
         else:
-            dt = self.updated.astimezone(timezone.get_default_timezone())
-            cal = {1: 'января', 2: 'февраля', 3: 'марта', 4: 'апреля', 5: 'мая', 6: 'июня', 7: 'июля', 8: 'августа', 9: 'сентября', 10: 'октября', 11: 'ноября', 12: 'декабря'}
-            return f'{dt.day} {cal[dt.month]} {dt.year}'#dt.strftime(f'%d {cal[dt.month]} %Y ')  # %H:%M
+            dt = self.updated
+            #dt = self.updated.astimezone(timezone.get_default_timezone())
+            return Article.date_printer(dt)
 
     def create(self, rubric, title):
         trans_title = '-'.join(transliterate(title).split())
@@ -162,8 +179,8 @@ class Article(models.Model):
         if not Rubric.objects.filter(pk=rubric).exists():
             self.delete()
             return False
-        link_to_rubric = ArticleToRubric(rubric=Rubric.objects.get(pk=rubric), art=self)
-        link_to_rubric.save()
+        self.rubric = Rubric.objects.get(pk=rubric)
+        self.save()
         return True
 
     def update_title(self, title):
@@ -190,7 +207,6 @@ class Article(models.Model):
             eb.art, eb.edit_block_num, eb.data, eb.html_data = self, num, rsub(r'\\"', "'", json.dumps(block)), html
             eb.save()
         self.save()
-
 
     def full_update(self, parts, sliders, htmls, artUpdates):
         parts, sliders, htmls = [json.loads(x) for x in (parts, sliders, htmls)]
@@ -232,13 +248,14 @@ class Article(models.Model):
     def get_news_url(self):
         return f'/news/{self.trans_title}'
 
+    def by_rubric_url(self):
+        return f'/news/sortby?rubric={self.rubric.codename}'
 
-class ArticleToRubric(models.Model):
-    art = models.ForeignKey(Article, null=False, blank=False, on_delete=models.CASCADE, related_name='rub')
-    rubric = models.ForeignKey(Rubric, null=False, blank=False, on_delete=models.CASCADE, related_name='arts')
+    def by_updated_url(self):
+        return f'/news/sortby?date={str(self.updated.date())}'
 
-    def __str__(self):
-        return f'{self.rubric.title} ({self.art.title})'
+    def by_author_url(self):
+        return f'/news/sortby?author={self.author.pk}' if self.author else f'/news/sortby?author'
 
 
 class Slider(models.Model):

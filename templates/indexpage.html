@@ -12,10 +12,10 @@
                              <div class="shadoweffect">
                                 <div class="shadow-desc">
                                     <div class="blog-meta">
-                                        <span class="bg-aqua"><a href="/news/sortby?rubric={{flist.0.article.rub.first.rubric.codename}}" title="">{{flist.0.article.rub.first.rubric.title}}</a></span>
-                                        <h4><a href="{{flist.0.article.get_news_url}}" title="{{flist.0.article.icon.label}}">{{flist.0.article.icon.label}}</a></h4>
-                                        <small><a href="#" title="">{{flist.0.article.print_time_updated}}</a></small>
-                                        <small><a href="#" title="">{{flist.0.article.author}}</a></small>
+                                        <span class="bg-aqua"><a href="{{flist.0.article.by_rubric_url}}" title="">{{flist.0.article.rubric.title}}</a></span>
+                                        <h4><a href="{{flist.0.article.get_news_url}}">{{flist.0.article.icon.label}}</a></h4>
+                                        <small><a href="{{flist.0.article.by_updated_url}}">{{flist.0.article.print_time_updated}}</a></small>
+                                        <small><a href="{{flist.0.article.by_author_url}}">{{flist.0.article.author}}</a></small>
                                     </div><!-- end meta -->
                                 </div><!-- end shadow-desc -->
                             </div><!-- end shadow -->
@@ -28,10 +28,10 @@
                              <div class="shadoweffect">
                                 <div class="shadow-desc">
                                     <div class="blog-meta">
-                                        <span class="bg-red"><a href="/news/sortby?rubric={{flist.1.article.rub.first.rubric.codename}}" title="">{{flist.1.article.rub.first.rubric.title}}</a></span>
+                                        <span class="bg-red"><a href="{{flist.1.article.by_rubric_url}}">{{flist.1.article.rubric.title}}</a></span>
                                         <h4><a href="{{flist.1.article.get_news_url}}" title="{{flist.1.article.icon.label}}">{{flist.1.article.icon.label}}</a></h4>
-                                        <small><a href="#" title="">{{flist.1.article.print_time_updated}}</a></small>
-                                        <small><a href="#" title="">{{ flist.1.article.author }}</a></small>
+                                        <small><a href="{{flist.1.article.by_updated_url}}">{{flist.1.article.print_time_updated}}</a></small>
+                                        <small><a href="{{flist.1.article.by_author_url}}">{{flist.1.article.author}}</a></small>
                                     </div><!-- end meta -->
                                 </div><!-- end shadow-desc -->
                             </div><!-- end shadow -->
@@ -42,8 +42,8 @@
                              <div class="shadoweffect">
                                 <div class="shadow-desc">
                                     <div class="blog-meta">
-                                        <span class="bg-grey"><a href="/news/sortby?rubric={{flist.2.article.rub.first.rubric.codename}}" title="">{{flist.2.article.rub.first.rubric.title}}</a></span>
-                                        <h4><a href="{{flist.2.article.get_news_url}}" title="">{{flist.2.article.icon.label}}</a></h4>
+                                        <span class="bg-grey"><a href="{{flist.2.article.by_rubric_url}}" title="">{{flist.2.article.rubric.title}}</a></span>
+                                        <h4><a href="{{flist.2.article.get_news_url}}">{{flist.2.article.icon.label}}</a></h4>
                                     </div><!-- end meta -->
                                 </div><!-- end shadow-desc -->
                             </div><!-- end shadow -->
@@ -54,8 +54,8 @@
                              <div class="shadoweffect">
                                 <div class="shadow-desc">
                                     <div class="blog-meta">
-                                        <span class="bg-green"><a href="/news/sortby?rubric={{flist.3.article.rub.first.rubric.codename}}" title="">{{flist.3.article.rub.first.rubric.title}}</a></span>
-                                        <h4><a href="{{flist.3.article.get_news_url}}" title="{{flist.3.article.icon.label}}">{{flist.3.article.icon.label}}</a></h4>
+                                        <span class="bg-green"><a href="{{flist.3.article.by_rubric_url}}" title="">{{flist.3.article.rubric.title}}</a></span>
+                                        <h4><a href="{{flist.3.article.get_news_url}}">{{flist.3.article.icon.label}}</a></h4>
                                     </div><!-- end meta -->
                                 </div><!-- end shadow-desc -->
                             </div><!-- end shadow -->
@@ -68,10 +68,10 @@
                              <div class="shadoweffect">
                                 <div class="shadow-desc">
                                     <div class="blog-meta">
-                                        <span class="bg-aqua"><a href="/news/sortby?rubric={{flist.4.article.rub.first.rubric.codename}}" title="">{{flist.4.article.rub.first.rubric.title}}</a></span>
-                                        <h4><a href="{{flist.4.article.get_news_url}}" title="{{flist.4.article.icon.label}}">{{flist.4.article.icon.label}}</a></h4>
-                                        <small><a href="#" title="">{{flist.4.article.print_time_updated}}</a></small>
-                                        <small><a href="#" title="">{{ flist.4.article.author }}</a></small>
+                                        <span class="bg-aqua"><a href="{{flist.4.article.by_rubric_url}}">{{flist.4.article.rubric.title}}</a></span>
+                                        <h4><a href="{{flist.4.article.get_news_url}}">{{flist.4.article.icon.label}}</a></h4>
+                                        <small><a href="{{flist.4.article.by_updated_url}}">{{flist.4.article.print_time_updated}}</a></small>
+                                        <small><a href="{{flist.4.article.by_author_url}}">{{flist.4.article.author}}</a></small>
                                     </div><!-- end meta -->
                                 </div><!-- end shadow-desc -->
                              </div><!-- end shadow -->
@@ -98,11 +98,11 @@
                                         </a>
                                     </div><!-- end media -->
                                     <div class="blog-meta big-meta">
-                                        <h4><a href="{{hlist.0.article.get_news_url}}" title="">{{hlist.0.article.icon.label}}</a></h4>
+                                        <h4><a href="{{hlist.0.article.get_news_url}}">{{hlist.0.article.icon.label}}</a></h4>
                                         <p>{{hlist.0.article.icon.short}}</p>
-                                        <small><a href="/news/sortby?rubric={{hlist.0.article.rub.first.rubric.codename}}" title="">{{hlist.0.article.rub.first.rubric.title}}</a></small>
-                                        <small><a href="#" title="">{{hlist.0.article.print_time_updated}}</a></small>
-                                        <small><a href="#" title="">{{ hlist.0.article.author }}</a></small>
+                                        <small><a href="{{hlist.0.article.by_rubric_url}}">{{hlist.0.article.rubric.title}}</a></small>
+                                        <small><a href="{{hlist.0.article.by_updated_url}}">{{hlist.0.article.print_time_updated}}</a></small>
+                                        <small><a href="{{hlist.0.article.by_author_url}}">{{hlist.0.article.author}}</a></small>
                                     </div><!-- end meta -->
                                 </div><!-- end blog-box -->
 
@@ -124,9 +124,9 @@
                                         </a>
                                     </div><!-- end media -->
                                     <div class="blog-meta">
-                                        <h4><a href="{{hlist.1.article.get_news_url}}" title="">{{hlist.1.article.icon.label}}</a></h4>
-                                        <small><a href="/news/sortby?rubric={{hlist.1.article.rub.first.rubric.codename}}" title="">{{hlist.1.article.rub.first.rubric.title}}</a></small>
-                                        <small><a href="#" title="">{{hlist.1.article.print_time_updated}}</a></small>
+                                        <h4><a href="{{hlist.1.article.get_news_url}}">{{hlist.1.article.icon.label}}</a></h4>
+                                        <small><a href="{{hlist.1.article.by_rubric_url}}">{{hlist.1.article.rubric.title}}</a></small>
+                                        <small><a href="{{hlist.1.article.by_updated_url}}">{{hlist.1.article.print_time_updated}}</a></small>
                                     </div><!-- end meta -->
                                 </div><!-- end blog-box -->
 
@@ -144,9 +144,9 @@
                                         </a>
                                     </div><!-- end media -->
                                     <div class="blog-meta">
-                                        <h4><a href="{{hlist.2.article.get_news_url}}" title="">{{hlist.2.article.icon.label}}</a></h4>
-                                        <small><a href="/news/sortby?rubric={{hlist.2.article.rub.first.rubric.codename}}" title="">{{hlist.2.article.rub.first.rubric.title}}</a></small>
-                                        <small><a href="#" title="">{{hlist.2.article.print_time_updated}}</a></small>
+                                        <h4><a href="{{hlist.2.article.get_news_url}}">{{hlist.2.article.icon.label}}</a></h4>
+                                        <small><a href="{{hlist.2.article.by_rubric_url}}">{{hlist.2.article.rubric.title}}</a></small>
+                                        <small><a href="{{hlist.2.article.by_updated_url}}">{{hlist.2.article.print_time_updated}}</a></small>
                                     </div><!-- end meta -->
                                 </div><!-- end blog-box -->
 
@@ -177,11 +177,11 @@
                                 </div><!-- end col -->
 
                                 <div class="blog-meta big-meta col-md-8">
-                                    <h4><a href="{{pair.0.get_news_url}}" title="">{{pair.0.icon.label}}</a></h4>
+                                    <h4><a href="{{pair.0.get_news_url}}">{{pair.0.icon.label}}</a></h4>
                                     <p>{{pair.0.icon.short}}</p>
-                                    <small><a href="/news/sortby?rubric={{pair.0.rub.first.rubric.codename}}" title="">{{pair.0.rub.first.rubric.title}}</a></small>
-                                    <small><a href="#" title="">{{pair.0.print_time_updated}}</a></small>
-                                    <small><a href="#" title="">{{ pair.0.author }}</a></small>
+                                    <small><a href="{{pair.0.by_rubric_url}}">{{pair.0.rubric.title}}</a></small>
+                                    <small><a href="{{pair.0.by_updated_url}}">{{pair.0.print_time_updated}}</a></small>
+                                    <small><a href="{{pair.0.by_author_url}}">{{pair.0.author}}</a></small>
                                 </div><!-- end meta -->
                             </div><!-- end blog-box -->
 
@@ -201,8 +201,8 @@
                             </div><!-- end media -->
                             <div class="blog-meta">
                                 <h4><a href="{{pair.1.get_news_url}}" title="">{{pair.1.icon.label}}</a></h4>
-                                <small><a href="#" title="">{{pair.1.print_time_updated}}</a></small>
-                                <small><a href="#" title="">{{ pair.1.author }}</a></small>
+                                <small><a href="{{pair.1.by_updated_url}}">{{pair.1.print_time_updated}}</a></small>
+                                <small><a href="{{pair.1.by_author_url}}">{{pair.1.author}}</a></small>
                             </div><!-- end meta -->
                         </div><!-- end blog-box -->
 

@@ -1,15 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User, Group
-from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django_resized import ResizedImageField
-
-import editor
-
-import json
-from re import sub as rsub
-from collections import OrderedDict
-from datetime import datetime
 
 
 class IndexArticleFresh(models.Model):

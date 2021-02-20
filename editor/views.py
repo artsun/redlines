@@ -13,7 +13,7 @@ from django.contrib.auth.models import User, Group
 import json
 from collections import OrderedDict
 
-from .models import Image, Slide, Slider, Rubric, Article, SliderToArticle, ArticleToRubric, EditBlock, Icon,\
+from .models import Image, Slide, Slider, Rubric, Article, SliderToArticle, EditBlock, Icon,\
     ARTICLE_STATUS_CHOICES, ARTICLE_STATUS_CHOICES_KEYS
 from management.models import Author
 
@@ -60,17 +60,16 @@ class Editor(LoginRequiredMixin, View):
             return render(request, 'editorNewspage.html', context)
 
         
-        rubric = ArticleToRubric.objects.get(art=article).rubric
-        sliders_in_rubric = Slider.objects.filter(rubric=ArticleToRubric.objects.get(art=article).rubric).order_by('pk')
+        rubric = Article.rubric
+        sliders_in_rubric = Slider.objects.filter(rubric=rubric).order_by('pk')
 
         if 'setAuth' in request.GET.keys() and request.GET['setAuth'] != '' and Author.objects.filter(pk=request.GET['setAuth']).exists():
             article.author = Author.objects.get(pk=request.GET['setAuth'])
             article.save()
             return redirect(article.get_edit_url())
         elif 'setRub' in request.GET.keys() and request.GET['setRub'] != '' and Rubric.objects.filter(pk=request.GET['setRub']).exists():
-            ator = ArticleToRubric.objects.get(art=article)
-            ator.rubric = Rubric.objects.get(pk=request.GET['setRub'])
-            ator.save()
+            article.rubric = Rubric.objects.get(pk=request.GET['setRub'])
+            article.save()
             return redirect(article.get_edit_url())
         elif 'setStatus' in request.GET.keys() and request.GET['setStatus'] in ARTICLE_STATUS_CHOICES_KEYS:
             if request.GET['setStatus'] != 'approved':
@@ -128,7 +127,7 @@ class SliderMake(LoginRequiredMixin, View):
             return redirect('/editor')
         article = Article.objects.get(trans_title=trans_title)
         article_edit_url = f"/editor/{trans_title}"
-        rubric = ArticleToRubric.objects.get(art=article).rubric
+        rubric = Article.rubric
         if spk is None:
             context = {'slides': Slide.objects.filter(rubric=rubric).order_by('pk'),
                        'article_edit_url': article_edit_url,
@@ -154,7 +153,7 @@ class SliderMake(LoginRequiredMixin, View):
         if not Article.objects.filter(trans_title=trans_title).exists():    # only for url
             return redirect('/editor')
         article = Article.objects.get(trans_title=trans_title)  # only for url, because edit only from article ## ???
-        rubric = ArticleToRubric.objects.get(art=article).rubric
+        rubric = article.rubric
 
         if request.POST.get('delSlide'):
             slide = Slide.objects.get(pk=request.POST.get('delSlide'))
@@ -200,7 +199,7 @@ class IconMake(LoginRequiredMixin, View):
         if not Article.objects.filter(trans_title=trans_title).exists():
             return redirect('/editor')
         article = Article.objects.get(trans_title=trans_title)
-        rubric = ArticleToRubric.objects.get(art=article).rubric
+        rubric = article.rubric
         icons = Icon.objects.filter(rubric=rubric).order_by('pk')
 
         context = {'icons': icons,

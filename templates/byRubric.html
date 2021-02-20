@@ -1,5 +1,5 @@
 {% extends "baseCloap.html" %}
-{% block title %}{{ article.title }}{% endblock title %}
+{% block title %}{{ rubric.title }} | Рубрики {% endblock title %}
 {% block mainContent %}
 
         <div class="page-title wb">
@@ -36,17 +36,16 @@
                                         <div class="blog-box">
                                             <div class="post-media">
                                                 <a href="{{ rubric_new.get_news_url }}" title="">
-                                                    {% if rubric_new.icon.hot_hz %}{% endif %}
-                                                    <img src="{{ rubric_new.hot_hz }}" alt="" class="img-fluid">
+                                                    <img src="{{rubric_new.hot_hz}}" alt="" class="img-fluid">
                                                     <div class="hovereffect"></div><!-- end hover -->
                                                 </a>
                                             </div><!-- end media -->
                                             <div class="blog-meta big-meta">
                                                 <h4><a href="{{ rubric_new.get_news_url }}" title="">{{ rubric_new.icon.label }}</a></h4>
                                                 <p>{{ rubric_new.icon.short }}</p>
-                                                <small><a href="/news/sortby?rubric={{ rubric.codename }}" title="">{{ rubric.title }}</a></small>
-                                                <small><a href="#" title="">{{ rubric_new.print_time_updated }}</a></small>
-                                                <small><a href="#" title="">{{ rubric_new.author }}</a></small>
+                                                <small><a href="{{rubric_new.by_rubric_url}}" title="">{{ rubric.title }}</a></small>
+                                                <small><a href="{{rubric_new.by_updated_url}}" title="">{{ rubric_new.print_time_updated }}</a></small>
+                                                <small><a href="{{rubric_new.by_author_url}}">{{rubric_new.author}}</a></small>
                                             </div><!-- end meta -->
                                         </div><!-- end blog-box -->
                                     </div><!-- end col -->
@@ -63,7 +62,7 @@
                                 <nav aria-label="Page navigation">
                                     <ul class="pagination justify-content-start">
                                         {% for pg in pages %}
-                                            <li class="page-item"><a class="page-link" href="?rubric={{ rubric.codename }}&page=pg">{{ pg }}/a></li>
+                                            <li class="page-item"><a class="page-link" href="?rubric={{rubric.codename}}&page=pg">{{ pg }}/a></li>
                                             {% if pg == 'next' %}
                                                 <li class="page-item">
                                                     <a class="page-link" href="#">Next</a>
@@ -113,11 +112,6 @@
             </div><!-- end container -->
         </section>
 
-
-
-        <div class="dmtop">Scroll to Top</div>
-        
-    </div><!-- end wrapper -->
 
 
 {% endblock mainContent %}

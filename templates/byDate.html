@@ -1,12 +1,12 @@
 {% extends "baseCloap.html" %}
-{% block title %}По дате {{req_date}}{% endblock title %}
+{% block title %}Публикации {{req_date}}{% endblock title %}
 {% block mainContent %}
 
         <div class="page-title wb">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
-                        <h2><i class="fa fa-calendar-check-o bg-grey"></i> Публикации от {{req_date}} <small class="hidden-xs-down hidden-sm-down">Nulla felis eros.</small></h2>
+                        <h2><i class="fa fa-calendar-check-o bg-grey"></i> Публикации {{req_date}} <small class="hidden-xs-down hidden-sm-down">Nulla felis eros.</small></h2>
                     </div><!-- end col -->
                     <div class="col-lg-4 col-md-4 col-sm-12 hidden-xs-down hidden-sm-down">
                         <ol class="breadcrumb">
@@ -29,16 +29,16 @@
                                 <div class="pitem item-w1 item-h1 col-lg-3">
                                     <div class="blog-box">
                                         <div class="post-media">
-                                            <a href="{{ article.get_news_url }}" title="">
-                                                <img src="{{ article.new_right }}" alt="" class="img-fluid">
+                                            <a href="{{article.get_news_url}}" title="">
+                                                <img src="{{article.new_right}}" alt="" class="img-fluid">
                                                 <div class="hovereffect"></div><!-- end hover -->
                                             </a>
                                         </div><!-- end media -->
                                         <div class="blog-meta">
-                                            <span class="bg-grey"><a href="/news/sortby?rubric={{article.rub.first.rubric.codename}}" title="">{{article.rub.first.rubric.title}}</a></span>
-                                            <h4><a href="{{ article.get_news_url }}" title="">{{article.icon.label}}</a></h4>
-                                            <small><a href="#" title="">{{article.author}}</a></small>
-                                            <small><a href="/news/sortby?date={{article.updated_url}}" title="">{{article.print_time_updated}}</a></small>
+                                            <span class="bg-grey"><a href="{{article.by_rubric_url}}" title="">{{article.rubric.title}}</a></span>
+                                            <h4><a href="{{article.get_news_url}}" title="">{{article.icon.label}}</a></h4>
+                                            <small><a href="{{article.by_author_url}}" title="">{{article.author}}</a></small>
+                                            <small><a href="{{article.by_updated_url}}" title="">{{article.print_time_updated}}</a></small>
                                         </div><!-- end meta -->
                                     </div><!-- end blog-box -->
                                 </div><!-- end col -->

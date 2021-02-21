@@ -55,10 +55,10 @@
                              <div class="shadoweffect">
                                 <div class="shadow-desc">
                                     <div class="blog-meta">
-                                        <span class="bg-aqua"><a href="#" title="{{article.rub.first.rubric.title}}">{{article.rub.first.rubric.title}}</a></span>
+                                        <span class="bg-aqua"><a href="#">{{article.rubric.title}}</a></span>
                                         <h4 class="text-white">{{article.icon.label}}</h4>
                                         <small class="text-white">{{article.print_time_updated}}</small>
-                                        <small class="text-white">{{article.author.fname}} {{article.author.lname}}</small>
+                                        <small class="text-white">{{article.author}}</small>
                                     </div><!-- end meta -->
                                 </div><!-- end shadow-desc -->
                             </div><!-- end shadow -->
@@ -76,7 +76,7 @@
                              <div class="shadoweffect">
                                 <div class="shadow-desc">
                                     <div class="blog-meta">
-                                        <span class="bg-red"><a href="#" title="{{article.rub.first.rubric.title}}">{{article.rub.first.rubric.title}}</a></span>
+                                        <span class="bg-red"><a href="#">{{article.rubric.title}}</a></span>
                                         <h4 class="text-white">{{article.icon.label}}</h4>
                                         <small class="text-white">{{article.print_time_updated}}</small>
                                         <small class="text-white">{{article.author.fname}} {{article.author.lname}}</small>
@@ -95,7 +95,7 @@
                              <div class="shadoweffect">
                                 <div class="shadow-desc">
                                     <div class="blog-meta">
-                                        <span class="bg-grey"><a href="#" title="{{article.rub.first.rubric.title}}">{{article.rub.first.rubric.title}}</a></span>
+                                        <span class="bg-grey"><a href="#">{{article.rubric.title}}</a></span>
                                         <h4 class="text-white">{{article.icon.label}}</h4>
                                     </div><!-- end meta -->
                                 </div><!-- end shadow-desc -->
@@ -120,7 +120,7 @@
                                         <div class="blog-box" onclick="changeFile('hotHz')">
                                             <div class="post-media">
                                                 {% if article.icon.hot_hz %}
-                                                    <img src="{{ article.icon.hot_hz.url }}" alt="{{article.icon.label}}" class="img-fluid">
+                                                    <img src="{{article.icon.hot_hz.url}}" alt="{{article.icon.label}}" class="img-fluid">
                                                 {% else %}
                                                     <img src="/static/cloap/upload/blog_05.jpg" alt="{{article.icon.label}}" class="img-fluid">
                                                 {% endif %}
@@ -128,10 +128,10 @@
                                             </div><!-- end media -->
                                             <div class="blog-meta big-meta">
                                                 <h4>{{article.icon.label}}</h4>
-                                                <p>{{hlist.0.article.icon.short}}</p>
-                                                <small>{{article.rub.first.rubric.title}}</small>
+                                                <p>{{article.icon.short}}</p>
+                                                <small>{{article.rubric.title}}</small>
                                                 <small>{{article.print_time_updated}}</small>
-                                                <small>{{article.author.fname}} {{article.author.lname}}</small>
+                                                <small>{{article.author}}</small>
                                             </div><!-- end meta -->
                                         </div><!-- end blog-box -->
 
@@ -159,7 +159,7 @@
                                             </div><!-- end media -->
                                             <div class="blog-meta">
                                                 <h4>{{article.icon.label}}</h4>
-                                                <small>{{article.rub.first.rubric.title}}</small>
+                                                <small>{{article.rubric.title}}</small>
                                                 <small>{{article.print_time_updated}}</small>
                                             </div><!-- end meta -->
                                         </div><!-- end blog-box -->
@@ -194,9 +194,9 @@
                                         <div class="blog-meta big-meta col-md-8">
                                             <h4>{{article.icon.label}}</h4>
                                             <p>{{article.icon.short}}</p>
-                                            <small>{{article.rub.first.rubric.title}}</small>
+                                            <small>{{article.rubric.title}}</small>
                                             <small>{{article.print_time_updated}}</small>
-                                            <small>{{article.author.fname}} {{article.author.lname}}</small>
+                                            <small>{{article.author}}</small>
                                         </div><!-- end meta -->
                                     </div><!-- end blog-box -->
                                     <hr class="invis">
@@ -217,7 +217,7 @@
                                     <div class="blog-meta">
                                         <h4>{{article.icon.label}}</h4>
                                         <small>{{article.print_time_updated}}</small>
-                                        <small>{{article.author.fname}} {{article.author.lname}}</small>
+                                        <small>{{article.author}}</small>
                                     </div><!-- end meta -->
                                 </div><!-- end blog-box -->
 

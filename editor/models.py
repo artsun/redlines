@@ -76,16 +76,20 @@ class Icon(models.Model):
     short = models.CharField(verbose_name='Подпись', max_length=512, null=True, blank=True, editable=True, default="")
     rubric = models.ForeignKey(Rubric, null=True, blank=False, on_delete=models.CASCADE, related_name='icons')
 
+    imgtypes = ('fresh_lg', 'fresh_med', 'fresh_sm', 'hot_hz', 'hot_vert', 'new_left', 'new_right')
+
     def __str__(self):
         return self.label
 
-    def set_image(self, fl, image_type):
-        if getattr(self, image_type):
+    def set_image(self, fl, image_type, save=False):
+        if hasattr(self, image_type):
             setattr(self, image_type, fl)
+            if save:
+                self.save(update_fields=[image_type], force_update=True)
 
     def set_all_images(self, fl):
-        [self.set_image(fl, image_type) for image_type in ('fresh_lg', 'fresh_med', 'fresh_sm', 'hot_hz', 'hot_vert', 'new_left', 'new_right')]
-        self.save(force_update=True)
+        [self.set_image(fl, image_type) for image_type in (self.imgtypes)]
+        self.save(update_fields=self.imgtypes, force_update=True)
 
     def upd(self, itCl, val):
         if itCl not in ('card-title', 'card-text'):

@@ -21,7 +21,7 @@ class ArtListPage(LoginRequiredMixin, View):
     login_url = '/login'
 
     def get(self, request):
-        context = {'artlist': Article.objects.all().order_by('-updated'),}
+        context = {'artlist': Article.objects.select_related('icon', 'author', 'rubric').all().order_by('-updated'),}
         return render(request, 'artlistpage.html', context)
 
 
@@ -39,8 +39,8 @@ class RubricPage(LoginRequiredMixin, View):
                 new_art = Article()
                 if new_art.create(rubric, title):
                     return redirect(new_art.get_edit_url())
-                msg = 'Статья с таким именем существует!'  # дощли сюда если не было redirect раньше
-        rubrics = Rubric.objects.all().order_by('pk')
+                msg = 'Статья с таким именем существует!'  # дошли сюда если не было redirect раньше
+        rubrics = Rubric.objects.select_related('logo', 'background').all().order_by('pk')
         context = {'rubrics': rubrics,
                    'msg': msg}
         return render(request, 'rubricpage.html', context)
@@ -59,9 +59,7 @@ class Editor(LoginRequiredMixin, View):
                         'linkback': 1}
             return render(request, 'editorNewspage.html', context)
 
-        
-        rubric = Article.rubric
-        sliders_in_rubric = Slider.objects.filter(rubric=rubric).order_by('pk')
+        sliders_in_rubric = Slider.objects.filter(rubric=article.rubric).order_by('pk')
 
         if 'setAuth' in request.GET.keys() and request.GET['setAuth'] != '' and Author.objects.filter(pk=request.GET['setAuth']).exists():
             article.author = Author.objects.get(pk=request.GET['setAuth'])
@@ -88,7 +86,7 @@ class Editor(LoginRequiredMixin, View):
         context = {'sliders': [(sl.pk, json.loads(sl.content)) for sl in sliders_in_rubric],  # right panel
                    'sliders_in_content': [[s.edit_block_num, s.slider.pk] for s in SliderToArticle.objects.filter(art=article).order_by('edit_block_num')],
                    'article': article,
-                   'rubric': rubric,
+                   'rubric': article.rubric,
                    'eblocks': EditBlock.objects.filter(art=article).order_by('edit_block_num'),
                    'authors': Author.objects.all(),
                    'rubrics': Rubric.objects.all(),
@@ -127,9 +125,8 @@ class SliderMake(LoginRequiredMixin, View):
             return redirect('/editor')
         article = Article.objects.get(trans_title=trans_title)
         article_edit_url = f"/editor/{trans_title}"
-        rubric = Article.rubric
         if spk is None:
-            context = {'slides': Slide.objects.filter(rubric=rubric).order_by('pk'),
+            context = {'slides': Slide.objects.filter(rubric=article.rubric).order_by('pk'),
                        'article_edit_url': article_edit_url,
                        'article': article,
                        }
@@ -138,7 +135,7 @@ class SliderMake(LoginRequiredMixin, View):
                 return redirect(f'/editor/slider?article={trans_title}')
 
             slider_instance = Slider.objects.get(pk=spk)
-            context = {'slides': Slide.objects.filter(rubric=rubric).order_by('pk'),
+            context = {'slides': Slide.objects.filter(rubric=article.rubric).order_by('pk'),
                        'slider_struct': json.dumps(slider_instance.compouse_struct()),
                        'article_edit_url': article_edit_url,
                        'article': article,
@@ -195,34 +192,27 @@ class IconMake(LoginRequiredMixin, View):
     login_url = '/login'
 
     def get(self, request):
-        trans_title = request.GET.get('article')
-        if not Article.objects.filter(trans_title=trans_title).exists():
+        article = list(Article.objects.select_related('icon', 'author', 'rubric').filter(trans_title=request.GET.get('article')))
+        if not article:
             return redirect('/editor')
-        article = Article.objects.get(trans_title=trans_title)
-        rubric = article.rubric
-        icons = Icon.objects.filter(rubric=rubric).order_by('pk')
-
-        context = {'icons': icons,
-                   'article': article, }
-
+        article = article[0]
+        context = {'article': article}
         return render(request, 'iconpage.html', context)
 
     def post(self, request):
-        trans_title = request.GET.get('article')
-
-        if not Article.objects.filter(trans_title=trans_title).exists():
+        article = list(Article.objects.filter(trans_title=request.GET.get('article')))
+        if not article:
             return redirect('/editor')
-        article = Article.objects.get(trans_title=trans_title)
+        article = article[0]
 
         if request.FILES.get('image') and request.POST.get('image_type'):
-            article.icon.set_image(request.FILES.get('image'), request.POST.get('image_type'))
-            article.icon.save(force_update=True)
+            article.icon.set_image(request.FILES.get('image'), request.POST.get('image_type'), save=True)
         elif request.FILES.get('file'):
             article.icon.set_all_images(request.FILES.get('file'))
         elif 'short' in request.POST.keys():
-            article.icon.short = request.POST['short']
-            article.icon.save()
-        return redirect(f'/editor/icon?article={trans_title}')
+            article.icon_short = request.POST['short']
+            article.icon.save(update_fields=['short'], force_update=True)
+        return redirect(f'/editor/icon?article={article.trans_title}')
 
 
 class Uploader(LoginRequiredMixin, View):

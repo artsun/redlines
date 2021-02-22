@@ -7,6 +7,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
 	<title>Редактор | Слайдер</title>
+    <link rel="shortcut icon" type="image/png" href="/static/cloap/images/fav-logo.gif" />
 	<link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 
@@ -18,7 +19,7 @@
 	<nav aria-label="breadcrumb">
 	  <ol class="breadcrumb">
 	  		<li class="breadcrumb-item"><a href="/editor" class="link-info" style="color: black">Статьи</a></li>
-	  		<li class="breadcrumb-item"><a href="{{ article_edit_url }}" class="link-info" style="color: black">{{article.title}}</a></li>
+	  		<li class="breadcrumb-item"><a href="{{article.get_edit_url}}" class="link-info" style="color: black">{{article.title}}</a></li>
 	    	<li class="breadcrumb-item active" aria-current="page">Слайдер</li>
 	  </ol>
 	</nav>
@@ -98,6 +99,7 @@
 	</div>
 
 
+</div>
 </div>
 </div>
 

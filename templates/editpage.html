@@ -6,7 +6,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<title>Редактор | {{ article.title }} </title>
-	<link rel="icon" type="image/png" href="/images/redlines-logo.jpg"/>
+	<link rel="shortcut icon" type="image/png" href="/static/cloap/images/fav-logo.gif" />
 	<link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 <style type="text/css">
@@ -37,12 +37,12 @@
                     <td>
                         <div class="dropdown">
                             <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="chRub" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                {{rubric.title}}
+                                {{article.rubric.title}}
                             </button>
                             <div class="dropdown-menu" aria-labelledby="chRub">
                                 {% for rub in rubrics  %}
-                                    {% if rub != rubric %}
-                                        <button class="dropdown-item" onclick="savePageAndGo('?setRub={{ rub.pk}}')" type="button">{{ rub }}</button>
+                                    {% if rub.pk != article.rubric.pk %}
+                                        <button class="dropdown-item" onclick="savePageAndGo('?setRub={{rub.pk}}')" type="button">{{ rub.title }}</button>
                                     {% endif %}
                                 {% endfor %}
                             </div>
@@ -58,8 +58,8 @@
                             </button>
                             <div class="dropdown-menu" aria-labelledby="chAuth">
                                 {% for author in authors  %}
-                                    {% if author != article.author %}
-                                        <button class="dropdown-item" onclick="savePageAndGo('?setAuth={{ author.pk}}')" type="button">{{ author }}</button>
+                                    {% if author.pk != article.author.pk %}
+                                        <button class="dropdown-item" onclick="savePageAndGo('?setAuth={{author.pk}}')" type="button">{{ author }}</button>
                                     {% endif %}
                                 {% endfor %}
                             </div>

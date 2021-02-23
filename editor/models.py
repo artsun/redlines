@@ -44,23 +44,23 @@ class Rubric(models.Model):
 
     @staticmethod
     def statistics():
-        return {r.codename: r.arts.count() for r in Rubric.objects.prefetch_related('arts').all()}
+        return {r.codename: r.arts.count() for r in Rubric.objects.prefetch_related('arts').defer('arts__content').all()}
 
     @staticmethod
     def navbar_catalogs():
         return {
-            'catBiology': Article.objects.select_related('icon', 'author', 'rubric').filter(rubric__codename='biology').order_by('updated')[:4],
-            'catGenetics': Article.objects.select_related('icon', 'author', 'rubric').filter(rubric__codename='genetics').order_by('updated')[:4],
-            'catGeography': Article.objects.select_related('icon', 'author', 'rubric').filter(rubric__codename='geography').order_by('updated')[:4],
-            'catMath': Article.objects.select_related('icon', 'author', 'rubric').filter(rubric__codename='math').order_by('updated')[:4],
-            'catMedicine': Article.objects.select_related('icon', 'author', 'rubric').filter(rubric__codename='medicine').order_by('updated')[:4],
-            'catPhysics': Article.objects.select_related('icon', 'author', 'rubric').filter(rubric__codename='physics').order_by('updated')[:4],
-            'catChemistry': Article.objects.select_related('icon', 'author', 'rubric').filter(rubric__codename='chemistry').order_by('updated')[:4],
-            'catEcology': Article.objects.select_related('icon', 'author', 'rubric').filter(rubric__codename='ecology').order_by('updated')[:4],
-            'catHistory': Article.objects.select_related('icon', 'author', 'rubric').filter(rubric__codename='history').order_by('updated')[:4],
-            'catPsycho': Article.objects.select_related('icon', 'author', 'rubric').filter(rubric__codename='psycho').order_by('updated')[:4],
-            'catSociology': Article.objects.select_related('icon', 'author', 'rubric').filter(rubric__codename='sociology').order_by('updated')[:4],
-            'catEconomics': Article.objects.select_related('icon', 'author', 'rubric').filter(rubric__codename='economics').order_by('updated')[:4]
+            'catBiology': Article.objects.select_related('icon', 'author', 'rubric').filter(rubric__codename='biology').defer('content').order_by('updated')[:4],
+            'catGenetics': Article.objects.select_related('icon', 'author', 'rubric').filter(rubric__codename='genetics').defer('content').order_by('updated')[:4],
+            'catGeography': Article.objects.select_related('icon', 'author', 'rubric').filter(rubric__codename='geography').defer('content').order_by('updated')[:4],
+            'catMath': Article.objects.select_related('icon', 'author', 'rubric').filter(rubric__codename='math').defer('content').order_by('updated')[:4],
+            'catMedicine': Article.objects.select_related('icon', 'author', 'rubric').filter(rubric__codename='medicine').defer('content').order_by('updated')[:4],
+            'catPhysics': Article.objects.select_related('icon', 'author', 'rubric').filter(rubric__codename='physics').defer('content').order_by('updated')[:4],
+            'catChemistry': Article.objects.select_related('icon', 'author', 'rubric').filter(rubric__codename='chemistry').defer('content').order_by('updated')[:4],
+            'catEcology': Article.objects.select_related('icon', 'author', 'rubric').filter(rubric__codename='ecology').defer('content').order_by('updated')[:4],
+            'catHistory': Article.objects.select_related('icon', 'author', 'rubric').filter(rubric__codename='history').defer('content').order_by('updated')[:4],
+            'catPsycho': Article.objects.select_related('icon', 'author', 'rubric').filter(rubric__codename='psycho').defer('content').order_by('updated')[:4],
+            'catSociology': Article.objects.select_related('icon', 'author', 'rubric').filter(rubric__codename='sociology').defer('content').order_by('updated')[:4],
+            'catEconomics': Article.objects.select_related('icon', 'author', 'rubric').filter(rubric__codename='economics').defer('content').order_by('updated')[:4]
         }
 
 
@@ -74,7 +74,6 @@ class Icon(models.Model):
     new_right = ResizedImageField(size=[800, 460], crop=['middle', 'center'], quality=100, upload_to='images/', blank=True, null=True)
     label = models.CharField(verbose_name='Заголовок', max_length=128, null=True, blank=True, editable=True, default="")
     short = models.CharField(verbose_name='Подпись', max_length=512, null=True, blank=True, editable=True, default="")
-    rubric = models.ForeignKey(Rubric, null=True, blank=False, on_delete=models.CASCADE, related_name='icons')
 
     imgtypes = ('fresh_lg', 'fresh_med', 'fresh_sm', 'hot_hz', 'hot_vert', 'new_left', 'new_right')
 
@@ -90,13 +89,6 @@ class Icon(models.Model):
     def set_all_images(self, fl):
         [self.set_image(fl, image_type) for image_type in (self.imgtypes)]
         self.save(update_fields=self.imgtypes, force_update=True)
-
-    def upd(self, itCl, val):
-        if itCl not in ('card-title', 'card-text'):
-            return
-        self.label = val if itCl == 'card-title' else self.label
-        self.short = val if itCl == 'card-text' else self.short
-        self.save(force_update=True)
 
 
 class Article(models.Model):
@@ -195,7 +187,7 @@ class Article(models.Model):
             return
         self.title = title
         self.trans_title = trans_title
-        self.save(force_update=True)
+        self.save(update_fields=['title', 'trans_title'], force_update=True)
 
     def part_update(self, parts, sliders, htmls, title):
         parts, sliders, htmls = [json.loads(x) for x in (parts, sliders, htmls)]
@@ -210,7 +202,6 @@ class Article(models.Model):
             eb = EditBlock()
             eb.art, eb.edit_block_num, eb.data, eb.html_data = self, num, rsub(r'\\"', "'", json.dumps(block)), html
             eb.save()
-        self.save()
 
     def full_update(self, parts, sliders, htmls, artUpdates):
         parts, sliders, htmls = [json.loads(x) for x in (parts, sliders, htmls)]
@@ -218,6 +209,7 @@ class Article(models.Model):
             title = json.loads(artUpdates)
             self.update_title(title)
         self.update_sliders_links(sliders)
+
         self.content = ''
         EditBlock.objects.filter(art=self).delete()
 
@@ -227,19 +219,23 @@ class Article(models.Model):
             eb.art, eb.edit_block_num, eb.data, eb.html_data = self, num, rsub(r'\\"', "'", json.dumps(block)), html
             eb.save()
 
-            if SliderToArticle.objects.filter(art=self, edit_block_num=num).exists():
-                self.content += json.loads(SliderToArticle.objects.get(art=self, edit_block_num=num).slider.content)
-        self.save()
+            # sliders to content of article
+            slider_for_this_block = Slider.objects.filter(article=self, inserted=True, edit_block_num=num)
+            if slider_for_this_block:
+                self.content += json.loads(slider_for_this_block[0].content)
+        self.save(update_fields=['content'], force_update=True)
 
-    def update_sliders_links(self, sliders):
-        SliderToArticle.objects.filter(art=self).delete()
-
-        for sl in sliders:
-            pk, num = sl[0], sl[1]
-            sl_instance = Slider.objects.get(pk=pk)
-            sta = SliderToArticle()
-            sta.art, sta.slider, sta.edit_block_num = self, sl_instance, num
-            sta.save()
+    def update_sliders_links(self, sliders):  # current sliders state
+        for s in Slider.objects.filter(article=self):  # drop current
+            s.inserted = False
+            s.edit_block_num = None
+            s.save(update_fields=['inserted', 'edit_block_num'], force_update=True)
+        for s in sliders:  # create actual
+            pk, num = s[0], s[1]
+            slider_instance = Slider.objects.get(pk=pk)
+            slider_instance.inserted = True
+            slider_instance.edit_block_num = num
+            slider_instance.save(update_fields=['inserted', 'edit_block_num'], force_update=True)
 
     def set_icon(self, icon):
         icon = Icon.objects.get(pk=icon) if Icon.objects.filter(pk=icon).exists() else None
@@ -263,26 +259,35 @@ class Article(models.Model):
 
 
 class Slider(models.Model):
-    content = models.TextField(null=True)
-    rubric = models.ForeignKey(Rubric, null=True, blank=False, on_delete=models.CASCADE, related_name='sliders')
+    content = models.TextField(null=False, default='{"Пустой": "слайдер"}', editable=True, blank=True)
+    edit_block_num = models.IntegerField(verbose_name='Блок привязки слайдера', null=True, editable=True, blank=True)
+    inserted = models.BooleanField(default=False, null=False)
+    article = models.ForeignKey(Article, null=True, blank=False, on_delete=models.CASCADE, related_name='sliders')
 
     def __str__(self):
-        return f'{self.pk} {self.rubric.title}. Используется: {", ".join([sta.art.title for sta in SliderToArticle.objects.filter(slider=self)])}'
+        return f'{self.pk} {self.article.trans_title} {self.inserted}'
 
     def compouse_struct(self):
-        sts_list = list(SlideToSlider.objects.filter(sld=self).order_by('num'))
-        return [[x.slde.pk, x.slde.label, x.slde.descr, x.slde.img.url] for x in sts_list]
+        slides = Slide.objects.filter(slider=self).order_by('num')
+        return [[s.pk, s.label, s.descr, s.img.url] for s in slides]
 
-    def from_struct_and_content(self, struct, content, rubric):
+    def from_struct_and_content(self, struct, content):
+        for slide in Slide.objects.filter(slider=self):
+            slide.num = None
+            slide.save(update_fields=['num'], force_update=True)
         self.content = rsub('newsSlider', f'slider{self.pk}', content)
-        self.rubric = rubric
-        self.save(force_update=True)
-        [x.delete() for x in list(SlideToSlider.objects.filter(sld=self))]
+        self.save(update_fields=['content'], force_update=True)
+
         for num, slide in enumerate(struct, start=0):
-            if not Slide.objects.filter(pk=slide[0]).exists():
+            slide = Slide.objects.filter(pk=slide[0])
+            if not slide:
                 continue
-            sts = SlideToSlider(sld=self, slde=Slide.objects.get(pk=slide[0]), num=num)
-            sts.save()
+            slide = slide[0]
+            slide.num = num
+            slide.save(update_fields=['num'], force_update=True)
+
+    def get_edit_url(self):
+        return f'/editor/slider?article={self.article.trans_title}&spk={self.pk}'
 
 
 class EditBlock(models.Model):
@@ -295,43 +300,28 @@ class EditBlock(models.Model):
         return f'Блок {self.edit_block_num} <- {self.art.title}'
 
 
-class SliderToArticle(models.Model):
-    art = models.ForeignKey(Article, null=False, blank=False, on_delete=models.CASCADE, related_name='sliders')
-    slider = models.ForeignKey(Slider, null=False, blank=False, on_delete=models.CASCADE, related_name='arts')
-    edit_block_num = models.IntegerField(verbose_name='Блок привязки слайдера', null=True, editable=True)
-
-    def __str__(self):
-        return f'{self.art.title} -> {self.slider.pk} {self.slider.rubric}'
-
-
 class Slide(models.Model):
     img = ResizedImageField(size=[1024, 768], crop=['middle', 'center'],  quality=100, upload_to='images/', blank=True, null=True)
     label = models.CharField(verbose_name='Заголовок', max_length=32, null=True, blank=True, editable=True)
     descr = models.CharField(verbose_name='Подпись', max_length=64, null=True, blank=True, editable=True)
-    rubric = models.ForeignKey(Rubric, null=True, blank=False, on_delete=models.CASCADE, related_name='slides')
+    num = models.IntegerField(verbose_name='Номер слайда', null=True, editable=True)
+    slider = models.ForeignKey(Slider, null=True, blank=True, on_delete=models.CASCADE, related_name='slides')
 
     def __str__(self):
-        return f'{self.label} {self.img.name}' if self.label else f'slide{self.pk} {self.img.name}'
+        return f'{self.label} {self.img.name}' if self.label else f'(nolabel){self.pk} {self.img.name}'
 
-    def upd(self, itCl, val):
-        if itCl not in ('card-title', 'card-text'):
+    @staticmethod
+    def update_if_exists(pk, field_name, value):
+        slide = Slide.objects.filter(pk=pk)
+        if not slide:
             return
-        self.label = val if itCl == 'card-title' else self.label
-        self.descr = val if itCl == 'card-text' else self.descr
-        self.save(force_update=True)
-
-
-    def remove_from_slider(self, slider):
-        slider_sts_list = list(SlideToSlider.objects.filter(sld=slider))
-        [sts.delete() for sts in slider_sts_list if sts.slde.pk == self.pk]
-        slider.delete() if len(list(SlideToSlider.objects.filter(sld=slider))) == 0 else None # del SLIDER if last
-
-
-class SlideToSlider(models.Model):
-    sld = models.ForeignKey(Slider, null=False, blank=False, on_delete=models.CASCADE, related_name='slider_slides')
-    slde = models.ForeignKey(Slide, null=False, blank=False, on_delete=models.CASCADE, related_name='sliders')
-    num = models.IntegerField(verbose_name='Номер слайда', null=False, editable=True)
-
-    def __str__(self):
-        return f'{self.num} {self.sld}'
-
+        slide = slide[0]
+        if field_name == 'card-title':
+            slide.label = value
+            slide.save(update_fields=['label'], force_update=True)
+        elif field_name == 'card-text':
+            slide.descr = value
+            slide.save(update_fields=['descr'], force_update=True)
+        elif field_name == 'photo':
+            slide.img = value
+            slide.save(update_fields=['img'], force_update=True)

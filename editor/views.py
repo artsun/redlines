@@ -13,16 +13,16 @@ from django.contrib.auth.models import User, Group
 import json
 from collections import OrderedDict
 
-from .models import Image, Slide, Slider, Rubric, Article, SliderToArticle, EditBlock, Icon,\
-    ARTICLE_STATUS_CHOICES, ARTICLE_STATUS_CHOICES_KEYS
+from .models import Image, Slide, Slider, Rubric, Article, EditBlock, Icon, ARTICLE_STATUS_CHOICES, ARTICLE_STATUS_CHOICES_KEYS
 from management.models import Author
+
 
 class ArtListPage(LoginRequiredMixin, View):
     login_url = '/login'
 
     def get(self, request):
-        context = {'artlist': Article.objects.select_related('icon', 'author', 'rubric').all().order_by('-updated'),}
-        return render(request, 'artlistpage.html', context)
+        artlist = Article.objects.select_related('icon', 'author', 'rubric').defer('content').all().order_by('-updated')
+        return render(request, 'artlistpage.html', {'artlist': artlist})
 
 
 class RubricPage(LoginRequiredMixin, View):
@@ -50,59 +50,55 @@ class Editor(LoginRequiredMixin, View):
     login_url = '/login'
 
     def get(self, request, trans_title=None):
-        if not Article.objects.filter(trans_title=trans_title).exists():
-            return redirect('/')
+        article = Article.objects.select_related('icon', 'author', 'rubric').filter(trans_title=trans_title)[:1]
+        if not article:
+            return redirect('/editor')
+        article = article[0]
 
-        article = Article.objects.get(trans_title=trans_title)
         if request.GET.get('preview'):
-            context = {'article': article,
-                        'linkback': 1}
-            return render(request, 'editorNewspage.html', context)
+            return render(request, 'editorNewspage.html', {'article': article})
 
-        sliders_in_rubric = Slider.objects.filter(rubric=article.rubric).order_by('pk')
+        sliders_of_article = Slider.objects.filter(article=article).order_by('pk')
 
         if 'setAuth' in request.GET.keys() and request.GET['setAuth'] != '' and Author.objects.filter(pk=request.GET['setAuth']).exists():
             article.author = Author.objects.get(pk=request.GET['setAuth'])
-            article.save()
+            article.save(update_fields=['author'], force_update=True)
             return redirect(article.get_edit_url())
         elif 'setRub' in request.GET.keys() and request.GET['setRub'] != '' and Rubric.objects.filter(pk=request.GET['setRub']).exists():
             article.rubric = Rubric.objects.get(pk=request.GET['setRub'])
-            article.save()
+            article.save(update_fields=['rubric'], force_update=True)
             return redirect(article.get_edit_url())
         elif 'setStatus' in request.GET.keys() and request.GET['setStatus'] in ARTICLE_STATUS_CHOICES_KEYS:
             if request.GET['setStatus'] != 'approved':
                 article.active = False
             article.status = request.GET['setStatus']
-            article.save()
+            article.save(update_fields=['status', 'active'], force_update=True)
             return redirect(article.get_edit_url())
         elif 'setActive' in request.GET.keys() and request.GET['setActive'] in ('1', '0'):
             if article.status == 'approved' and request.GET['setActive'] == '1':
                 article.active = True
             else:
                 article.active = False
-            article.save()
+            article.save(update_fields=['active'], force_update=True)
             return redirect(article.get_edit_url())
 
-        context = {'sliders': [(sl.pk, json.loads(sl.content)) for sl in sliders_in_rubric],  # right panel
-                   'sliders_in_content': [[s.edit_block_num, s.slider.pk] for s in SliderToArticle.objects.filter(art=article).order_by('edit_block_num')],
+        context = {'sliders': [(sl.pk, json.loads(sl.content)) for sl in sliders_of_article],  # right panel
+                   'sliders_in_content': [[s.edit_block_num, s.pk] for s in Slider.objects.filter(article=article, inserted=True).defer('content').order_by('edit_block_num')],
                    'article': article,
-                   'rubric': article.rubric,
-                   'eblocks': EditBlock.objects.filter(art=article).order_by('edit_block_num'),
-                   'authors': Author.objects.all(),
-                   'rubrics': Rubric.objects.all(),
+                   'eblocks': EditBlock.objects.select_related('art').filter(art=article).order_by('edit_block_num'),
+                   'authors': Author.objects.defer('login', 'short', 'avatar').all(),
+                   'rubrics': Rubric.objects.defer('codename', 'logo', 'background').all(),
                    'status_choices': ARTICLE_STATUS_CHOICES}
 
         return render(request, 'editpage.html', context)
 
     def post(self, request, trans_title=None):
-        if not Article.objects.filter(trans_title=trans_title).exists():
+        article = Article.objects.select_related('icon', 'author', 'rubric').filter(trans_title=trans_title)[:1]
+        if not article:
             return redirect('/editor')
+        article = article[0]
 
-        article = Article.objects.get(trans_title=trans_title)
-        if request.POST.get('getContent'):
-            parts = [x.data for x in EditBlock.objects.filter(art=article).order_by('edit_block_num')]
-            return JsonResponse({'parts': json.dumps(parts)})
-        elif request.POST.get('parts') and request.POST.get('sliders') and request.POST.get('htmls'):
+        if request.POST.get('parts') and request.POST.get('sliders') and request.POST.get('htmls'):
             parts, sliders, htmls = request.POST.get('parts'), request.POST.get('sliders'), request.POST.get('htmls')
             if request.POST.get('partSave'):
                 article.part_update(parts, sliders, htmls, request.POST.get('artTitle'))
@@ -121,23 +117,24 @@ class SliderMake(LoginRequiredMixin, View):
 
     def get(self, request):
         trans_title, spk = request.GET.get('article'), request.GET.get('spk')
-        if not Article.objects.filter(trans_title=trans_title).exists():
+        article = Article.objects.select_related('icon', 'author', 'rubric').defer('content').filter(trans_title=trans_title)[:1]
+        if not article:
             return redirect('/editor')
-        article = Article.objects.get(trans_title=trans_title)
-        article_edit_url = f"/editor/{trans_title}"
-        if spk is None:
-            context = {'slides': Slide.objects.filter(rubric=article.rubric).order_by('pk'),
-                       'article_edit_url': article_edit_url,
-                       'article': article,
-                       }
-        else:
-            if not Slider.objects.filter(pk=spk).exists():  # inside qs incorrect query
-                return redirect(f'/editor/slider?article={trans_title}')
+        article = article[0]
 
-            slider_instance = Slider.objects.get(pk=spk)
-            context = {'slides': Slide.objects.filter(rubric=article.rubric).order_by('pk'),
-                       'slider_struct': json.dumps(slider_instance.compouse_struct()),
-                       'article_edit_url': article_edit_url,
+        if spk is None:  # create slider and redirect
+            slider = Slider(article=article)
+            slider.save()
+            return redirect(slider.get_edit_url())
+
+        else:  # edit existing slider
+            slider = Slider.objects.filter(pk=spk)[:1]
+            if not slider.exists():  # inside qs incorrect query
+                return redirect(article.get_edit_url())  # go article edit
+            slider = slider[0]
+
+            context = {'slides': Slide.objects.filter(slider=slider).order_by('pk'),
+                       'slider_struct': json.dumps(slider.compouse_struct()),
                        'article': article,
                        }
 
@@ -145,62 +142,57 @@ class SliderMake(LoginRequiredMixin, View):
 
     def post(self, request):
         trans_title, spk = request.GET.get('article'), request.GET.get('spk')
-        post_heads = request.POST.keys()
-        slider_exists = Slider.objects.filter(pk=spk).exists()
-        if not Article.objects.filter(trans_title=trans_title).exists():    # only for url
+
+        article = Article.objects.select_related('icon', 'author', 'rubric').defer('content').filter(trans_title=trans_title)[:1]
+        if not article:
             return redirect('/editor')
-        article = Article.objects.get(trans_title=trans_title)  # only for url, because edit only from article ## ???
-        rubric = article.rubric
+        article = article[0]
+
+        slider = Slider.objects.filter(pk=spk)
+        if not slider:
+            return redirect(article.get_edit_url())
+        slider = slider[0]
 
         if request.POST.get('delSlide'):
-            slide = Slide.objects.get(pk=request.POST.get('delSlide'))
-            [slide.remove_from_slider(sl) for sl in set(Slider.objects.filter(slider_slides__slde=slide).all())]
-            slide.delete()
-            return redirect(f'/editor/slider?article={trans_title}') if spk is None else redirect(f'/editor/slider?article={trans_title}&spk={spk}')
+            slide = Slide.objects.filter(pk=request.POST.get('delSlide'))[:1]
+            if slide:
+                slide[0].delete()
+            return redirect(slider.get_edit_url())
+        elif request.FILES.get('file'):  # new slide
+            sl = Slide(img=request.FILES.get('file'), label=request.POST.get('label'), descr=request.POST.get('descr'), slider=slider)
+            sl.save()
 
-        elif request.POST.get("updSlider") and request.POST.get("sliderContent"):
+        elif request.POST.get("updSlider") and request.POST.get("sliderContent"):  # saving slider
             struct = json.loads(request.POST.get("updSlider"), object_pairs_hook=OrderedDict)
-            if slider_exists:
-                slider = Slider.objects.get(pk=spk)
-                if len(struct) < 1:
-                    slider.delete()
-                    return JsonResponse({'url': f'/editor/slider?article={trans_title}'})
-            else:
-                if len(struct) < 1:
-                    return JsonResponse({'url': f'/editor/slider?article={trans_title}'})
-                slider = Slider()
-                slider.save()  # not force update
-            
-            slider.from_struct_and_content(struct, request.POST.get("sliderContent"), rubric)
+            if len(struct) < 1:  # save empty slider -> delete and redirect
+                slider.delete()
+                return JsonResponse({'url': article.get_edit_url()})
+            slider.from_struct_and_content(struct, request.POST.get("sliderContent"))
             return JsonResponse({'url': f'/editor/slider?article={trans_title}&spk={slider.pk}'})
 
         elif request.FILES.get('photo') and request.POST.get('name'):
-            Slide.objects.get(pk=request.POST.get('name')).img.commit(request.FILES.get('photo'), force_update=True)
+            Slide.update_if_exists(request.POST.get('name'), 'photo', request.FILES.get('photo'))
 
-        elif request.POST.get('name') and request.POST.get('class') and 'val' in post_heads:
-            Slide.objects.get(pk=request.POST.get('name')).upd(request.POST.get('class'), request.POST.get('val'))
+        elif request.POST.get('name') and request.POST.get('class') and 'val' in request.POST.keys():
+            Slide.update_if_exists(request.POST.get('name'), request.POST.get('class'), request.POST.get('val'))
 
-        elif request.FILES.get('file'):
-            print(request.FILES.get('file'))
-            sl = Slide(img=request.FILES.get('file'), label=request.POST.get('label'), descr=request.POST.get('descr'), rubric=rubric)
-            sl.save()
-
-        return redirect(f'/editor/slider?article={trans_title}') if spk is None else redirect(f'/editor/slider?article={trans_title}&spk={spk}')
+        return redirect(slider.get_edit_url())
 
 
 class IconMake(LoginRequiredMixin, View):
     login_url = '/login'
 
     def get(self, request):
-        article = list(Article.objects.select_related('icon', 'author', 'rubric').filter(trans_title=request.GET.get('article')))
+        article = Article.objects.select_related('icon', 'author', 'rubric').filter(trans_title=request.GET.get('article'))[:1]
         if not article:
             return redirect('/editor')
         article = article[0]
+
         context = {'article': article}
         return render(request, 'iconpage.html', context)
 
     def post(self, request):
-        article = list(Article.objects.filter(trans_title=request.GET.get('article')))
+        article = Article.objects.filter(trans_title=request.GET.get('article'))[:1]
         if not article:
             return redirect('/editor')
         article = article[0]

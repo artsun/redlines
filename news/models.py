@@ -13,11 +13,22 @@ class NewsComment(models.Model):
     gname = models.CharField(verbose_name='Имя', max_length=64, null=False, editable=True)
     short = models.CharField(verbose_name='Подпись', max_length=512, null=False, blank=False, editable=True)
     timestamp = models.DateTimeField(auto_now_add=True)
-    email = models.EmailField(verbose_name='Почта', null=False, editable=True)
+    email = models.EmailField(verbose_name='Почта', null=True, editable=True)
     article = models.ForeignKey('editor.Article', null=False, on_delete=models.CASCADE, related_name='comments')
 
     def __str__(self):
         return f'{self.article.title} -> {self.print_timestamp()} -> {self.gname}'
+
+    @staticmethod
+    def create(article, commName, commMail, commTXT):
+        commName, commMail, commTXT = commName.strip(), commMail.strip(), commTXT.strip()
+        if not commName or not commTXT:
+            return
+        ncomm = NewsComment(gname=commName, short=commTXT, article=article)
+        if commMail:
+            ncomm.email = commMail
+
+        ncomm.save()
 
     def print_timestamp(self):
         one_hour = 3600  # sec

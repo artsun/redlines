@@ -33,6 +33,8 @@ class LoginPage(View):
         user = authenticate(request, username=request.POST.get('username'), password=request.POST.get('password'))
         if user is not None:
             login(request, user)
+            if request.POST.get('next') is None or request.POST.get('next') == 'None':
+                return redirect('/editor')
             return redirect('/editor') if not request.POST.get('next') else redirect(request.POST.get('next'))
         else:
             return redirect('/login')
@@ -41,4 +43,27 @@ class LoginPage(View):
 class LogoutPage(View):
     def get(self, request):
         logout(request)
+        return redirect('/')
+
+
+from django.core.mail import EmailMessage
+
+
+class SubscribePage(View):
+    def get(self, request):
+        #print(request.GET)
+        return redirect('/')
+
+    def post(self, request):
+        print(request.POST)
+        email = EmailMessage(
+            'Hello',
+            'Body goes here',
+            'mymail@mailmy.com',
+            ['parafo@gmail.com'],
+            [],  # bcc  - black carbon copy
+            reply_to=['another@example.com'],
+            headers={},
+        )
+        email.send()
         return redirect('/')

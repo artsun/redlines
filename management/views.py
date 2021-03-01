@@ -59,10 +59,10 @@ class SubscribePage(View):
         email = EmailMessage(
             'Hello',
             'Body goes here',
-            'mymail@mailmy.com',
-            ['parafo@gmail.com'],
+            '',
+            [],
             [],  # bcc  - black carbon copy
-            reply_to=['another@example.com'],
+            reply_to=[],
             headers={},
         )
         email.send()

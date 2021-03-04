@@ -22,7 +22,7 @@
                                 <div class="blog-meta big-meta">
                                     <small><a href="{{article.by_updated_url}}" title="">{{article.print_time_updated}}</a></small>
                                     <small><a href="{{article.by_author_url}}">{{article.author}}</a></small>
-                                    <small><a href="#" title=""><i class="fa fa-eye"></i> 2344</a></small>
+                                    <small><i class="fa fa-eye"></i>{{article.metric.calcvalue}}</small>
                                 </div><!-- end meta -->
 
                                 <div class="post-sharing">
@@ -163,8 +163,8 @@
                                             <div class="media">
                                                 <div class="media-body">
                                                     <h4 class="media-heading user_name">{{comment.gname}}<small>{{comment.print_timestamp}}</small></h4>
-                                                    <p>{{comment.short}}</p>
-                                                    <a href="#" class="btn btn-primary btn-sm">Reply</a>
+                                                    <p>{{comment.short | safe}}</p>
+                                                    <button type="button" class="btn btn-primary btn-sm" onclick="reply('{{comment.gname}}');">Ответить</button>
                                                 </div>
                                             </div>
                                             {% endfor %}
@@ -181,10 +181,11 @@
                                 <div class="row">
                                     <div class="col-lg-12">
                                         <form class="form-wrapper">
-                                            <input type="text" class="form-control" placeholder="Имя">
-                                            <input type="text" class="form-control" placeholder="Почта">
-                                            <textarea class="form-control" placeholder="Комментарий"></textarea>
-                                            <button type="submit" class="btn btn-primary">Отправить</button>
+                                            <input id="commName" type="text" class="form-control" placeholder="Имя" required>
+                                            <input id="commMail" type="text" class="form-control" placeholder="Почта">
+                                            <p id="commAddr"></p>
+                                            <textarea id="commTXT"  class="form-control" placeholder="Комментарий" required="required"></textarea>
+                                            <button type="button" class="btn btn-primary" onclick="sendComm();">Отправить</button>
                                         </form>
                                     </div>
                                 </div>
@@ -248,4 +249,32 @@
             </div><!-- end container -->
         </section>
 {% endblock mainContent %}
+
+{% block addScripts %}
+<script>
+
+function reply(gname) {
+    item = document.getElementById("commAddr");
+    item.innerHTML = `<b>${gname},</b>`;
+}
+
+function sendComm(){
+	let formData = new FormData();
+	let commName = document.getElementById("commName").value.trim();
+	let commMail = document.getElementById("commMail").value.trim();
+	let commAddr = document.getElementById("commAddr").innerHTML.trim();
+	let commTXT = document.getElementById("commTXT").value.trim();
+	commTXT = `${commAddr} ${commTXT}`;
+	if (commName.length===0 || commTXT.length===0) {
+	    return;
+    }
+
+	formData.append("commName", commName);
+	formData.append("commMail", commMail);
+	formData.append("commTXT", commTXT);
+	fetch("", {method: "POST", headers:{"X-CSRFToken": '{{ csrf_token }}'}, body: formData}).then(() => { location.replace('{{ article.get_news_url }}');});
+}
+
+</script>
+{% endblock addScripts %}
 

@@ -25,7 +25,7 @@
                         <div class="page-wrapper">
                             <div class="portfolio row">
 
-                                {% for article in articles %}
+                                {% for article in page_arts %}
                                 <div class="pitem item-w1 item-h1 col-lg-3">
                                     <div class="blog-box">
                                         <div class="post-media">
@@ -35,7 +35,7 @@
                                             </a>
                                         </div><!-- end media -->
                                         <div class="blog-meta">
-                                            <span class="bg-grey"><a href="{{article.by_rubric_url}}" title="">{{article.rubric.title}}</a></span>
+                                            <span class="bg-grey"><a href="{{article.by_rubric_url}}">{{article.rubric.title}}</a></span>
                                             <h4><a href="{{article.get_news_url}}" title="">{{article.icon.label}}</a></h4>
                                             <small><a href="{{article.by_author_url}}" title="">{{article.author}}</a></small>
                                             <small><a href="{{article.by_updated_url}}" title="">{{article.print_time_updated}}</a></small>
@@ -54,12 +54,38 @@
                             <div class="col-md-12">
                                 <nav aria-label="Page navigation">
                                     <ul class="pagination justify-content-start">
-                                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                        <li class="page-item">
-                                            <a class="page-link" href="#">Next</a>
-                                        </li>
+                                        {% if page_arts.has_previous %}
+                                            <li class="page-item"><a class="page-link" href="?date={{date_query}}&page={{ page_arts.previous_page_number }}">Предыдущая</a></li>
+                                        {% endif %}
+                                        {% if pages_left|length == 5 and pages_left.0.number > 1 %}
+                                            <li class="page-item"><a class="page-link" href="?date={{date_query}}&page=1">...</a></li>
+                                        {% endif %}
+                                        {% for pg in pages_left %}
+                                            {% if pg.number == page_arts.number %}
+                                                <li class="page-item "><a class="page-link" href="?date={{date_query}}&page={{pg.number}}"><b>{{pg.number}}</b></a></li>
+                                                {% else %}
+                                                <li class="page-item "><a class="page-link" href="?date={{date_query}}&page={{pg.number}}">{{pg.number}}</a></li>
+                                            {% endif %}
+                                        {% endfor %}
+
+
+                                        {% for pg in pages_right %}
+                                            {% if pg.number == page_arts.number %}
+                                                <li class="page-item"><a class="page-link" href="?date={{date_query}}&page={{pg.number}}"><b>{{pg.number}}</b></a></li>
+                                            {% else %}
+                                            <li class="page-item"><a class="page-link" href="?date={{date_query}}&page={{pg.number}}">{{pg.number}}</a></li>
+                                            {% endif %}
+                                        {% endfor %}
+
+                                        {% if pages_right|length == 5 and pages_right.4.number < page_arts.paginator.num_pages %}
+                                            <li class="page-item"><a class="page-link" href="?date={{date_query}}&page={{page_arts.paginator.num_pages}}">...</a></li>
+                                        {% endif %}
+                                        {% if page_arts.has_next %}
+                                            <li class="page-item">
+                                                <a class="page-link" href="?date={{date_query}}&page={{ page_arts.next_page_number }}">Следующая</a>
+                                            </li>
+                                        {% endif %}
+
                                     </ul>
                                 </nav>
                             </div><!-- end col -->

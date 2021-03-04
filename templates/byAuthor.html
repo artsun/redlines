@@ -11,7 +11,7 @@
                     <div class="col-lg-4 col-md-4 col-sm-12 hidden-xs-down hidden-sm-down">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="/">Главная</a></li>
-                            <li class="breadcrumb-item"><a href="#">Блоги</a></li>
+                            <li class="breadcrumb-item">Блоги</li>
                             <li class="breadcrumb-item active">{{ author }}</li>
                         </ol>
                     </div><!-- end col -->
@@ -52,7 +52,7 @@
 
 
                             <div class="blog-custom-build">
-                                {% for article in articles %}
+                                {% for article in page_arts %}
                                 <div class="blog-box">
                                     <div class="post-media">
                                         <a href="{{article.get_news_url}}">
@@ -76,7 +76,7 @@
                                         <small><a href="{{article.by_rubric_url}}">{{article.rubric.title}}</a></small>
                                         <small><a href="{{article.by_updated_url}}">{{article.print_time_updated}}</a></small>
                                         <small><a href="{{article.by_author_url}}" title="">{{author}}</a></small>
-                                        <small><a href="#" title=""><i class="fa fa-eye"></i> 2291</a></small>
+                                        <small><i class="fa fa-eye"></i>{{article.metric.calcvalue}}</small>
                                     </div><!-- end meta -->
                                 </div><!-- end blog-box -->
                                 <hr class="invis">
@@ -91,12 +91,37 @@
                             <div class="col-md-12">
                                 <nav aria-label="Page navigation">
                                     <ul class="pagination justify-content-start">
-                                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                        <li class="page-item">
-                                            <a class="page-link" href="#">Next</a>
-                                        </li>
+                                        {% if page_arts.has_previous %}
+                                            <li class="page-item"><a class="page-link" href="?author={{author.pk}}&page={{ page_arts.previous_page_number }}">Предыдущая</a></li>
+                                        {% endif %}
+                                        {% if pages_left|length == 5 and pages_left.0.number > 1 %}
+                                            <li class="page-item"><a class="page-link" href="?author={{author.pk}}&page=1">...</a></li>
+                                        {% endif %}
+                                        {% for pg in pages_left %}
+                                            {% if pg.number == page_arts.number %}
+                                                <li class="page-item "><a class="page-link" href="?author={{author.pk}}&page={{pg.number}}"><b>{{pg.number}}</b></a></li>
+                                                {% else %}
+                                                <li class="page-item "><a class="page-link" href="?author={{author.pk}}&page={{pg.number}}">{{pg.number}}</a></li>
+                                            {% endif %}
+                                        {% endfor %}
+
+
+                                        {% for pg in pages_right %}
+                                            {% if pg.number == page_arts.number %}
+                                                <li class="page-item"><a class="page-link" href="?author={{author.pk}}&page={{pg.number}}"><b>{{pg.number}}</b></a></li>
+                                            {% else %}
+                                            <li class="page-item"><a class="page-link" href="?author={{author.pk}}&page={{pg.number}}">{{pg.number}}</a></li>
+                                            {% endif %}
+                                        {% endfor %}
+
+                                        {% if pages_right|length == 5 and pages_right.4.number < page_arts.paginator.num_pages %}
+                                            <li class="page-item"><a class="page-link" href="?author={{author.pk}}&page={{page_arts.paginator.num_pages}}">...</a></li>
+                                        {% endif %}
+                                        {% if page_arts.has_next %}
+                                            <li class="page-item">
+                                                <a class="page-link" href="?author={{author.pk}}&page={{ page_arts.next_page_number }}">Следующая</a>
+                                            </li>
+                                        {% endif %}
                                     </ul>
                                 </nav>
                             </div><!-- end col -->

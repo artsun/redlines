@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Image, Slide, SlideToSlider, Slider, Rubric, Article, ArticleToRubric, EditBlock, SliderToArticle, Icon
+from .models import Image, Slide, Slider, Rubric, Article, EditBlock, Icon
 
 @admin.register(Image)
 class ImageAdmin(admin.ModelAdmin):
@@ -9,10 +9,6 @@ class ImageAdmin(admin.ModelAdmin):
 
 @admin.register(Slide)
 class SlideAdmin(admin.ModelAdmin):
-    pass
-
-@admin.register(SlideToSlider)
-class SlideToSliderAdmin(admin.ModelAdmin):
     pass
 
 @admin.register(Slider)
@@ -27,16 +23,8 @@ class RubricAdmin(admin.ModelAdmin):
 class ArticleAdmin(admin.ModelAdmin):
     pass
 
-@admin.register(ArticleToRubric)
-class ArticleToRubricAdmin(admin.ModelAdmin):
-    pass
-
 @admin.register(EditBlock)
 class EditBlockAdmin(admin.ModelAdmin):
-    pass
-
-@admin.register(SliderToArticle)
-class SliderToArticleAdmin(admin.ModelAdmin):
     pass
 
 @admin.register(Icon)
